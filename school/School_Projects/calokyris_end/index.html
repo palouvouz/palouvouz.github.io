@@ -1,0 +1,203 @@
+<!-- 
+ <!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ψηφοφορία για τον κύριο Καλοκύρη</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #03dac6;
+    }
+
+    .song-option {
+      background-color: #1e1e2f;
+      border: 2px solid #03dac6;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px auto;
+      width: 300px;
+    }
+
+    .song-option h2 {
+      color: #ffd54f;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #4caf50;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    .vote-count {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #80cbc4;
+    }
+
+    #chart-container {
+      width: 90%;
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #1e1e2f;
+      padding: 20px;
+      border-radius: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Ποιο τραγούδι ταιριάζει στον κύριο Καλοκύρη που παίρνει σύνταξη;</h1>
+
+  <div class="song-option">
+    <h2>Επιλογή Α</h2>
+    <audio controls>
+      <source src="./A.mp3" type="audio/mpeg" />
+      Το πρόγραμμα περιήγησης δεν υποστηρίζει το στοιχείο ήχου.
+    </audio>
+    <br />
+    <button onclick="vote('A')">Ψηφίζω Α</button>
+    <div class="vote-count">Ψήφοι Α: <span id="votesA">0</span></div>
+  </div>
+
+  <div class="song-option">
+    <h2>Επιλογή Β</h2>
+    <audio controls>
+      <source src="./B.mp3" type="audio/mpeg" />
+      Το πρόγραμμα περιήγησης δεν υποστηρίζει το στοιχείο ήχου.
+    </audio>
+    <br />
+    <button onclick="vote('B')">Ψηφίζω Β</button>
+    <div class="vote-count">Ψήφοι Β: <span id="votesB">0</span></div>
+  </div>
+
+  <div class="song-option">
+    <h2>Επιλογή Γ</h2>
+    <audio controls>
+      <source src="./C.mp3" type="audio/mpeg" />
+      Το πρόγραμμα περιήγησης δεν υποστηρίζει το στοιχείο ήχου.
+    </audio>
+    <br />
+    <button onclick="vote('C')">Ψηφίζω Γ</button>
+    <div class="vote-count">Ψήφοι Γ: <span id="votesC">0</span></div>
+  </div>
+
+  <div id="chart-container">
+    <canvas id="voteChart"></canvas>
+  </div>
+
+  <!-- Firebase v8 SDKs --><!-- 
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <!-- Chart.js --><!-- 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    // Ρύθμιση Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjsTIjThOuq2SQYaqpwiB2AO28e5KdKBw",
+      authDomain: "palouvouz14.firebaseapp.com",
+      projectId: "palouvouz14",
+      storageBucket: "palouvouz14.firebasestorage.app",
+      messagingSenderId: "487036002101",
+      appId: "1:487036002101:web:7525ac092d81055d74b67c",
+      measurementId: "G-X211FWXG8Z"
+    };
+
+    // Αρχικοποίηση Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Αναφορά στο έγγραφο ψηφοφορίας
+    const votesDoc = db.collection("votes").doc("results");
+
+    // Δημιουργία του Chart
+    const ctx = document.getElementById('voteChart').getContext('2d');
+    const voteChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Επιλογή Α', 'Επιλογή Β', 'Επιλογή Γ'],
+        datasets: [{
+          label: 'Αριθμός Ψήφων',
+          data: [0, 0, 0],
+          backgroundColor: ['#03dac6', '#ffca28', '#80cbc4']
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          yAxes: [{
+            ticks: { beginAtZero: true, fontColor: "#fff" }
+          }],
+          xAxes: [{
+            ticks: { fontColor: "#fff" }
+          }]
+        },
+        legend: {
+          labels: { fontColor: "#fff" }
+        }
+      }
+    });
+
+    // Ενημέρωση UI με τα δεδομένα από Firestore
+    function updateUI(data) {
+      const votesA = data.A || 0;
+      const votesB = data.B || 0;
+      const votesC = data.C || 0;
+
+      document.getElementById('votesA').textContent = votesA;
+      document.getElementById('votesB').textContent = votesB;
+      document.getElementById('votesC').textContent = votesC;
+
+      voteChart.data.datasets[0].data = [votesA, votesB, votesC];
+      voteChart.update();
+    }
+
+    // Παρακολούθηση αλλαγών σε πραγματικό χρόνο
+    votesDoc.onSnapshot((doc) => {
+      if (doc.exists) {
+        updateUI(doc.data());
+      } else {
+        // Αν δεν υπάρχει το έγγραφο, δημιούργησέ το με 0 ψήφους
+        votesDoc.set({ A: 0, B: 0, C: 0 });
+      }
+    });
+
+    // Συνάρτηση ψηφοφορίας με έλεγχο τοπικά (localStorage)
+    function vote(option) {
+      if (localStorage.getItem('hasVoted')) {
+        alert('Έχεις ήδη ψηφίσει!');
+        return;
+      }
+
+      votesDoc.update({
+        [option]: firebase.firestore.FieldValue.increment(1)
+      }).then(() => {
+        localStorage.setItem('hasVoted', 'true');
+        alert('Ευχαριστούμε για την ψήφο σου!');
+      }).catch((error) => {
+        alert('Σφάλμα κατά την καταγραφή της ψήφου. Προσπάθησε ξανά.');
+        console.error('Firebase update error:', error);
+      });
+    }
+  </script>
+
+</body>
+</html>

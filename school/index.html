@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palouvouz | Secure Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- 1. SETTINGS & RESET --- */
+        :root {
+            --primary: #00f2ea;
+            --secondary: #ff0050;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+            --input-bg: rgba(0, 0, 0, 0.3);
+        }
+
+        * { box-sizing: border-box; outline: none; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #080810;
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Prevent scrolling from animations */
+            position: relative;
+        }
+
+        /* --- 2. ANIMATED BACKGROUND (The "Wow" Factor) --- */
+        .background-blobs {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: #080810;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 10s infinite alternate;
+        }
+
+        .blob-1 { top: 10%; left: 10%; width: 300px; height: 300px; background: #6c5ce7; animation-delay: 0s; }
+        .blob-2 { bottom: 20%; right: 10%; width: 350px; height: 350px; background: #00f2ea; animation-delay: -5s; }
+        .blob-3 { bottom: 10%; left: 30%; width: 200px; height: 200px; background: #ff0050; animation-delay: -2s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(20px, -40px) scale(1.1); }
+        }
+
+        /* --- 3. GLASS CARD CONTAINER --- */
+        .card {
+            width: 90%;
+            max-width: 450px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        /* --- 4. INPUT FIELD --- */
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1.1rem;
+            text-align: center;
+            letter-spacing: 4px;
+            transition: 0.3s all;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        input::placeholder { color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 242, 234, 0.2);
+        }
+
+        input.error {
+            border-color: var(--secondary);
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        /* Shake Animation */
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* --- 5. LINK BUTTONS --- */
+        .links-container {
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .link-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Glowing effect on hover */
+        .link-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 0%; height: 100%;
+            background: var(--primary);
+            opacity: 0.1;
+            transition: width 0.3s ease;
+            z-index: 0;
+        }
+
+        .link-btn:hover::before { width: 100%; }
+
+        .link-btn:hover {
+            transform: scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 242, 234, 0.3);
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        .btn-icon {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .arrow-icon {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: 0.3s;
+            color: var(--primary);
+        }
+
+        .link-btn:hover .arrow-icon {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* --- 6. ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-msg {
+            height: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="card">
+        <h1>Palouvouz</h1>
+        <p class="subtitle">Secure Project Gateway</p>
+
+        <div class="input-group">
+            <input type="password" id="passInput" placeholder="PASSCODE" maxlength="10" autocomplete="off">
+            <div id="statusMsg" class="status-msg"></div>
+        </div>
+
+        <div id="linksList" class="links-container">
+            </div>
+    </div>
+
+<script>
+    // --- CONFIGURATION ---
+    // To add a new one, go to a base64 encoder online, type your number, and paste the result here.
+    const validHashes = [
+        "Njk0NTE5MzQyMA==", 
+        "NjkzODg4NTM2OA=="        
+    ];
+
+    // 2. Data with Icon names (FontAwesome)
+    const projects = [
+        { name: "STL Projects", url: "https://palouvouz14.web.app/stl/", icon: "fa-cube" },
+        { name: "Piroguard", url: "https://rpiroguard.web.app", icon: "fa-shield-halved" },
+        { name: "Hall Sensor Project", url: "https://palouvouz15.web.app/school/School%20Projects/k_stratakis/", icon: "fa-magnet" },
+        { name: "Minecraft Server", url: "https://palouvouz.aternos.me", icon: "fa-gamepad" },
+    ];
+
+    // --- LOGIC ---
+
+    const input = document.getElementById('passInput');
+    const linksContainer = document.getElementById('linksList');
+    const statusMsg = document.getElementById('statusMsg');
+
+    input.addEventListener('input', (e) => {
+        const val = e.target.value;
+
+        // Clean UI if user deletes input
+        if (val.length === 0) {
+            input.classList.remove('error');
+            statusMsg.style.opacity = '0';
+        }
+
+        // Check only when length is 10
+        if (val.length === 10) {
+            checkPassword(val);
+        }
+    });
+
+    function checkPassword(password) {
+        // Encode input to match our stored hashes
+        const inputHash = btoa(password);
+
+        if (validHashes.includes(inputHash)) {
+            unlockSuccess();
+        } else {
+            unlockFail();
+        }
+    }
+
+    function unlockSuccess() {
+        // UI Feedback
+        input.style.borderColor = '#00f2ea';
+        input.style.color = '#00f2ea';
+        input.disabled = true; // Lock input
+        statusMsg.textContent = "ACCESS GRANTED";
+        statusMsg.style.color = "#00f2ea";
+        statusMsg.style.opacity = "1";
+
+        // Reveal Links
+        linksContainer.style.display = 'flex';
+        renderLinks();
+    }
+
+    function unlockFail() {
+        // Shake Effect
+        input.classList.add('error');
+        statusMsg.textContent = "ACCESS DENIED";
+        statusMsg.style.color = "#ff0050";
+        statusMsg.style.opacity = "1";
+
+        // Remove error class after animation finishes so it can trigger again
+        setTimeout(() => {
+            input.classList.remove('error');
+            input.value = ""; // Clear input
+        }, 800);
+    }
+
+    function renderLinks() {
+        linksContainer.innerHTML = '';
+        projects.forEach((proj, index) => {
+            const link = document.createElement('a');
+            link.href = proj.url;
+            link.target = "_blank";
+            link.className = 'link-btn';
+            
+            // Staggered Animation Delay
+            link.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.1}s`;
+            link.style.opacity = '0'; // Start invisible
+
+            link.innerHTML = `
+                <div class="btn-content">
+                    <i class="fa-solid ${proj.icon} btn-icon"></i>
+                    <span>${proj.name}</span>
+                </div>
+                <i class="fa-solid fa-chevron-right arrow-icon"></i>
+            `;
+            linksContainer.appendChild(link);
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PyroGuard Chat — Send / Receive</title>
+  <style>
+    :root{
+      --bg: #0b1220;
+      --panel: #071025;
+      --muted: #9fb3d6;
+      --accent: #2563eb;
+    }
+    html,body{ height:100%; margin:0; font-family: Inter, "Segoe UI", Roboto, Arial; background:var(--bg); color:#e6eef8;}
+    .app { max-width:920px; margin:18px auto; display:flex; flex-direction:column; gap:12px; height:calc(100vh - 36px); }
+    header{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    header .title{ font-size:20px; font-weight:700; }
+    header .sub{ color:var(--muted); font-size:13px; }
+    .chat-wrap{ background:linear-gradient(180deg, rgba(10,18,30,0.95), rgba(6,10,16,0.95)); border-radius:12px; padding:12px; display:flex; flex-direction:column; flex:1; min-height:200px; box-shadow: 0 6px 18px rgba(0,0,0,0.5); }
+    .messages{ flex:1; overflow:auto; padding:12px; display:flex; flex-direction:column; gap:10px; }
+    .msg { display:flex; gap:8px; max-width:80%; }
+    .msg.user { align-self:flex-end; flex-direction:row-reverse; }
+    .bubble { padding:10px 14px; border-radius:16px; line-height:1.4; }
+    .bubble.user { background: linear-gradient(90deg,#2b7cff,#2563eb); color:white; border-radius:16px 16px 6px 16px; }
+    .bubble.bot { background:#0f2135; color:#d7e6ff; border-radius:16px 16px 16px 6px; border:1px solid rgba(255,255,255,0.03); }
+    .meta { font-size:12px; color:var(--muted); margin-top:6px; text-align:left; }
+    .controls{ display:flex; gap:8px; align-items:center; padding-top:8px; }
+    textarea#inputQ{ width:100%; min-height:60px; max-height:160px; resize:vertical; padding:10px; border-radius:10px; border:1px solid #233044; background:var(--panel); color:#e6eef8; }
+    button{ padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:600; }
+    button.primary{ background:var(--accent); color:white; }
+    button.ghost{ background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--muted); }
+    .top-row{ display:flex; gap:12px; align-items:center; }
+    .user-color { width:34px; height:34px; border-radius:8px; border:2px solid rgba(255,255,255,0.06); }
+    .small{ font-size:13px; color:var(--muted); }
+    .history-controls{ display:flex; gap:8px; }
+    .status { font-size:13px; color:var(--muted); margin-left:8px; }
+    .hint{ font-size:13px; color:var(--muted); margin-top:6px; }
+    .suggestions{ display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
+    .chip{ background:rgba(255,255,255,0.03); padding:8px 10px; border-radius:999px; cursor:pointer; color:var(--muted); border:1px solid rgba(255,255,255,0.02); }
+    footer.note{ font-size:12px; color:var(--muted); text-align:center; margin-top:6px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <div class="title">PyroGuard Chat</div>
+        <div class="sub">Στείλε μήνυμα σαν Viber — συνέχεια context, history & per-user background</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="userColor" class="user-color" title="Your color"></div>
+        <div class="small">ID: <span id="userId">—</span></div>
+      </div>
+    </header>
+
+    <div class="chat-wrap" id="chatWrap">
+      <div class="messages" id="messages"></div>
+
+      <div class="controls">
+        <textarea id="inputQ" placeholder="Γράψε... (π.χ. 'Καλημέρα' ή 'Τι κάνει το PyroGuard;')"></textarea>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="primary" id="sendBtn">Αποστολή</button>
+          <div class="history-controls">
+            <button class="ghost" id="clearHistory">Καθάρισμα ιστορικού</button>
+            <button class="ghost" id="exportHistory">Εξαγωγή history</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint small" id="hint">Tip: Πάτα Ctrl+Enter για αποστολή. Τα μηνύματα αποθηκεύονται τοπικά.</div>
+      <div class="suggestions" id="suggestions">
+        <div class="chip" data-q="Τι κάνει το PyroGuard?">Τι κάνει το PyroGuard?</div>
+        <div class="chip" data-q="Ποιοι αισθητήρες χρησιμοποιούνται?">Ποιοι αισθητήρες χρησιμοποιούνται?</div>
+        <div class="chip" data-q="Ποια άσκηση θα μπορούσα να κάνω για να μπω στην ομάδα?">Άσκηση για ομάδα</div>
+      </div>
+    </div>
+
+    <footer class="note">Το σύστημα απαντά μόνο conceptually για το PyroGuard — δεν δίνει κώδικα/credentials/ML models.</footer>
+  </div>
+
+<script>
+/* ================= CONFIG ================ */
+/* Βάλε εδώ το OpenAI API key (frontend-only). Σε prod κράτησέ το στο backend. */
+const OPENAI_API_KEY = "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";
+
+/* Model settings */
+const MODEL = "gpt-4.1-mini";
+const MAX_TOKENS = 700;
+const TEMPERATURE = 0.15;
+
+/* Blocklist / safety (ερωτήσεις + απαντήσεις) */
+const BLOCKED_PATTERNS = [
+  "κώδικα","code","train","training","weights","model weights","api key","ssh","root","password",
+  "hack","exploit","payload","reverse shell","backdoor","token","private key","rm -rf","sudo","deploy","execute","run script"
+];
+const BLOCKED_REGEX = /(give me .*code|show me .*password|provide .*credentials|how to hack|how to exploit|train .*model)/i;
+
+/* Full system prompt (Greek) — περιλαμβάνει το πλήρες spec v1.4 και tone */
+const SYSTEM_PROMPT = `
+Είσαι ευγενικός, επαγγελματικός τεχνικός βοηθός του PyroGuard. ΓΝΩΡΙΖΕΙΣ ΟΛΟ το επίσημο specification PyroGuard v1.4 (sensors, cameras, 4 IMUs, Gimbal, LIDAR 2D, Arduino roles, Raspberry control, policy "limit spread then extinguish", dashboard roles users/admins/superadmins κ.λπ.). 
+Απάντα σε ερωτήσεις για τη λειτουργία, σχεδίαση, χρήσεις, εκπαιδευτικές ασκήσεις και διαδικασίες υψηλού επιπέδου. ΠΟΤΕ μην δίνεις πραγματικό εκτελέσιμο κώδικα, μοντέλα ML, weights, credentials, API keys, ή βήμα‑βήμα οδηγίες που θα επέτρεπαν σε κάποιον να ελέγξει, παραβιάσει ή τρέξει το PyroGuard. 
+Να είσαι πάντα ευγενικός, σαφής και πρακτικός. Αν ο χρήστης ρωτήσει για κώδικα/ML/credentials, άρνησέ το ευγενικά και δώσε υψηλού επιπέδου θεωρητική απάντηση ή πρόταση για εκπαιδευτική άσκηση.
+Είσαι ο επίσημος τεχνικός βοηθός του PyroGuard. ΣΟΥ ΔΙΝΕΤΑΙ ΟΛΟ το επίσημο specification του PyroGuard (v1.4). Χρησιμοποίησε αυτή τη γνώση για να απαντάς σε ερωτήσεις αποκλειστικά σχετικά με το PyroGuard: λειτουργία, αρχιτεκτονική, αισθητήρες, κάμερες, Gimbal, IMUs, LIDAR, στρατηγική κατάσβεσης, telemetry, dashboard, and user roles. ΠΟΤΕ μην δώσεις πραγματικό κώδικα, scripts, μοντέλα machine learning, credentials, API keys, εντολές εκτέλεσης ή οδηγίες που μπορούν να ελέγξουν, μεταβάλουν ή παραβιάσουν το ρομπότ. Αν ο χρήστης ζητήσει τέτοιου είδους πληροφορία, ΑΡΝΗΣΟΥ ευγενικά και δώσε υψηλού επιπέδου, θεωρητική ή εκπαιδευτική απάντηση.
+
+--- PyroGuard Spec v1.4 (Περίληψη — γνώρισε τα πάντα) ---
+1.0 Γενικά:
+- PyroGuard: αυτόνομο ρομποτικό πυροσβεστικό όχημα.
+- Raspberry Pi είναι ο κεντρικός εγκέφαλος: αποφάσεις, επεξεργασία εικόνας, local web server.
+- Αποστολή: εντοπισμός φωτιάς, περιορισμός εξάπλωσης, κατάσβεση. Χωρίς τηλεχειρισμό (μόνο monitoring & config).
+- Επικοινωνία Raspberry ↔ Arduino(2) μέσω Bluetooth. Δικαιώματα χρήσης: users / admins / superadmins.
+
+2.0 Αισθητήρες & IMUs:
+- 4 IMUs συνολικά:
+  • IMU1–3: συνδεδεμένα στο Arduino που ελέγχει τα Gimbal (1 ανά Gimbal).
+  • IMU4: απευθείας στο Raspberry για πλοήγηση/ευστάθεια σασί.
+- IR flame sensor (4-pin) → απευθείας στο Raspberry.
+- GPS module → απευθείας στο Raspberry (logging / τοποθεσία).
+- 2D LIDAR → στο Raspberry για mapping & obstacle scanning.
+- Distance sensors: 4 πλευρικοί HD (front, rear, left, right) + 2 κάτω (front/rear) για αποφυγή πτώσης.
+
+3.0 Κάμερες & Gimbal:
+- 3 κάμερες: CSI μπροστά (ML), CSI πίσω (ML), USB webcam μπροστά (live feed, 360° rotation μέσω admin UI).
+- Κάθε κάμερα σε Gimbal — σύνολο 3 Gimbal.
+- Κάθε Gimbal: 1 IMU + 3 servos → 3 IMUs στο Arduino + 9 servos.
+- CSI ροές → ML inference στο Raspberry. USB webcam → streaming.
+
+4.0 Arduino(s):
+- Arduino A (Gimbal Controller): ελέγχει 3 Gimbal (IMU1–3 + Servos 1–9), stabilizer feedback loop, Bluetooth telemetry προς Raspberry.
+- Arduino B (Micro-meteorological / Fire-management Station): αισθητήρες ανέμου (anemometer / wind vane), temp/humidity, gas sensors (προαιρετικά), στέλνει wind direction & speed στο Raspberry. Σκοπός: υποστήριξη πολιτικής “περιορισμός εξάπλωσης”.
+
+5.0 Πολιτική κατάσβεσης:
+- Στρατηγική: περιορισμός εξάπλωσης → πλήρης κατάσβεση.
+- Ροή: ML detection (CSI cams) + flame sensor + wind data (Arduino B) + IMU4 + LIDAR + distance sensors → Raspberry αποφασίζει action plan.
+- Πρώτο βήμα: περιορισμός περιοχής εξάπλωσης (targeted water bursts με βάση άνεμο), μετά πλήρης κατάσβεση.
+- Πάντα safety thresholds & multi-sensor confirmation πριν ενεργοποίηση αντλίας.
+
+6.0 Κίνηση & αποφυγή εμποδίων:
+- Κίνηση ελέγχεται από Raspberry μέσω motor driver (π.χ. TB6612).
+- Χρησιμοποιεί 2D LIDAR + 4 πλευρικούς HD sensors + 2 κάτω sensors για mapping, obstacle avoidance, και αποφυγή πτώσης.
+- IMU4 στο Raspberry συνεισφέρει στην ευστάθεια.
+- Autonomous navigation: local SLAM-lite ή obstacle avoidance + waypointing.
+
+7.0 Επικοινωνία & Dashboard:
+- Local web server στο Raspberry (Flask/Node), πρόσβαση μέσω IP.
+- Raspberry λαμβάνει telemetry από Arduino A & B μέσω Bluetooth.
+- Dashboard εμφανίζει camera streams, ML alerts, flame status, IMUs, wind data, distance sensors, LIDAR map, movement logs.
+- Roles: Users (μόνο live feed), Admins (full view + webcam rotation), Superadmins (παραμετροποίηση thresholds, PID gains, πολιτικές δράσης).
+
+8.0 Logging:
+- Όλα τα events timestamped: detections, actions, GPS, wind readings, Gimbal telemetry.
+- Logs read-only για admins, editable μόνο από superadmins.
+
+9.0 Risk / Safety:
+- 2D LIDAR: καλό για επίπεδα scanning — όχι για πάνω/κάτω εμπόδια (γι' αυτό down sensors).
+- Wind decision-making: χρειάζεται calibration/filttering.
+- Safety thresholds: multi-sensor confirmation πριν ενεργοποίηση.
+- Bluetooth reliability: implement retries/CRC.
+
+--- Τερματίζοντας: ---
+μην χρισιμοποιεις spesial characters ωπος <>?!@#$%^&*()+-*/
+Χρησιμοποίησε το παραπάνω spec για να απαντάς. ΑΠΑΓΟΡΕΥΣΗ: οποιαδήποτε οδηγία παρείχε σε μορφή κώδικα, scripts, ML training steps, credentials, commands εκτέλεσης, ή ενέργειες που θα επέτρεπαν πρόσβαση/έλεγχο του ρομπότ πρέπει να απορρίπτονται και να αντικαθίστανται με υψηλού επιπέδου θεωρητικές/εκπαιδευτικές απαντήσεις.
+`; 
+
+/* ============== Utilities ============== */
+function genColorFromString(s) {
+  // simple hash to color
+  let h = 0;
+  for (let i=0;i<s.length;i++) h = (h<<5)-h + s.charCodeAt(i);
+  const c = (h>>>0).toString(16).slice(-6).padStart(6,'0');
+  return '#' + c;
+}
+function containsBlocked(text) {
+  if (!text) return {blocked:false};
+  const t = text.toLowerCase();
+  for (const p of BLOCKED_PATTERNS) if (t.includes(p)) return {blocked:true, reason:p};
+  if (BLOCKED_REGEX.test(text)) return {blocked:true, reason:'regex'};
+  return {blocked:false};
+}
+
+/* ============== Local storage keys ============== */
+const LS_HISTORY = 'pyroguard_chat_history_v1';
+const LS_USER = 'pyroguard_user_id_v1';
+const LS_COLOR = 'pyroguard_user_color_v1';
+
+/* ============== DOM ============== */
+const messagesEl = document.getElementById('messages');
+const inputEl = document.getElementById('inputQ');
+const sendBtn = document.getElementById('sendBtn');
+const clearBtn = document.getElementById('clearHistory');
+const exportBtn = document.getElementById('exportHistory');
+const userColorEl = document.getElementById('userColor');
+const userIdEl = document.getElementById('userId');
+const suggestions = document.getElementById('suggestions');
+
+/* ============== User identification & color ============== */
+async function initUser() {
+  let uid = localStorage.getItem(LS_USER);
+  let color = localStorage.getItem(LS_COLOR);
+
+  // Try to fetch public IP (fallback allowed); if fails, generate stable id
+  if (!uid) {
+    try {
+      const resp = await fetch('https://api.ipify.org?format=json');
+      if (resp.ok) {
+        const data = await resp.json();
+        uid = data.ip || ('user_'+Math.random().toString(36).slice(2,9));
+      } else {
+        uid = 'user_'+Math.random().toString(36).slice(2,9);
+      }
+    } catch (e) {
+      uid = 'user_'+Math.random().toString(36).slice(2,9);
+    }
+    localStorage.setItem(LS_USER, uid);
+  }
+  if (!color) {
+    color = genColorFromString(uid);
+    localStorage.setItem(LS_COLOR, color);
+  }
+  userIdEl.innerText = uid;
+  userColorEl.style.background = color;
+}
+initUser();
+
+/* ============== History management ============== */
+function loadHistory() {
+  const raw = localStorage.getItem(LS_HISTORY);
+  if (!raw) return [];
+  try { return JSON.parse(raw); } catch(e){ return []; }
+}
+function saveHistory(hist) {
+  localStorage.setItem(LS_HISTORY, JSON.stringify(hist));
+}
+function appendHistory(role, text) {
+  const hist = loadHistory();
+  hist.push({role, text, time: (new Date()).toISOString()});
+  // keep only last 20 messages to limit token size
+  const trimmed = hist.slice(-20);
+  saveHistory(trimmed);
+}
+function clearHistory() {
+  localStorage.removeItem(LS_HISTORY);
+  renderMessages();
+}
+
+/* ============== Rendering ============== */
+function renderMessages() {
+  const hist = loadHistory();
+  messagesEl.innerHTML = '';
+  for (const m of hist) {
+    const el = document.createElement('div');
+    el.className = 'msg ' + (m.role === 'user' ? 'user' : 'bot');
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble ' + (m.role === 'user' ? 'user' : 'bot');
+    bubble.innerText = m.text;
+    el.appendChild(bubble);
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.innerText = (new Date(m.time)).toLocaleString();
+    el.appendChild(meta);
+    messagesEl.appendChild(el);
+  }
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+renderMessages();
+
+/* ============== Build messages for OpenAI ============== */
+function buildOpenAIMessages(userQuestion) {
+  const hist = loadHistory(); // contains alternating user/bot entries
+  const msgs = [{role:'system', content: SYSTEM_PROMPT}];
+  // include last 10 exchanges (user+assistant pairs), in order
+  const last = hist.slice(-12); // roughly last 12 entries
+  for (const entry of last) {
+    msgs.push({role: entry.role === 'user' ? 'user' : 'assistant', content: entry.text});
+  }
+  // add current user message
+  msgs.push({role:'user', content: userQuestion});
+  return msgs;
+}
+
+/* ============== Send to OpenAI ============== */
+async function sendToOpenAI(messages) {
+  // note: frontend-only call; consider backend for prod
+  const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'Authorization': `Bearer ${OPENAI_API_KEY}`
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      messages: messages,
+      max_tokens: MAX_TOKENS,
+      temperature: TEMPERATURE,
+      n: 1
+    })
+  });
+  if (!resp.ok) {
+    const t = await resp.text();
+    throw new Error(`OpenAI API ${resp.status}: ${t}`);
+  }
+  const data = await resp.json();
+  const content = data.choices?.[0]?.message?.content || '';
+  return content;
+}
+
+/* ============== Main send flow ============== */
+async function handleSend() {
+  const q = inputEl.value.trim();
+  if (!q) return;
+  // show user message immediately
+  appendHistory('user', q);
+  renderMessages();
+  inputEl.value = '';
+  // blocked query?
+  const qCheck = containsBlocked(q);
+  if (qCheck.blocked) {
+    appendHistory('bot', `Η ερώτησή σου δεν επιτρέπεται (reason: ${qCheck.reason}). Μπορείς να ρωτήσεις για τη λειτουργία/αισθητήρες/εκπαιδευτικές ασκήσεις.`);
+    renderMessages();
+    return;
+  }
+  // Build messages with history for context
+  const messages = buildOpenAIMessages(q);
+  // Make network call
+  appendHistory('bot', 'Αναμονή απάντησης από AI…');
+  renderMessages();
+  try {
+    const respText = await sendToOpenAI(messages);
+    // safety check on response
+    const rCheck = containsBlocked(respText);
+    if (rCheck.blocked) {
+      const msg = 'Η απάντηση περιείχε απαγορευμένο περιεχόμενο και απορρίφθηκε από το σύστημα ασφαλείας.';
+      // replace last "αναμονή" bot message with warning
+      const hist = loadHistory();
+      hist[hist.length - 1] = { role:'bot', text: msg, time: (new Date()).toISOString() };
+      saveHistory(hist);
+      renderMessages();
+      return;
+    }
+    // replace last "αναμονή" with actual answer
+    const hist = loadHistory();
+    hist[hist.length - 1] = { role:'bot', text: respText, time: (new Date()).toISOString() };
+    saveHistory(hist);
+    renderMessages();
+  } catch (err) {
+    // replace last bot message with error
+    const hist = loadHistory();
+    hist[hist.length - 1] = { role:'bot', text: `Σφάλμα: ${err.message}`, time: (new Date()).toISOString() };
+    saveHistory(hist);
+    renderMessages();
+  }
+}
+
+/* ============== Event handlers ============== */
+sendBtn.addEventListener('click', handleSend);
+inputEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && e.ctrlKey) { handleSend(); }
+});
+clearBtn.addEventListener('click', () => { if (confirm('Θέλεις να διαγράψεις το τοπικό ιστορικό;')) { clearHistory(); }});
+exportBtn.addEventListener('click', () => {
+  const hist = loadHistory();
+  const blob = new Blob([JSON.stringify(hist, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'pyroguard_history.json'; a.click();
+  URL.revokeObjectURL(url);
+});
+
+/* suggestions quick-fill */
+document.querySelectorAll('.chip').forEach(ch => {
+  ch.addEventListener('click', () => {
+    inputEl.value = ch.dataset.q;
+    inputEl.focus();
+  });
+});
+
+/* ensure messages render on load */
+renderMessages();
+</script>
+</body>
+</html>

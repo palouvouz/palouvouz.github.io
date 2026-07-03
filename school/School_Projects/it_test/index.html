@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Διαγώνισμα Αλγορίθμων</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #1f2937;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+
+        .container {
+            background: var(--card-bg);
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            padding-bottom: 20px;
+        }
+
+        .screen { display: none; padding: 30px; animation: fadeIn 0.5s ease; }
+        .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Login Styles */
+        .login-form h2 { color: var(--primary); text-align: center; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; }
+        .form-input { 
+            width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; 
+            font-size: 1rem; box-sizing: border-box; outline: none;
+        }
+        .form-input:focus { border-color: var(--primary); }
+        .start-btn {
+            background: var(--primary); color: white; border: none; width: 100%; padding: 15px;
+            border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
+            transition: 0.3s;
+        }
+        .start-btn:hover { background: #4f46e5; transform: scale(1.02); }
+        .start-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Quiz Styles */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .progress-container { height: 6px; background: #e5e7eb; width: 100%; position: absolute; top: 0; left: 0; }
+        .progress-bar { height: 100%; background: var(--secondary); width: 0%; transition: width 0.5s ease; }
+        .score-badge { background: var(--primary); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
+        
+        .question { font-size: 1.3rem; font-weight: 700; margin-bottom: 25px; line-height: 1.5; }
+        .options-grid { display: grid; gap: 12px; }
+        .option-btn {
+            background: white; border: 2px solid #e5e7eb; padding: 15px; border-radius: 12px;
+            font-size: 1rem; cursor: pointer; text-align: left; transition: all 0.2s; width: 100%;
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #f5f3ff; }
+        .option-btn.correct { background: var(--correct); border-color: var(--correct); color: white; }
+        .option-btn.wrong { background: var(--wrong); border-color: var(--wrong); color: white; }
+        
+        .text-input { width: 100%; padding: 15px; border: 2px solid #e5e7eb; border-radius: 12px; margin-bottom: 15px; box-sizing: border-box; }
+        .submit-answer-btn { background: var(--primary); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; margin-right: 10px; }
+
+        .feedback-msg { margin-top: 15px; padding: 15px; border-radius: 10px; text-align: center; font-weight: bold; display: none; }
+
+        /* Results Screen */
+        .results { text-align: center; }
+        .circular-chart { max-width: 150px; margin: 20px auto; }
+        .circle-bg { fill: none; stroke: #eee; stroke-width: 3.8; }
+        .circle { fill: none; stroke-width: 2.8; stroke-linecap: round; animation: progress 1s ease-out forwards; }
+        .percentage { fill: #666; font-family: sans-serif; font-weight: bold; font-size: 0.5em; text-anchor: middle; }
+
+        /* Admin Footer */
+        .admin-footer {
+            margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; text-align: center;
+        }
+        .admin-toggle { background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 0.8rem; }
+        .admin-panel { display: none; margin-top: 10px; }
+        .admin-input { padding: 8px; border-radius: 5px; border: 1px solid #ddd; }
+        
+        /* Admin Results Table */
+        #admin-results-view { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(255,255,255,0.98); z-index: 100; overflow-y: auto; padding: 40px; box-sizing: border-box;
+            display: none;
+        }
+        .table-container { max-width: 800px; margin: 0 auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: var(--primary); color: white; }
+        tr:hover { background: #f9fafb; }
+        .close-admin { position: absolute; top: 20px; right: 20px; font-size: 2rem; cursor: pointer; }
+
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; margin-left: 10px; vertical-align: middle; display: none;}
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div id="admin-results-view">
+    <span class="close-admin" onclick="closeAdminView()">&times;</span>
+    <div class="table-container">
+        <h2 style="color: var(--primary);">Αποτελέσματα Εξετάσεων</h2>
+        <div style="margin-bottom: 20px;">
+            <button onclick="refreshResults()" class="submit-answer-btn">Ανανέωση</button>
+            <button onclick="exportToCSV()" class="submit-answer-btn" style="background:#10b981">Λήψη CSV (Excel)</button>
+        </div>
+        <div id="results-table-container">Φόρτωση...</div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div id="login-screen" class="screen active">
+        <div class="login-form">
+            <h2>📝 Διαγώνισμα Αλγορίθμων</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">Συμπλήρωσε τα στοιχεία σου. Έχεις μόνο μία προσπάθεια.</p>
+            
+            <div class="form-group">
+                <label>Ονοματεπώνυμο</label>
+                <input type="text" id="inp-name" class="form-input" placeholder="π.χ. Γιάννης Παπαδόπουλος">
+            </div>
+            
+            <div class="form-group">
+                <label>Τμήμα</label>
+                <select id="inp-class" class="form-input">
+                    <option value="" disabled selected>Επίλεξε Τμήμα</option>
+                    <option value="Α1">Α1</option>
+                    <option value="Α2">Α2</option>
+                    <option value="Α3">Α3</option>
+                    <option value="Β1">Β1</option>
+                    <option value="Β2">Β2</option>
+                    <option value="Γ1">Γ1</option>
+                </select>
+            </div>
+
+            <button class="start-btn" onclick="attemptLogin()">ΕΝΑΡΞΗ ΕΞΕΤΑΣΗΣ <div class="loader" id="login-loader"></div></button>
+            <p id="login-error" style="color: red; text-align: center; margin-top: 10px; display: none;"></p>
+        </div>
+        
+        <div class="admin-footer">
+            <button class="admin-toggle" onclick="document.querySelector('.admin-panel').style.display='block'">Διαχείριση</button>
+            <div class="admin-panel">
+                <input type="password" id="admin-pass" class="admin-input" placeholder="Κωδικός (1234)">
+                <button onclick="checkAdmin()" style="cursor:pointer; padding: 8px;">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="quiz-screen" class="screen">
+        <div class="header">
+            <div class="score-badge">Βαθμολογία: <span id="score">0</span> / 20</div>
+            <div class="q-count">Ερώτηση <span id="current-q">1</span> / 20</div>
+        </div>
+        <div class="question" id="question-text"></div>
+        <div id="options-container" class="options-grid"></div>
+        <div id="feedback" class="feedback-msg"></div>
+    </div>
+
+    <div id="results-screen" class="screen results">
+        <h2 style="color: var(--primary);">Η εξέταση ολοκληρώθηκε!</h2>
+        <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path class="circle" id="result-circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="#4f46e5" />
+            <text x="18" y="20.35" class="percentage" id="result-score">0/20</text>
+        </svg>
+        <p class="result-text" id="result-msg">Αποθήκευση...</p>
+        <p style="font-size: 0.9rem; color: #666;">Μην κλείσεις τη σελίδα μέχρι να δεις την επιβεβαίωση.</p>
+    </div>
+</div>
+
+<script>
+// --- 1. FIREBASE CONFIGURATION (ΤΑ ΚΛΕΙΔΙΑ ΣΟΥ ΕΙΝΑΙ ΕΤΟΙΜΑ ΕΔΩ) ---
+const firebaseConfig = {
+  apiKey: "AIzaSyCCb5OLIoU9_r0E8qSaKSKHFyZa_pKbZiI",
+  authDomain: "palouvouz15.firebaseapp.com",
+  projectId: "palouvouz15",
+  storageBucket: "palouvouz15.firebasestorage.app",
+  messagingSenderId: "251402530857",
+  appId: "1:251402530857:web:14bbc7d51913260ac52c38"
+};
+
+// Initialize Firebase (Compat mode - Χωρίς imports)
+try {
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    console.log("Firebase connected successfully!");
+} catch (e) {
+    console.error("Firebase Init Error:", e);
+    alert("Σφάλμα σύνδεσης με τη βάση. Ελέγξτε την κονσόλα.");
+}
+
+// --- CSV DATA ---
+const csvData = `Type,Question,Options,Correct_Answer
+Σωστό-Λάθος,"Ο όρος ""αλγόριθμος"" προέρχεται από τον Πέρση μαθηματικό Al-Khwarizmi.",,Σωστό
+Σωστό-Λάθος,Μια συνταγή μαγειρικής δεν μπορεί να θεωρηθεί αλγόριθμος.,,Λάθος
+Σωστό-Λάθος,Όλα τα προβλήματα έχουν λύση.,,Λάθος
+Σωστό-Λάθος,Ένα ""Ανοικτό"" πρόβλημα είναι αυτό που η λύση του δεν έχει βρεθεί ακόμα.,,Σωστό
+Σωστό-Λάθος,Τα ""Άλυτα"" προβλήματα είναι αυτά που αποδεδειγμένα δεν έχουν λύση.,,Σωστό
+Σωστό-Λάθος,Η επίλυση της δευτεροβάθμιας εξίσωσης είναι ένα ""Άλυτο"" πρόβλημα.,,Λάθος
+Σωστό-Λάθος,Τα ""Δομημένα"" προβλήματα λύνονται με αυτοματοποιημένες διαδικασίες.,,Σωστό
+Σωστό-Λάθος,Ένα πρόβλημα απόφασης απαντιέται με ένα ΝΑΙ ή ένα ΟΧΙ.,,Σωστό
+Σωστό-Λάθος,Ο αλγόριθμος πρέπει να είναι σαφής, δηλαδή να μην αφήνει αμφιβολίες.,,Σωστό
+Σωστό-Λάθος,Η ιδιότητα της ""Περατότητας"" σημαίνει ότι ο αλγόριθμος τελειώνει σε άπειρο χρόνο.,,Λάθος
+Σωστό-Λάθος,"Ένας αλγόριθμος είναι ""Γενικός"" αν επιλύει μόνο μία συγκεκριμένη περίπτωση προβλήματος.",,Λάθος
+Σωστό-Λάθος,Το πρόγραμμα είναι η υλοποίηση ενός αλγορίθμου σε γλώσσα υπολογιστή.,,Σωστό
+Σωστό-Λάθος,Κάθε αλγόριθμος είναι απαραίτητα και πρόγραμμα υπολογιστή.,,Λάθος
+Σωστό-Λάθος,Η Γλώσσα Μηχανής αποτελείται από λέξεις της Αγγλικής γλώσσας.,,Λάθος
+Σωστό-Λάθος,Η Γλώσσα Μηχανής αποτελείται από ακολουθίες bits (0 και 1).,,Σωστό
+Σωστό-Λάθος,Η Assembly είναι γλώσσα υψηλού επιπέδου.,,Λάθος
+Σωστό-Λάθος,Οι γλώσσες Υψηλού Επιπέδου μοιάζουν με τη φυσική ανθρώπινη γλώσσα.,,Σωστό
+Σωστό-Λάθος,Ο Μεταγλωττιστής (Compiler) ελέγχει όλο το πρόγραμμα πριν την εκτέλεση.,,Σωστό
+Σωστό-Λάθος,Ο Διερμηνευτής (Interpreter) μετατρέπει και εκτελεί το πρόγραμμα εντολή-εντολή.,,Σωστό
+Σωστό-Λάθος,Τα συντακτικά λάθη εντοπίζονται κατά τη διάρκεια της εκτέλεσης του προγράμματος.,,Λάθος
+Σωστό-Λάθος,Ένα λογικό λάθος σημαίνει ότι το πρόγραμμα τρέχει αλλά βγάζει λάθος αποτέλεσμα.,,Σωστό
+Σωστό-Λάθος,Ο κειμενογράφος (Editor) χρησιμοποιείται για τη σύνταξη του πηγαίου κώδικα.,,Σωστό
+Σωστό-Λάθος,Το εκτελέσιμο πρόγραμμα δημιουργείται ακόμα και αν υπάρχουν συντακτικά λάθη.,,Λάθος
+Σωστό-Λάθος,Η ταξινόμηση βιβλίων σε βιβλιοθήκη είναι παράδειγμα προβλήματος.,,Σωστό
+Σωστό-Λάθος,Τα ""Αδόμητα"" προβλήματα βασίζονται συχνά στην ανθρώπινη διαίσθηση.,,Σωστό
+Σωστό-Λάθος,Το πρόβλημα του ""Πύργου του Ανόι"" είναι ένα κλασικό αλγοριθμικό πρόβλημα.,,Σωστό
+Σωστό-Λάθος,Ένας αλγόριθμος μπορεί να έχει άπειρα βήματα.,,Λάθος
+Σωστό-Λάθος,Οι αλγόριθμοι δημιουργήθηκαν πρώτη φορά μετά την εφεύρεση των ηλεκτρονικών υπολογιστών.,,Λάθος
+Σωστό-Λάθος,Το ""Πηγαίο"" πρόγραμμα μπορεί να εκτελεστεί απευθείας από τον επεξεργαστή.,,Λάθος
+Σωστό-Λάθος,Ένα πρόβλημα μπορεί να έχει παραπάνω από μία σωστές λύσεις (αλγορίθμους).,,Σωστό
+Σωστό-Λάθος,Η Python είναι γλώσσα προγραμματισμού χαμηλού επιπέδου.,,Λάθος
+Σωστό-Λάθος,Η έννοια του ""σφαλμα"" (bug) προέρχεται από πραγματικό έντομο που βρέθηκε σε υπολογιστή.,,Σωστό
+Πολλαπλής Επιλογής,Ποιο από τα παρακάτω ΔΕΝ είναι ιδιότητα του αλγορίθμου;,"Α) Σαφήνεια | Β) Περατότητα | C) Πολυπλοκότητα | D) Αποτελεσματικότητα",C
+Πολλαπλής Επιλογής,Πώς ονομάζεται το πρόβλημα που η λύση του δεν έχει βρεθεί ακόμα αλλά δεν έχει αποδειχθεί ότι δεν λύνεται;,"Α) Άλυτο | Β) Ανοικτό | C) Δομημένο | D) Απόφασης",Β
+Πολλαπλής Επιλογής,Ποια κατηγορία προβλημάτων απαιτεί απάντηση τύπου ΝΑΙ/ΟΧΙ;,"Α) Υπολογιστικά | Β) Βελτιστοποίησης | C) Απόφασης | D) Ανοικτά",C
+Πολλαπλής Επιλογής,Τι χαρακτηρίζει τα ""Δομημένα"" προβλήματα;,"Α) Η λύση τους είναι άγνωστη | Β) Η λύση προκύπτει από αυτοματοποιημένη διαδικασία | C) Βασίζονται στη διαίσθηση | D) Δεν έχουν δεδομένα",Β
+Πολλαπλής Επιλογής,Ποιο είναι το χαμηλότερο επίπεδο γλώσσας προγραμματισμού;,"Α) Python | B) Assembly | C) Γλώσσα Μηχανής | D) Java",C
+Πολλαπλής Επιλογής,Τι κάνει ο Μεταγλωττιστής (Compiler);,"Α) Εκτελεί εντολή-εντολή | Β) Μετατρέπει όλο το πρόγραμμα σε γλώσσα μηχανής πριν την εκτέλεση | C) Γράφει τον κώδικα | D) Διορθώνει τα λογικά λάθη",Β
+Πολλαπλής Επιλογής,Ποια γλώσσα χρησιμοποιεί συμβολικά ονόματα αντί για 0 και 1 αλλά παραμένει χαμηλού επιπέδου;,"A) C++ | B) Python | C) Assembly | D) Visual Basic",C
+Πολλαπλής Επιλογής,Ποιο από τα παρακάτω είναι γλώσσα Υψηλού Επιπέδου;,"A) Γλώσσα Μηχανής | B) Assembly | C) Python | D) Binary",C
+Πολλαπλής Επιλογής,Τι είναι το ""Πηγαίο Πρόγραμμα"";,"Α) Το εκτελέσιμο αρχείο | Β) Το πρόγραμμα γραμμένο από τον προγραμματιστή | C) Η γλώσσα μηχανής | D) Τα αποτελέσματα",Β
+Πολλαπλής Επιλογής,Πότε εντοπίζονται τα Συντακτικά Λάθη;,"Α) Κατά τη μετάφραση/μεταγλώττιση | Β) Κατά την εκτέλεση | C) Μετά την έξοδο αποτελεσμάτων | D) Ποτέ",Α
+Πολλαπλής Επιλογής,Τι είναι το Λογικό Λάθος;,"Α) Ο υπολογιστής κολλάει | Β) Το πρόγραμμα δεν τρέχει | C) Το πρόγραμμα τρέχει αλλά δίνει λάθος αποτέλεσμα | D) Λάθος στη γραμματική της γλώσσας",C
+Πολλαπλής Επιλογής,Ποιο από τα παρακάτω αποτελεί πρόβλημα Βελτιστοποίησης;,"Α) Επίλυση εξίσωσης | Β) Εύρεση της συντομότερης διαδρομής | C) Απάντηση Ναι/Όχι | D) Ταξινόμηση",Β
+Πολλαπλής Επιλογής,Ποιο στοιχείο του προβλήματος είναι αυτό που ψάχνουμε να βρούμε;,"Α) Δεδομένο | Β) Ζητούμενο | C) Επίλυση | D) Χώρος",Β
+Πολλαπλής Επιλογής,Ποια ιδιότητα απαιτεί ο αλγόριθμος να τελειώνει μετά από συγκεκριμένα βήματα;,"Α) Σαφήνεια | Β) Περατότητα | C) Γενικότητα | D) Ταχύτητα",Β
+Πολλαπλής Επιλογής,Ποιος θεωρείται ο πατέρας του αλγορίθμου;,"A) Alan Turing | B) Bill Gates | C) Al-Khwarizmi | D) Steve Jobs",C
+Πολλαπλής Επιλογής,Ποιο εργαλείο χρησιμοποιούμε για να γράψουμε τον κώδικα;,"Α) Compiler | B) Editor (Κειμενογράφος) | C) Debugger | D) Browser",Β
+Πολλαπλής Επιλογής,Σε ποια μορφή καταλαβαίνει τελικά τις εντολές ο υπολογιστής;,"Α) Ελληνικά | Β) Αγγλικά | C) Γλώσσα Μηχανής (0 και 1) | D) Ψευδοκώδικα",C
+Πολλαπλής Επιλογής,Τι σημαίνει ότι ένας αλγόριθμος είναι ""Αποτελεσματικός"";,"Α) Να δίνει σωστό αποτέλεσμα σε πεπερασμένο χρόνο | Β) Να έχει ωραία γραφικά | C) Να είναι γραμμένος σε C++ | D) Να μην έχει δεδομένα",Α
+Πολλαπλής Επιλογής,Ποιο από τα παρακάτω ΔΕΝ είναι γλώσσα προγραμματισμού;,"A) Python | B) HTML (Γλώσσα σήμανσης) | C) Java | D) Pascal",Β
+Πολλαπλής Επιλογής,Τι απαιτείται για να τρέξει ένα πρόγραμμα σε γλώσσα υψηλού επιπέδου;,"Α) Εκτυπωτής | Β) Μεταφραστικό πρόγραμμα (Compiler/Interpreter) | C) Σύνδεση στο Internet | D) Ποντίκι",Β
+Πολλαπλής Επιλογής,Ποιο σχήμα συμβολίζει την ""Απόφαση"" στο διάγραμμα ροής;,"Α) Ορθογώνιο | Β) Ρόμβος | C) Έλλειψη | D) Κύκλος",Β
+Πολλαπλής Επιλογής,Ποια είναι η διαδικασία διόρθωσης λαθών στον προγραμματισμό;,"Α) Debugging (Εκσφαλμάτωση) | Β) Coding | C) Compiling | D) Saving",Α
+Πολλαπλής Επιλογής,Τι αντιπροσωπεύει ο αλγόριθμος;,"Α) Μαθηματικές πράξεις | Β) Σειρά εντολών για επίλυση προβλήματος | C) Κώδικας | D) Σχέδιο δεδομένων",Β
+Πολλαπλής Επιλογής,Ποια είναι η σωστή σειρά για την εκτέλεση ενός αλγορίθμου;,"Α) Τυχαία | Β) Βάσει προτίμησης | C) Χωρίς σειρά | D) Λογική και συνεχής",D
+Πολλαπλής Επιλογής,Τι χαρακτηρίζει έναν καλό αλγόριθμο;,"Α) Πολυπλοκότητα | Β) Πολλαπλά προβλήματα | C) Σαφήνεια και ακρίβεια | D) Γρήγορη εκτέλεση",C
+Πολλαπλής Επιλογής,Ποιος ήταν ο σκοπός των πρώτων αλγορίθμων του al-Khwarizmi;,"Α) Εμπόριο | Β) Αστρονομία | C) Παιχνίδια | D) Επεξεργασία αριθμών",D
+Πολλαπλής Επιλογής,Πώς μπορεί να αποτυπωθεί ένας αλγόριθμος;,"Α) Μόνο κώδικας | Β) Διαγράμματα ροής και ψευδοκώδικας | C) Λεκτικά | D) Βίντεο",Β
+Πολλαπλής Επιλογής,Τι σημαίνει ο όρος ""προγραμματισμός"";,"Α) Γραφικά | Β) Συγγραφή κώδικα για εντολές | C) Τεστ | D) Κατασκευή PC",Β
+Πολλαπλής Επιλογής,Ποιο από τα παρακάτω είναι ""Ημιδομημένο"" πρόβλημα;,"Α) Υπολογιστικά ΦΠΑ | Β) Επιλογή ξενοδοχείου για διακοπές | C) Σύνθεση μουσικής | D) Επίλυση δευτεροβάθμιας",Β
+Συμπλήρωση Κενών,Το [πρόβλημα] είναι μια κατάσταση που χρήζει αντιμετώπισης.,,πρόβλημα
+Συμπλήρωση Κενών,Τα [δεδομένα] είναι τα γνωστά στοιχεία ενός προβλήματος.,,δεδομένα
+Συμπλήρωση Κενών,Το [ζητούμενο] είναι αυτό που ψάχνουμε να βρούμε στο πρόβλημα.,,ζητούμενο
+Συμπλήρωση Κενών,Ο [αλγόριθμος] είναι μια σειρά βημάτων για τη λύση ενός προβλήματος.,,αλγόριθμος
+Συμπλήρωση Κενών,Η [σαφήνεια] είναι η ιδιότητα να είναι κάθε εντολή ξεκάθαρη.,,σαφήνεια
+Συμπλήρωση Κενών,Η γλώσσα [μηχανής] αποτελείται από 0 και 1.,,μηχανής
+Συμπλήρωση Κενών,Ο [μεταγλωττιστής] μετατρέπει όλο το πρόγραμμα σε γλώσσα μηχανής.,,μεταγλωττιστής
+Συμπλήρωση Κενών,Τα [συντακτικά] λάθη οφείλονται σε παραβίαση των κανόνων της γλώσσας.,,συντακτικά
+Συμπλήρωση Κενών,Τα [λογικά] λάθη εμφανίζονται όταν το αποτέλεσμα είναι λανθασμένο.,,λογικά
+Συμπλήρωση Κενών,Το [πρόγραμμα] είναι ένας αλγόριθμος γραμμένος σε γλώσσα υπολογιστή.,,πρόγραμμα
+Συμπλήρωση Κενών,Η [assembly] είναι μια συμβολική γλώσσα χαμηλού επιπέδου.,,assembly
+Συμπλήρωση Κενών,Τα προβλήματα που δεν έχουν λυθεί ακόμα λέγονται [ανοικτά].,,ανοικτά
+Συμπλήρωση Κενών,Τα προβλήματα που απαντώνται με Ναι/Όχι λέγονται [απόφασης].,,απόφασης
+Συμπλήρωση Κενών,Ο [διερμηνευτής] εκτελεί το πρόγραμμα εντολή προς εντολή.,,διερμηνευτής`;
+
+// --- UTILS ---
+function parseCSV(text) {
+    const lines = [];
+    let currentRow = [];
+    let currentCell = '';
+    let insideQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const nextChar = text[i + 1];
+        if (char === '"') {
+            if (insideQuotes && nextChar === '"') { currentCell += '"'; i++; } else { insideQuotes = !insideQuotes; }
+        } else if (char === ',' && !insideQuotes) {
+            currentRow.push(currentCell.trim()); currentCell = '';
+        } else if (char === '\n' && !insideQuotes) {
+            currentRow.push(currentCell.trim()); lines.push(currentRow); currentRow = []; currentCell = '';
+        } else { currentCell += char; }
+    }
+    if (currentCell) currentRow.push(currentCell.trim());
+    if (currentRow.length) lines.push(currentRow);
+    return lines.slice(1).map(row => ({
+        type: row[0], question: row[1], options: row[2] ? row[2].split('|').map(o => o.trim()) : [], answer: row[3]
+    })).filter(q => q.question);
+}
+
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function selectQuestions(allQuestions) {
+    const tf = allQuestions.filter(q => q.type === 'Σωστό-Λάθος');
+    const mc = allQuestions.filter(q => q.type === 'Πολλαπλής Επιλογής');
+    const fb = allQuestions.filter(q => q.type === 'Συμπλήρωση Κενών');
+    shuffle(tf); shuffle(mc); shuffle(fb);
+    return shuffle([...mc.slice(0, 9), ...tf.slice(0, 7), ...fb.slice(0, 4)]);
+}
+
+// Levenshtein for fuzzy matching
+function getEditDistance(a, b) {
+    if (a.length === 0) return b.length; if (b.length === 0) return a.length;
+    var matrix = [];
+    for (var i = 0; i <= b.length; i++) { matrix[i] = [i]; }
+    for (var j = 0; j <= a.length; j++) { matrix[0][j] = j; }
+    for (var i = 1; i <= b.length; i++) {
+        for (var j = 1; j <= a.length; j++) {
+            if (b.charAt(i - 1) == a.charAt(j - 1)) { matrix[i][j] = matrix[i - 1][j - 1]; }
+            else { matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1)); }
+        }
+    }
+    return matrix[b.length][a.length];
+};
+
+function checkFuzzyAnswer(user, correct) {
+    const u = user.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const c = correct.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if (u === c) return true;
+    const dist = getEditDistance(u, c);
+    if (c.length >= 7 && dist <= 2) return true;
+    if (c.length >= 4 && dist <= 1) return true;
+    return false;
+}
+
+// --- STATE & DOM ---
+const STATE = {
+    questions: [], currentIdx: 0, score: 0, isLocked: false, timer: null,
+    user: { name: '', section: '' }
+};
+
+const DOM = {
+    screens: {
+        login: document.getElementById('login-screen'),
+        quiz: document.getElementById('quiz-screen'),
+        results: document.getElementById('results-screen')
+    },
+    login: {
+        name: document.getElementById('inp-name'),
+        class: document.getElementById('inp-class'),
+        btn: document.querySelector('.start-btn'),
+        error: document.getElementById('login-error'),
+        loader: document.getElementById('login-loader')
+    },
+    quiz: {
+        qText: document.getElementById('question-text'),
+        options: document.getElementById('options-container'),
+        feedback: document.getElementById('feedback'),
+        score: document.getElementById('score'),
+        currQ: document.getElementById('current-q'),
+        progress: document.getElementById('progress-bar')
+    },
+    results: {
+        score: document.getElementById('result-score'),
+        circle: document.getElementById('result-circle'),
+        msg: document.getElementById('result-msg')
+    }
+};
+
+function switchScreen(screenName) {
+    Object.values(DOM.screens).forEach(s => s.classList.remove('active'));
+    DOM.screens[screenName].classList.add('active');
+}
+
+// --- LOGIN LOGIC ---
+async function attemptLogin() {
+    const name = DOM.login.name.value.trim();
+    const section = DOM.login.class.value;
+    
+    if (!name || !section) {
+        DOM.login.error.textContent = "Παρακαλώ συμπλήρωσε όλα τα πεδία.";
+        DOM.login.error.style.display = 'block';
+        return;
+    }
+    
+    const cleanName = name.toLowerCase();
+    DOM.login.btn.disabled = true;
+    DOM.login.loader.style.display = 'inline-block';
+    DOM.login.error.style.display = 'none';
+
+    try {
+        const examsRef = firebase.firestore().collection('exam_results');
+        const snapshot = await examsRef
+            .where('cleanName', '==', cleanName)
+            .where('classSection', '==', section)
+            .get();
+
+        if (!snapshot.empty) {
+            DOM.login.error.textContent = "Έχεις ήδη υποβάλει το διαγώνισμα!";
+            DOM.login.error.style.display = 'block';
+            DOM.login.btn.disabled = false;
+            DOM.login.loader.style.display = 'none';
+            return;
+        }
+
+        STATE.user.name = name;
+        STATE.user.section = section;
+        initGame();
+
+    } catch (err) {
+        console.error(err);
+        let msg = "Σφάλμα σύνδεσης. ";
+        if(err.code === 'permission-denied') msg += "Δεν έχεις πρόσβαση στη βάση (Rules).";
+        else msg += "Ελέγξτε το internet.";
+        
+        DOM.login.error.textContent = msg;
+        DOM.login.error.style.display = 'block';
+        DOM.login.btn.disabled = false;
+        DOM.login.loader.style.display = 'none';
+    }
+}
+
+// --- GAME LOGIC ---
+function initGame() {
+    const all = parseCSV(csvData);
+    STATE.questions = selectQuestions(all);
+    STATE.currentIdx = 0;
+    STATE.score = 0;
+    STATE.isLocked = false;
+    switchScreen('quiz');
+    renderQuestion();
+}
+
+function renderQuestion() {
+    if (STATE.timer) clearTimeout(STATE.timer);
+    STATE.isLocked = false;
+    
+    const q = STATE.questions[STATE.currentIdx];
+    DOM.quiz.currQ.textContent = STATE.currentIdx + 1;
+    DOM.quiz.score.textContent = STATE.score;
+    DOM.quiz.progress.style.width = ((STATE.currentIdx) / 20 * 100) + '%';
+    
+    DOM.quiz.qText.textContent = q.question.replace(/\[.*?\]/g, '_______');
+    DOM.quiz.options.innerHTML = '';
+    DOM.quiz.feedback.style.display = 'none';
+
+    if (q.type === 'Συμπλήρωση Κενών') {
+        const input = document.createElement('input');
+        input.type = 'text'; input.className = 'text-input'; input.placeholder = 'Απάντηση...';
+        const submit = document.createElement('button');
+        submit.className = 'submit-answer-btn'; submit.textContent = 'Υποβολή';
+        submit.onclick = () => handleAnswer(input.value, q.answer, input);
+        input.addEventListener("keypress", (e) => { if (e.key === "Enter") { e.preventDefault(); submit.click(); }});
+        DOM.quiz.options.appendChild(input); DOM.quiz.options.appendChild(submit);
+        input.focus();
+    } else {
+        const choices = q.type === 'Σωστό-Λάθος' ? ['Σωστό', 'Λάθος'] : q.options;
+        choices.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn'; btn.textContent = opt;
+            btn.onclick = () => handleAnswer(opt, q.answer, btn);
+            DOM.quiz.options.appendChild(btn);
+        });
+    }
+}
+
+function handleAnswer(userAns, correctAns, element) {
+    if (STATE.isLocked) return;
+    STATE.isLocked = true; 
+
+    const allBtns = DOM.quiz.options.querySelectorAll('button');
+    allBtns.forEach(b => { b.disabled = true; b.classList.add('locked'); });
+    if(element.tagName === 'INPUT') element.disabled = true;
+
+    let isCorrect = false;
+    if (STATE.questions[STATE.currentIdx].type === 'Συμπλήρωση Κενών') {
+        isCorrect = checkFuzzyAnswer(userAns, correctAns);
+    } else {
+        const normalize = str => str.toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const u = normalize(userAns);
+        const c = normalize(correctAns);
+        isCorrect = u === c || u.startsWith(c);
+    }
+
+    if (isCorrect) {
+        STATE.score++;
+        DOM.quiz.score.textContent = STATE.score; 
+        showFeedback(true, "Σωστά! (+1)", element);
+    } else {
+        showFeedback(false, `Λάθος. Σωστό: ${correctAns}`, element);
+        if (element.tagName === 'BUTTON') {
+            const normalize = str => str.toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const buttons = DOM.quiz.options.querySelectorAll('button');
+            buttons.forEach(b => {
+                if (normalize(b.textContent).startsWith(normalize(correctAns)) || normalize(b.textContent) === normalize(correctAns)) {
+                    b.classList.add('correct');
+                }
+            });
+        }
+    }
+
+    STATE.timer = setTimeout(() => { nextQuestion(); }, 1800);
+}
+
+function showFeedback(success, text, element) {
+    if (element.tagName === 'BUTTON') {
+        element.classList.add(success ? 'correct' : 'wrong');
+    } else if (element.tagName === 'INPUT') {
+        element.style.borderColor = success ? 'var(--correct)' : 'var(--wrong)';
+        element.style.background = success ? '#ecfdf5' : '#fef2f2';
+    }
+    DOM.quiz.feedback.textContent = text;
+    DOM.quiz.feedback.style.display = 'block';
+    DOM.quiz.feedback.style.background = success ? '#d1fae5' : '#fee2e2';
+    DOM.quiz.feedback.style.color = success ? '#065f46' : '#991b1b';
+}
+
+function nextQuestion() {
+    STATE.currentIdx++;
+    if (STATE.currentIdx < 20) {
+        renderQuestion();
+    } else {
+        finishExam();
+    }
+}
+
+// --- SUBMISSION LOGIC ---
+async function finishExam() {
+    switchScreen('results');
+    const s = STATE.score;
+    DOM.results.score.textContent = `${s}/20`;
+    const percent = Math.round((s / 20) * 100);
+    DOM.results.circle.setAttribute('stroke-dasharray', `${percent}, 100`);
+    DOM.results.circle.setAttribute('stroke', percent >= 50 ? '#10b981' : '#ef4444');
+    
+    try {
+        await firebase.firestore().collection('exam_results').add({
+            fullName: STATE.user.name,
+            cleanName: STATE.user.name.toLowerCase(),
+            classSection: STATE.user.section,
+            score: STATE.score,
+            total: 20,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            userAgent: navigator.userAgent
+        });
+        DOM.results.msg.textContent = "Το αποτέλεσμά σου καταχωρήθηκε επιτυχώς!";
+        DOM.results.msg.style.color = "#10b981";
+        startFireworks();
+    } catch (e) {
+        console.error(e);
+        DOM.results.msg.textContent = "Πρόβλημα σύνδεσης. Ειδοποίησε τον καθηγητή να καταγράψει το βαθμό σου χειροκίνητα.";
+        DOM.results.msg.style.color = "red";
+    }
+}
+
+// --- ADMIN LOGIC ---
+let cachedResults = [];
+
+function checkAdmin() {
+    const pass = document.getElementById('admin-pass').value;
+    if (pass === "1234") { // Κωδικός Διαχειριστή
+        document.getElementById('admin-results-view').style.display = 'block';
+        refreshResults();
+    } else {
+        alert("Λάθος κωδικός!");
+    }
+}
+
+function closeAdminView() {
+    document.getElementById('admin-results-view').style.display = 'none';
+}
+
+async function refreshResults() {
+    const container = document.getElementById('results-table-container');
+    container.innerHTML = '<div class="loader" style="display:block;margin:auto;"></div>';
+    
+    try {
+        const snapshot = await firebase.firestore().collection('exam_results').orderBy('classSection').orderBy('fullName').get();
+        cachedResults = [];
+        
+        let html = `<table>
+            <thead><tr><th>Τμήμα</th><th>Ονοματεπώνυμο</th><th>Βαθμός</th><th>Ημ/νία</th></tr></thead>
+            <tbody>`;
+            
+        if (snapshot.empty) {
+            container.innerHTML = "<p>Δεν υπάρχουν αποτελέσματα ακόμα.</p>";
+            return;
+        }
+
+        snapshot.forEach(doc => {
+            const d = doc.data();
+            cachedResults.push(d);
+            const date = d.timestamp ? d.timestamp.toDate().toLocaleString('el-GR') : '-';
+            html += `<tr>
+                <td><b>${d.classSection}</b></td>
+                <td>${d.fullName}</td>
+                <td style="font-weight:bold; color: ${d.score >= 10 ? 'green' : 'red'}">${d.score}/20</td>
+                <td style="font-size:0.8em; color:#666;">${date}</td>
+            </tr>`;
+        });
+        
+        html += '</tbody></table>';
+        container.innerHTML = html;
+        
+    } catch (e) {
+        console.error(e);
+        container.innerHTML = "Σφάλμα φόρτωσης: " + e.message;
+    }
+}
+
+function exportToCSV() {
+    if (cachedResults.length === 0) {
+        alert("Δεν υπάρχουν δεδομένα για εξαγωγή.");
+        return;
+    }
+    
+    let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // Add BOM for Excel greek support
+    csvContent += "Τμήμα,Ονοματεπώνυμο,Βαθμός,Ημερομηνία\n";
+    
+    cachedResults.forEach(r => {
+        const date = r.timestamp ? r.timestamp.toDate().toLocaleString('el-GR').replace(',', '') : '-';
+        csvContent += `${r.classSection},"${r.fullName}",${r.score},${date}\n`;
+    });
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "apotelesmata_diagonismatos.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// --- VISUALS ---
+function startFireworks() {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let particles = [];
+    function createParticle(x, y) {
+        for (let i = 0; i < 30; i++) {
+            particles.push({x: x, y: y, vx: (Math.random()-0.5)*10, vy: (Math.random()-0.5)*10, alpha: 1, color: `hsl(${Math.random()*360},100%,50%)`});
+        }
+    }
+    function loop() {
+        requestAnimationFrame(loop);
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.globalCompositeOperation = 'lighter';
+        if (Math.random()<0.05) createParticle(Math.random()*canvas.width, Math.random()*canvas.height/2);
+        particles.forEach((p,i)=>{
+            p.x+=p.vx; p.y+=p.vy; p.vy+=0.05; p.alpha-=0.01;
+            ctx.fillStyle=p.color; ctx.globalAlpha=p.alpha;
+            ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fill();
+            if(p.alpha<=0) particles.splice(i,1);
+        });
+    }
+    loop();
+}
+</script>
+</body>
+</html>

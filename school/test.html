@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PyroGuard Q&A — Complete Spec</title>
+  <style>
+    body { font-family: Inter,Segoe UI,Roboto,Arial; background:#081225; color:#e6eef8; margin:0; padding:22px; }
+    .wrap{ max-width:1000px; margin:0 auto; }
+    h1{ margin:0 0 12px; font-size:22px; }
+    textarea { width:100%; min-height:110px; resize:vertical; padding:12px; border-radius:8px; border:1px solid #233044; background:#071025; color:#e6eef8; }
+    button{ padding:10px 16px; border-radius:8px; border:none; cursor:pointer; background:#16a34a; color:#fff; font-weight:600; }
+    .card{ background:#071025; border:1px solid #132033; padding:14px; border-radius:10px; margin-top:12px; }
+    .answer{ white-space:pre-wrap; line-height:1.45; min-height:120px; }
+    .meta{ font-size:13px; color:#9fb3d6; margin-top:8px; }
+    .blocked{ color:#ff6b6b; font-weight:700; }
+    footer{ margin-top:18px; font-size:13px; color:#9fb3d6; }
+    .small{ font-size:13px; color:#9fb3d6; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>PyroGuard Q&A — Full-Knowledge Assistant</h1>
+
+    <div class="card">
+      <label for="question">Γράψε την ερώτησή σου για το PyroGuard (π.χ. "Τι κάνει το PyroGuard;")</label>
+      <textarea id="question" placeholder="Ερώτηση..."></textarea>
+      <div style="display:flex;gap:8px;margin-top:10px;align-items:center;">
+        <button id="askBtn">Ρώτα το AI</button>
+        <div class="meta">Status: <span id="status">έτοιμο</span></div>
+      </div>
+      <div class="meta small">Το σύστημα γνωρίζει ΟΛΟ το spec του PyroGuard. ΑΠΑΓΟΡΕΥΕΤΑΙ η παροχή πραγματικού κώδικα, credentials, ML models ή διαδικασίες παραβίασης.</div>
+    </div>
+
+    <div class="card">
+      <div id="answer" class="answer">Εδώ θα εμφανιστεί η απάντηση.</div>
+    </div>
+
+    <footer>
+      <div>Σημείωση: Το παράδειγμα είναι frontend-only. Για production βάλτε API key σε backend ή serverless endpoint.</div>
+    </footer>
+  </div>
+
+<script>
+/* ================== CONFIG ================== */
+/* Paste your OpenAI API key here if you run frontend-only (not recommended for production) */
+const OPENAI_API_KEY = "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";
+
+/* Model settings */
+const MODEL = "gpt-4.1-mini";
+const MAX_TOKENS = 800;
+const TEMPERATURE = 0.15;
+
+/* ================== BLOCKLIST ================== */
+/* Λέξεις/φράσεις που μπλοκάρουν την ερώτηση ή την απάντηση */
+const BLOCKED_PATTERNS = [
+  "κώδικα", "code", "model weights", "weights", "train", "training", "api key", "ssh", "root", "password", "passwd",
+  "hack", "exploit", "payload", "reverse shell", "backdoor", "token", "private key", "key.pem", "rm -rf", "sudo",
+  "compile", "deploy", "execute", "run script", "run this", "connect to", "open port", "vnc", "telnet"
+];
+const BLOCKED_REGEX = /(give me .*code|show me .*password|provide .*credentials|how to hack|how to exploit|train .*model)/i;
+
+function containsBlocked(text){
+  const t = text.toLowerCase();
+  for(const p of BLOCKED_PATTERNS) if(t.includes(p)) return {blocked:true, reason:p};
+  if(BLOCKED_REGEX.test(text)) return {blocked:true, reason:'blocked_regex'};
+  return {blocked:false};
+}
+
+/* ================== SYSTEM PROMPT ================ */
+/* Εδώ το πλήρες spec PyroGuard v1.4 — το μοντέλο θα "γνωρίζει" τα πάντα.
+   Το κείμενο είναι στα ελληνικά για καλύτερες απαντήσεις στη γλώσσα σου. */
+const SYSTEM_PROMPT = `
+Είσαι ο επίσημος τεχνικός βοηθός του PyroGuard. ΣΟΥ ΔΙΝΕΤΑΙ ΟΛΟ το επίσημο specification του PyroGuard (v1.4). Χρησιμοποίησε αυτή τη γνώση για να απαντάς σε ερωτήσεις αποκλειστικά σχετικά με το PyroGuard: λειτουργία, αρχιτεκτονική, αισθητήρες, κάμερες, Gimbal, IMUs, LIDAR, στρατηγική κατάσβεσης, telemetry, dashboard, and user roles. ΠΟΤΕ μην δώσεις πραγματικό κώδικα, scripts, μοντέλα machine learning, credentials, API keys, εντολές εκτέλεσης ή οδηγίες που μπορούν να ελέγξουν, μεταβάλουν ή παραβιάσουν το ρομπότ. Αν ο χρήστης ζητήσει τέτοιου είδους πληροφορία, ΑΡΝΗΣΟΥ ευγενικά και δώσε υψηλού επιπέδου, θεωρητική ή εκπαιδευτική απάντηση.
+
+--- PyroGuard Spec v1.4 (Περίληψη — γνώρισε τα πάντα) ---
+1.0 Γενικά:
+- PyroGuard: αυτόνομο ρομποτικό πυροσβεστικό όχημα.
+- Raspberry Pi είναι ο κεντρικός εγκέφαλος: αποφάσεις, επεξεργασία εικόνας, local web server.
+- Αποστολή: εντοπισμός φωτιάς, περιορισμός εξάπλωσης, κατάσβεση. Χωρίς τηλεχειρισμό (μόνο monitoring & config).
+- Επικοινωνία Raspberry ↔ Arduino(2) μέσω Bluetooth. Δικαιώματα χρήσης: users / admins / superadmins.
+
+2.0 Αισθητήρες & IMUs:
+- 4 IMUs συνολικά:
+  • IMU1–3: συνδεδεμένα στο Arduino που ελέγχει τα Gimbal (1 ανά Gimbal).
+  • IMU4: απευθείας στο Raspberry για πλοήγηση/ευστάθεια σασί.
+- IR flame sensor (4-pin) → απευθείας στο Raspberry.
+- GPS module → απευθείας στο Raspberry (logging / τοποθεσία).
+- 2D LIDAR → στο Raspberry για mapping & obstacle scanning.
+- Distance sensors: 4 πλευρικοί HD (front, rear, left, right) + 2 κάτω (front/rear) για αποφυγή πτώσης.
+
+3.0 Κάμερες & Gimbal:
+- 3 κάμερες: CSI μπροστά (ML), CSI πίσω (ML), USB webcam μπροστά (live feed, 360° rotation μέσω admin UI).
+- Κάθε κάμερα σε Gimbal — σύνολο 3 Gimbal.
+- Κάθε Gimbal: 1 IMU + 3 servos → 3 IMUs στο Arduino + 9 servos.
+- CSI ροές → ML inference στο Raspberry. USB webcam → streaming.
+
+4.0 Arduino(s):
+- Arduino A (Gimbal Controller): ελέγχει 3 Gimbal (IMU1–3 + Servos 1–9), stabilizer feedback loop, Bluetooth telemetry προς Raspberry.
+- Arduino B (Micro-meteorological / Fire-management Station): αισθητήρες ανέμου (anemometer / wind vane), temp/humidity, gas sensors (προαιρετικά), στέλνει wind direction & speed στο Raspberry. Σκοπός: υποστήριξη πολιτικής “περιορισμός εξάπλωσης”.
+
+5.0 Πολιτική κατάσβεσης:
+- Στρατηγική: περιορισμός εξάπλωσης → πλήρης κατάσβεση.
+- Ροή: ML detection (CSI cams) + flame sensor + wind data (Arduino B) + IMU4 + LIDAR + distance sensors → Raspberry αποφασίζει action plan.
+- Πρώτο βήμα: περιορισμός περιοχής εξάπλωσης (targeted water bursts με βάση άνεμο), μετά πλήρης κατάσβεση.
+- Πάντα safety thresholds & multi-sensor confirmation πριν ενεργοποίηση αντλίας.
+
+6.0 Κίνηση & αποφυγή εμποδίων:
+- Κίνηση ελέγχεται από Raspberry μέσω motor driver (π.χ. TB6612).
+- Χρησιμοποιεί 2D LIDAR + 4 πλευρικούς HD sensors + 2 κάτω sensors για mapping, obstacle avoidance, και αποφυγή πτώσης.
+- IMU4 στο Raspberry συνεισφέρει στην ευστάθεια.
+- Autonomous navigation: local SLAM-lite ή obstacle avoidance + waypointing.
+
+7.0 Επικοινωνία & Dashboard:
+- Local web server στο Raspberry (Flask/Node), πρόσβαση μέσω IP.
+- Raspberry λαμβάνει telemetry από Arduino A & B μέσω Bluetooth.
+- Dashboard εμφανίζει camera streams, ML alerts, flame status, IMUs, wind data, distance sensors, LIDAR map, movement logs.
+- Roles: Users (μόνο live feed), Admins (full view + webcam rotation), Superadmins (παραμετροποίηση thresholds, PID gains, πολιτικές δράσης).
+
+8.0 Logging:
+- Όλα τα events timestamped: detections, actions, GPS, wind readings, Gimbal telemetry.
+- Logs read-only για admins, editable μόνο από superadmins.
+
+9.0 Risk / Safety:
+- 2D LIDAR: καλό για επίπεδα scanning — όχι για πάνω/κάτω εμπόδια (γι' αυτό down sensors).
+- Wind decision-making: χρειάζεται calibration/filttering.
+- Safety thresholds: multi-sensor confirmation πριν ενεργοποίηση.
+- Bluetooth reliability: implement retries/CRC.
+
+--- Τερματίζοντας: ---
+Χρησιμοποίησε το παραπάνω spec για να απαντάς. ΑΠΑΓΟΡΕΥΣΗ: οποιαδήποτε οδηγία παρείχε σε μορφή κώδικα, scripts, ML training steps, credentials, commands εκτέλεσης, ή ενέργειες που θα επέτρεπαν πρόσβαση/έλεγχο του ρομπότ πρέπει να απορρίπτονται και να αντικαθίστανται με υψηλού επιπέδου θεωρητικές/εκπαιδευτικές απαντήσεις.
+`;
+
+/* ================== UI / Logic ================== */
+const askBtn = document.getElementById("askBtn");
+const qEl = document.getElementById("question");
+const aEl = document.getElementById("answer");
+const statusEl = document.getElementById("status");
+
+function setStatus(txt, cls) {
+  statusEl.innerText = txt;
+  statusEl.className = cls || '';
+}
+
+/* Helper to check server response for blocked content */
+function responseSafetyCheck(text) {
+  return containsBlocked(text);
+}
+
+askBtn.addEventListener("click", async () => {
+  const question = qEl.value.trim();
+  if (!question) { aEl.innerText = "Γράψε πρώτα μια ερώτηση."; return; }
+
+  // Block direct risky user queries
+  const qCheck = containsBlocked(question);
+  if (qCheck.blocked) {
+    aEl.innerHTML = `<span class="blocked">Η ερώτηση αφορά απαγορευμένο περιεχόμενο (keyword: ${qCheck.reason}). Δεν απαντάω αυτό.</span>`;
+    setStatus("blocked","blocked");
+    return;
+  }
+
+  setStatus("αναμονή...");
+  aEl.innerText = "Ζητάω απάντηση από το AI...";
+
+  // Compose messages (system full spec + user question)
+  const messages = [
+    { role: "system", content: SYSTEM_PROMPT },
+    { role: "user", content: `Ερώτηση: ${question}\n\nΠαράκαλώ απάντησε σύμφωνα με τις οδηγίες του system prompt.` }
+  ];
+
+  try {
+    const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages,
+        max_tokens: MAX_TOKENS,
+        temperature: TEMPERATURE,
+        n: 1
+      })
+    });
+
+    if (!resp.ok) {
+      const t = await resp.text();
+      aEl.innerText = `API error ${resp.status}: ${t}`;
+      setStatus("error");
+      return;
+    }
+
+    const data = await resp.json();
+    const content = data.choices?.[0]?.message?.content || "(Χωρίς απάντηση)";
+
+    // Safety double-check on response
+    const rCheck = responseSafetyCheck(content);
+    if (rCheck.blocked) {
+      aEl.innerHTML = `<span class="blocked">Η απάντηση περιείχε ευαίσθητο περιεχόμενο και κόπηκε.</span>`;
+      setStatus("blocked");
+      return;
+    }
+
+    aEl.innerText = content;
+    setStatus("επιτυχία");
+  } catch (err) {
+    console.error(err);
+    aEl.innerText = "Σφάλμα δικτύου/αίτησης: " + (err.message || err);
+    setStatus("error");
+  }
+});
+
+/* Optional: Ctrl+Enter to submit */
+qEl.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && e.ctrlKey) askBtn.click();
+});
+</script>
+</body>
+</html>

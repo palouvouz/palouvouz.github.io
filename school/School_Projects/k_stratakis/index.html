@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hall Sensor Project | Palouvouz</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --glass: rgba(255,255,255,0.08);
+            --border: rgba(255,255,255,0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1900ff, #232391);
+            color: white;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            border: none;
+        }
+
+        .description {
+            line-height: 1.7;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .section {
+            margin-top: 20px;
+        }
+
+        .section-title {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: white;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: white;
+            color: #1900ff;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Hall Sensor Project 🔬</h1>
+
+    <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/3WvNO8m-sLo"
+            title="YouTube video player"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <div class="description">
+        Αυτό το βίντεο παρουσιάζει ένα έργο από το 3ο Γυμνάσιο Ηρακλείου, στο οποίο χρησιμοποιείται ένας μαγνητικός αισθητήρας Hall με την πλατφόρμα Arduino.
+    </div>
+
+    <div class="section">
+        <div class="section-title">📌 Περιγραφή Έργου</div>
+        <p>
+            Το σύστημα λειτουργεί ως μετρητής μαγνητικών πεδίων. Κάθε φορά που ένας μαγνήτης πλησιάζει τον αισθητήρα, το σύστημα το αναγνωρίζει και αυξάνει έναν μετρητή.
+        </p>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚙️ Πώς λειτουργεί</div>
+        <p>
+            Ο αισθητήρας Hall ανιχνεύει την παρουσία μαγνητικού πεδίου. Ο κώδικας Arduino διαβάζει την κατάσταση (HIGH / LOW) και όταν εντοπιστεί αλλαγή, καταγράφεται νέα ανίχνευση.
+        </p>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🧠 Τεχνικές λεπτομέρειες</div>
+        <ul>
+            <li>Pin σύνδεσης: 7</li>
+            <li>Χρήση INPUT_PULLUP για σταθερό σήμα</li>
+            <li>Real-time εμφάνιση μέσω Serial Monitor</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🔗 Κώδικας</div>
+        <p>
+            Διαθέσιμος εδώ:
+            <a href="https://bit.ly/hall_sensor_code" target="_blank" style="color:#00d2ff;">
+                bit.ly/hall_sensor_code
+            </a>
+        </p>
+    </div>
+
+    <a href="../" class="back-btn">⬅ Επιστροφή</a>
+
+</div>
+
+</body>
+</html>

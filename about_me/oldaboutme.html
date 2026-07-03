@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="el">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <title>Ποιος ειμαι|Palouvouz</title>
+        <style>
+        /* Keyframes για την αλλαγή χρώματος */
+        /* Keyframes για την αλλαγή χρώματος */
+        @keyframes textGlow {
+            0% { color: #d9ff00; }  
+            2.5% { color: #00ffee; }  
+            5% { color: #00ff73; } 
+            7.5% { color: #e74c3c; } 
+            10% { color: #ff0000; } 
+            12.5% { color: #00ff73; } 
+            15% { color: #e74c3c; } 
+            17.5% { color: #ff0000; } 
+            20% { color: #d9ff00; } 
+            22.5% { color: #00ffee; } 
+            25% { color: #d9ff00; }
+            30% { color: #00ffee; }  
+            32.5% { color: #00ff73; } 
+            35% { color: #e74c3c; } 
+            37.5% { color: #ff0000; }
+            40% { color: #00ff73; }
+            42.5% { color: #e74c3c; }
+            45% { color: #ff0000; }
+            47.5% { color: #d9ff00; }
+            50% { color: #00ffee; }
+            52.5% { color: #00ff73; } 
+            55% { color: #e74c3c; } 
+            57.5% { color: #ff0000; }
+            60% { color: #00ff73; }
+            62.5% { color: #e74c3c; }
+            65% { color: #ff0000; }
+            67.5% { color: #d9ff00; }
+            70% { color: #00ffee; }
+            72.5% { color: #00ff73; }
+            75% { color: #e74c3c; }
+            77.5% { color: #ff0000; }
+            80% { color: #d9ff00; }
+            82.5% { color: #00ffee; }
+            85% { color: #00ff73; }
+            87.5% { color: #e74c3c; }
+            90% { color: #ff0000; }
+            92.5% { color: #00ff73; }
+            95% { color: #e74c3c; }
+            97.5% { color: #ff0000; }
+            100% { color: #d9ff00; } 
+        }
+
+        /* Keyframes για το glow effect */
+        @keyframes glowEffect {
+            0% { text-shadow: 0 0 5px #edfd92, 0 0 10px #e7ff5f; }
+            25% { text-shadow: 0 0 20px #50fff3, 0 0 30px #00ffee; }
+            50% { text-shadow: 0 0 20px #ff6767, 0 0 30px #ff5151; }    
+            75% { text-shadow: 0 0 20px #9350ff, 0 0 30px #5823fa; }    
+            100% { text-shadow: 0 0 5px #e5fc61, 0 0 10px #d9ff00; }
+        }
+
+        /* Στυλ για τα κείμενα */
+        h1, h5, h6, h7, p {
+            font-family: 'Arial', sans-serif;
+            font-size: 24px;
+            text-align: center;
+            animation: textGlow 20s infinite alternate ease-in-out, 
+                    glowEffect 10s infinite alternate ease-in-out;
+            transition: color 2s ease-in-out;
+        }
+
+        /* Γενικό background */
+        body {
+            background-color: #111; /* Μαύρο background */
+            color: white; /* Λευκά γράμματα */
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+            /* Γενικές ρυθμίσεις */
+            body {
+                background-color: #181818;
+                color: #f0f0f0;
+                font-family: 'Arial', sans-serif;
+                text-align: center;
+                margin: 0;
+                padding: 0;
+            }
+            @keyframes textGlow {
+                0% { color: #d9ff00; }  
+                5% { color: #00ffee; }  
+                10% { color: #00ff73; } 
+                15% { color: #e74c3c; } 
+                20% { color: #ff0000; } 
+                25% { color: #00ff73; } 
+                30% { color: #e74c3c; } 
+                35% { color: #ff0000; } 
+                40% { color: #d9ff00; } 
+                45% { color: #00ffee; } 
+                50% { color: #00ff73; } 
+                55% { color: #e74c3c; } 
+                60% { color: #ff0000; } 
+                65% { color: #00ff73; } 
+                70% { color: #e74c3c; } 
+                75% { color: #ff4444; } 
+                80% { color: #d9ff00; } 
+                85% { color: #00ffee; } 
+                90% { color: #00ff73; } 
+                95% { color: #e74c3c; } 
+                100% { color: #d9ff00; } 
+            }
+
+            h2 {
+                animation: textGlow 100s infinite alternate;
+            }
+            
+            p {
+                animation: textGlow 150s infinite alternate;
+            }
+
+            /* Στυλ για τα κουμπιά */
+            .button {
+                background-color: #45fff3;
+                color: #fff;
+                padding: 12px 18px;
+                font-size: 16px;
+                border: none;
+                border-radius: 25px;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.2s;
+            }
+            .button:hover {
+                background-color: #4fff75;
+                transform: scale(1.1);
+            }
+            .button-container {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+            }
+
+            /* Στυλ για το Modal */
+            .modal {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #fff;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                width: 100%;
+                max-width: 400px;
+            }
+            .modal input {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 15px;
+                border-radius: 10px;
+                border: 1px solid #ccc;
+            }
+            .modal button {
+                background-color: #2ecc71;
+                border-radius: 10px;
+                color: #fff;
+                padding: 12px 18px;
+                border: none;
+                cursor: pointer;
+                font-size: 16px;
+                width: 100%;
+                transition: background-color 0.3s;
+            }
+            .modal button:hover {
+                background-color: #27ae60;
+            }
+
+            /* Στυλ για τις ενέργειες στο modal */
+            .switch {
+                color: #3498db;
+                cursor: pointer;
+                display: inline-block;
+                margin-top: 10px;
+            }
+            .switch:hover {
+                text-decoration: underline;
+            }
+
+            /* Στυλ για τις σελίδες και την ημερομηνία */
+            #date, #time {
+                font-size: 20px;
+                margin-top: 20px;
+                color: #f1c40f;
+            }
+            .red-text {
+                color: #e74c3c;
+            }
+            .p-text {
+                color: #1abc9c;
+            }
+        </style>
+    </head>
+    <body>
+
+
+        <h1>Ποιος ειμαι?</h1>
+        <h2>
+            Ονομάζομαι &nbsp;Πανταζής &nbsp;Λουκας &nbsp;Βουζαξακης.<br>
+        </h2>
+
+        <p>
+            ειμαι μαθητης της δευτερας γυμνασιου και μενω στο Ηρακλειο της κρητης!<br>
+            Γνωρίζω πώς να χρησιμοποιώ τις βασικές γλώσσες <br> προγραματισμου και ανάπτυξης ιστοσελίδων.<br>
+            Δηλαδή PYTHON, HTML, CSS και JS.συμετεχω σε πολλα προτζεκτ με το σχολειο(<a href="../School Projects/EcoRun/">
+            <span class="projectTitle">EcoRun</span> </a>)<br><br>
+            και η αγαπημενη playlist μου ειναι<br><br> <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/23mNahUdNGO5tsVM3pQUjM?utm_source=generator" width="40%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </p>
+
+        <div id="authModal" class="modal">
+            <span class="close" onclick="closeModal()">×</span>
+            <h2 id="modalTitle">Login</h2>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" style="display: none;">
+            <button id="authButtonAction" onclick="authenticate()">Σύνδεση</button>
+            <span class="switch" onclick="toggleAuthMode()">Δεν έχετε λογαριασμό; Εγγραφή</span>
+        </div>
+
+        <h5 id="date"></h5>
+        <h6 id="time"></h6>
+        
+
+        <script>
+            let isLoggedIn = false;
+            let isSignUp = false;
+            let users = {};
+
+            function openModal() {
+                document.getElementById("authModal").style.display = "block";
+            }
+
+            function closeModal() {
+                document.getElementById("authModal").style.display = "none";
+            }
+
+            function toggleAuthMode() {
+                isSignUp = !isSignUp;
+                document.getElementById("modalTitle").innerText = isSignUp ? "Sign Up" : "Login";
+                document.getElementById("authButtonAction").innerText = isSignUp ? "Εγγραφή" : "Σύνδεση";
+                document.getElementById("confirmPassword").style.display = isSignUp ? "block" : "none";
+                document.querySelector(".switch").innerText = isSignUp ? "Έχετε ήδη λογαριασμό; Σύνδεση" : "Δεν έχετε λογαριασμό; Εγγραφή";
+
+                const authButton = document.getElementById("authButton");
+                if (isSignUp) {
+                    authButton.innerText = "Sign Up";
+                    authButton.style.backgroundColor = "green";
+                } else {
+                    authButton.innerText = "Sign In";
+                    authButton.style.backgroundColor = "green";
+                }
+            }
+
+            function authenticate() {
+                let email = document.getElementById("email").value;
+                let password = document.getElementById("password").value;
+                let confirmPassword = document.getElementById("confirmPassword").value;
+
+                if (email === "" || password === "") {
+                    alert("Συμπληρώστε όλα τα πεδία!");
+                    return;
+                }
+
+                if (isSignUp) {
+                    if (password !== confirmPassword) {
+                        alert("Οι κωδικοί δεν ταιριάζουν!");
+                        return;
+                    }
+
+                    if (users[email]) {
+                        alert("Το email υπάρχει ήδη!");
+                        return;
+                    }
+
+                    users[email] = password;
+                    alert("Εγγραφή επιτυχής! Μπορείτε να συνδεθείτε.");
+                    toggleAuthMode();
+                } else {
+                    if (users[email] !== password) {
+                        alert("Λάθος email ή κωδικός!");
+                        return;
+                    }
+
+                    isLoggedIn = true;
+                    alert(`Συνδεθήκατε ως: ${email}`);
+                    document.getElementById("authButton").innerText = "Sign Out";
+                    document.getElementById("authButton").style.backgroundColor = "red";
+                    closeModal();
+                }
+            }
+
+            function logout() {
+                isLoggedIn = false;
+                alert("Αποσυνδεθήκατε!");
+                document.getElementById("authButton").innerText = "Sign In | Sign Up";
+                document.getElementById("authButton").style.backgroundColor = "green";
+            }
+
+            updateDate();
+            function updateDate() {
+                let today = new Date();
+                let options = { year: 'numeric', month: 'long', day: 'numeric' };
+                let formattedDate = today.toLocaleDateString('el-GR', options);
+                document.getElementById("date").innerText = "Σήμερα είναι: " + formattedDate;
+            }
+            function updateTime() {
+                let now = new Date();
+                let timeString = now.toLocaleTimeString('el-GR');
+                document.getElementById("time").innerText = "Η ώρα είναι: " + timeString;
+            }
+
+            setInterval(updateTime, 1000); // Ενημέρωση κάθε δευτερόλεπτο
+            updateTime(); // Άμεση κλήση για την αρχική εμφάνιση της ώρας
+
+            document.getElementById("authButton").onclick = function() {
+                if (isLoggedIn) {
+                    logout();
+                } else {
+                    openModal();
+                }
+            }
+        </script>
+    </body>
+</html>

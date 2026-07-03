@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palouvouz | Da Vinci Archive v3.1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: #00f2ea;
+            --secondary: #ff0050;
+            --accent: #b8860b;
+            --bg-dark: #020205;
+            --glass-bg: rgba(5, 5, 15, 0.9);
+            --glass-border: rgba(0, 242, 234, 0.2);
+            --text: #e0e0ff;
+        }
+
+        * { box-sizing: border-box; outline: none; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- CYBER CANVAS BACKGROUND --- */
+        #particle-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            filter: brightness(0.6);
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 242, 234, 0.02) 50%);
+            background-size: 100% 4px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            padding: 0.5rem 0.8rem;
+            opacity: 0.6;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+            opacity: 1;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; left: 0; width: 100%; height: 2px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* --- MAIN CARDS --- */
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            z-index: 10;
+        }
+
+        .page-content {
+            display: none;
+            animation: terminalIn 0.6s ease-out forwards;
+        }
+
+        .page-content.active { display: block; }
+
+        @keyframes terminalIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            margin-bottom: 40px;
+        }
+
+        .bracket {
+            position: absolute;
+            width: 20px; height: 20px;
+            border-color: var(--primary);
+            border-style: solid;
+            opacity: 0.5;
+        }
+        .top-left { top: 10px; left: 10px; border-width: 2px 0 0 2px; }
+        .bottom-right { bottom: 10px; right: 10px; border-width: 0 2px 2px 0; }
+
+        /* --- TYPOGRAPHY --- */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: #fff;
+            text-shadow: 0 0 20px rgba(0, 242, 234, 0.4);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary);
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title::after {
+            content: ''; height: 1px; background: var(--glass-border); flex-grow: 1;
+        }
+
+        /* --- MIRROR LAB SPECIFIC --- */
+        #mirrorOutput {
+            transform: scaleX(-1);
+            display: inline-block;
+            unicode-bidi: bidi-override;
+            text-shadow: 0 0 15px rgba(0, 242, 234, 0.6);
+            word-break: break-all;
+        }
+
+        .cyber-input {
+            background: rgba(0,0,0,0.5) !important;
+            border: 1px solid var(--glass-border) !important;
+            color: var(--primary) !important;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 1rem 1.5rem !important;
+            border-radius: 8px !important;
+        }
+
+        /* --- FLYING MACHINE ANIMATION --- */
+        .wing {
+            transition: transform 0.2s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+            transform-origin: center;
+        }
+        .ornithopter:hover .wing-left { transform: rotate(-25deg); }
+        .ornithopter:hover .wing-right { transform: rotate(25deg); }
+
+        /* --- DATA TABLES --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin: 20px 0;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px;
+            background: rgba(0, 242, 234, 0.1);
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            margin-top: auto;
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.5);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+    <div class="scanline"></div>
+
+    <nav>
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center">
+            <div class="font-bold tracking-tighter text-xl" style="font-family: 'JetBrains Mono'; color: var(--primary);">DA_VINCI_DECRYPTED</div>
+            <div class="flex space-x-1 md:space-x-4 overflow-x-auto">
+                <span onclick="showPage('home')" id="nav-home" class="nav-link active">Αρχική</span>
+                <span onclick="showPage('theory')" id="nav-theory" class="nav-link">Θεωρία</span>
+                <span onclick="showPage('lab')" id="nav-lab" class="nav-link">Εργαστήριο</span>
+                <span onclick="showPage('research')" id="nav-research" class="nav-link">Έρευνα</span>
+                <span onclick="showPage('results')" id="nav-results" class="nav-link">Αποτελέσματα</span>
+                <span onclick="showPage('sources')" id="nav-sources" class="nav-link">Πηγές</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container px-4">
+
+        <!-- PAGE: HOME -->
+        <div id="page-home" class="page-content active">
+            <div class="text-center mb-12">
+                <h1>Ο Άνθρωπος του Βιτρούβιου</h1>
+                <p class="text-primary opacity-70 italic">L'Uomo Vitruviano: Η Γεωμετρία της Ζωής</p>
+            </div>
+
+            <div class="glass-card">
+                <div class="bracket top-left"></div>
+                <div class="bracket bottom-right"></div>
+                
+                <div class="grid md:grid-cols-2 gap-10 items-center">
+                    <div>
+                        <div class="section-title">PROJECT_INFO</div>
+                        <ul class="space-y-4 font-mono text-sm">
+                            <li><span class="text-primary">> SUBJECT:</span> Τεχνολογία Γ’ Γυμνασίου</li>
+                            <li><span class="text-primary">> AUTHOR:</span> Πανταζής Λούκας Βουζαξάκης</li>
+                            <li><span class="text-primary">> CAMPUS:</span> 3ο Γυμνάσιο Ηρακλείου</li>
+                        </ul>
+                    </div>
+                    <div class="text-center">
+                         <div class="inline-block p-4 border border-primary/20 rounded-lg bg-primary/5">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Da_Vinci_Vitruve_Luc_Viatour.jpg/800px-Da_Vinci_Vitruve_Luc_Viatour.jpg" class="w-48 h-48 object-cover rounded shadow-2xl" alt="Vitruvian Man">
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: THEORY -->
+        <div id="page-theory" class="page-content">
+            <div class="glass-card">
+                <div class="section-title">THEORETICAL_FRAMEWORK</div>
+                <h3 class="text-2xl font-bold mb-4">Leonardo da Vinci</h3>
+                <p class="opacity-80 leading-relaxed mb-6">
+                    Ο Λεονάρντο μελετούσε την ανατομία όχι μόνο για την ιατρική, αλλά για να βρει τους κανόνες της θείας αναλογίας. 
+                    Ο Άνθρωπος του Βιτρούβιου αποδεικνύει ότι ο άνθρωπος είναι το μέτρο όλων των πραγμάτων.
+                </p>
+                <div class="bg-primary/10 p-6 border-l-2 border-primary">
+                    <p class="italic text-primary">"Η κατοπτρική γραφή ήταν ένας τρόπος του Leonardo να προστατεύει τις ιδέες του, καθώς έγραφε από τα δεξιά προς τα αριστερά."</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: LAB -->
+        <div id="page-lab" class="page-content">
+            <div class="glass-card mb-8">
+                <div class="section-title">MODULE_01: MIRROR_WRITING</div>
+                <p class="mb-6 opacity-70">Γράψε το μήνυμά σου και δες το να αντιστρέφεται όπως στα χειρόγραφα του Leonardo.</p>
+                <div class="grid md:grid-cols-2 gap-6 items-center">
+                    <input type="text" id="mirrorInput" placeholder="Πληκτρολόγησε..." class="cyber-input w-full outline-none">
+                    <div class="p-8 bg-black/50 border border-primary/20 rounded-lg text-center overflow-hidden">
+                        <div id="mirrorOutput" class="text-3xl font-serif text-primary truncate">...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass-card">
+                    <div class="section-title">MODULE_02: PROPORTIO</div>
+                    <p class="text-xs mb-4 opacity-60">Υπολογισμός αναλογιών σώματος βάσει του Κανόνα του Βιτρούβιου.</p>
+                    <div class="space-y-4">
+                        <input type="number" id="propHeight" placeholder="Ύψος σε cm (π.χ. 175)" class="cyber-input w-full text-center">
+                        <div id="propResults" class="grid grid-cols-2 gap-2 text-[10px] font-mono">
+                            <div class="p-2 border border-white/5 bg-white/5">Άνοιγμα Χεριών: <span id="resSpan" class="text-primary">-</span></div>
+                            <div class="p-2 border border-white/5 bg-white/5">Μήκος Ποδιού: <span id="resFoot" class="text-primary">-</span></div>
+                            <div class="p-2 border border-white/5 bg-white/5">Πρόσωπο (1/8): <span id="resFace" class="text-primary">-</span></div>
+                            <div class="p-2 border border-white/5 bg-white/5">Κεφάλι (1/10): <span id="resHead" class="text-primary">-</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card ornithopter">
+                    <div class="section-title">MODULE_03: VOLATUS</div>
+                    <p class="text-xs mb-6 opacity-60">Πτητική Μηχανή: Πέρασε το ποντίκι πάνω από το σχέδιο για να κινηθούν τα φτερά.</p>
+                    <div class="flex justify-center">
+                        <svg width="180" height="100" viewBox="0 0 180 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M90 80L90 20" stroke="#00f2ea" stroke-width="2"/>
+                            <g class="wing wing-left">
+                                <path d="M90 40C60 10 10 10 10 40L90 50" stroke="#00f2ea" stroke-width="1.5" stroke-dasharray="2 2"/>
+                            </g>
+                            <g class="wing wing-right">
+                                <path d="M90 40C120 10 170 10 170 40L90 50" stroke="#00f2ea" stroke-width="1.5" stroke-dasharray="2 2"/>
+                            </g>
+                            <circle cx="90" cy="45" r="5" fill="#ff0050"/>
+                        </svg>
+                    </div>
+                    <p class="text-[9px] mt-4 text-center text-secondary font-mono animate-pulse">FLIGHT_PROTOCOL: ACTIVE</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: RESEARCH -->
+        <div id="page-research" class="page-content">
+            <div class="glass-card">
+                <div class="section-title">RESEARCH_METHODOLOGY</div>
+                <table>
+                    <thead>
+                        <tr><th>Phase</th><th>Activity Details</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Week 01</td><td>Ανάθεση εργασίας και αρχικός σχεδιασμός</td></tr>
+                        <tr><td>Week 02</td><td>Συγκέντρωση θεωρητικού υλικού και ιστορικών στοιχείων</td></tr>
+                        <tr><td>Week 03</td><td>Διεξαγωγή μετρήσεων στους μαθητές της τάξης (Γ1Α)</td></tr>
+                        <tr><td>Week 04</td><td>Επεξεργασία δεδομένων, δημιουργία πινάκων και συμπερασμάτων</td></tr>
+                        <tr><td>Week 05</td><td>Ολοκλήρωση συγγραφής και παράδοση (27/01/2026)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PAGE: RESULTS -->
+        <div id="page-results" class="page-content">
+            <div class="glass-card">
+                <div class="section-title">DATA_ANALYSIS</div>
+                <table>
+                    <thead>
+                        <tr><th>Category</th><th>Height (m)</th><th>Arm Span (m)</th><th>Delta (cm)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="text-primary">Αγόρια</td><td>1,74</td><td>1,77</td><td class="text-secondary">+3</td></tr>
+                        <tr><td class="text-primary">Κορίτσια</td><td>1,65</td><td>1,64</td><td class="text-secondary">-1</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PAGE: SOURCES -->
+        <div id="page-sources" class="page-content">
+            <div class="glass-card">
+                <div class="bracket top-left"></div>
+                <div class="bracket bottom-right"></div>
+                <div class="section-title">BIBLIOGRAPHY_DATABASE</div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-primary font-bold mb-3 uppercase tracking-tighter text-sm"><i class="fa-solid fa-scroll mr-2"></i> Πρωτογενείς Πηγές</h4>
+                            <ul class="space-y-2 text-xs opacity-80 font-mono">
+                                <li>> Vitruvius Pollio, M.: De Architectura, Book III, Ch. 1</li>
+                                <li>> Leonardo da Vinci: The Notebooks (Original Codices)</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-primary font-bold mb-3 uppercase tracking-tighter text-sm"><i class="fa-solid fa-microscope mr-2"></i> Πειραματικά Δεδομένα</h4>
+                            <p class="text-xs opacity-80 font-mono leading-relaxed">
+                                > Πανταζής Λ. & Βουζαξάκης: Πρωτογενείς Μετρήσεις Τμήματος Γ1Α, 3ο Γυμνάσιο Ηρακλείου Κρήτης (Aca. Year 2025-26).
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-primary font-bold mb-3 uppercase tracking-tighter text-sm"><i class="fa-solid fa-building-columns mr-2"></i> Μουσειακές & Επίσημες Πηγές</h4>
+                            <ul class="space-y-3 text-[11px] opacity-80 font-mono">
+                                <li>> Gallerie dell'Accademia di Venezia: L'Uomo Vitruviano</li>
+                                <li>> Royal Collection Trust: Leonardo da Vinci: Anatomist</li>
+                                <li>> Stanford Encyclopedia of Philosophy: Leonardo</li>
+                                <li>> Encyclopaedia Britannica: Vitruvian Man Archives</li>
+                                <li>> Wikipedia: Ο Άνθρωπος του Βιτρούβιου (Scientific Index)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-10 p-4 border border-primary/10 bg-primary/5 rounded">
+                   <p class="text-[10px] font-mono text-primary text-center tracking-widest">
+                       ACCESS_STATUS: VERIFIED // DATA_INTEGRITY: 100%
+                   </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="max-w-4xl mx-auto">
+            <p class="mb-2">PALOUVOUZ_CORE_SYSTEM // DA_VINCI_DECRYPTED // v3.1</p>
+            <p class="opacity-40">"Simplicity is the ultimate sophistication."</p>
+            <p class="mt-4">© 2026 // ΕΡΓΑΣΙΑ ΤΕΧΝΟΛΟΓΙΑΣ // ΗΡΑΚΛΕΙΟ</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- PAGE SWITCHING ---
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(p => p.classList.remove('active'));
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(l => l.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.getElementById('nav-' + pageId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- MIRROR LOGIC ---
+        const mirrorInput = document.getElementById('mirrorInput');
+        const mirrorOutput = document.getElementById('mirrorOutput');
+        mirrorInput.addEventListener('input', (e) => {
+            mirrorOutput.textContent = e.target.value || '...';
+        });
+
+        // --- VITRUVIAN CALCULATOR LOGIC ---
+        const propHeight = document.getElementById('propHeight');
+        propHeight.addEventListener('input', (e) => {
+            const h = parseFloat(e.target.value);
+            if (!h) return;
+            document.getElementById('resSpan').textContent = h.toFixed(1) + ' cm';
+            document.getElementById('resFoot').textContent = (h / 6).toFixed(1) + ' cm';
+            document.getElementById('resHead').textContent = (h / 10).toFixed(1) + ' cm';
+            document.getElementById('resFace').textContent = (h / 8).toFixed(1) + ' cm';
+        });
+
+        // --- NEURAL PARTICLES ENGINE ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for(let i=0; i<85; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4,
+                    size: Math.random() * 1.5
+                });
+            }
+        }
+        function draw() {
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00f2ea';
+            ctx.strokeStyle = 'rgba(0, 242, 234, 0.08)';
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                ctx.fill();
+                particles.forEach(p2 => {
+                    let d = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if(d < 170) {
+                        ctx.lineWidth = 0.8 - d/170;
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(draw);
+        }
+        initCanvas(); draw(); window.onresize = initCanvas;
+    </script>
+</body>
+</html>
