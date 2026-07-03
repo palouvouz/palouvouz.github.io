@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 | Lost in the Void</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: #00f2ea;
+            --secondary: #ff0050;
+            --accent: #7000ff;
+            --bg-dark: #010103;
+            --glass-bg: rgba(5, 5, 15, 0.9);
+            --glass-border: rgba(0, 242, 234, 0.2);
+            --text: #e0e0ff;
+        }
+
+        * { box-sizing: border-box; outline: none; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- HYPERSPACE CANVAS --- */
+        #star-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 242, 234, 0.03) 50%);
+            background-size: 100% 4px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* --- 404 GLITCH EFFECT --- */
+        .glitch-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(6rem, 15vw, 10rem);
+            font-weight: 800;
+            line-height: 1;
+            color: #fff;
+            position: relative;
+            text-shadow: 0.05em 0 0 var(--secondary), -0.025em -0.05em 0 var(--primary),
+                         0.025em 0.05em 0 var(--accent);
+            animation: glitch 500ms infinite;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 var(--secondary), -0.05em -0.025em 0 var(--primary), -0.025em 0.05em 0 var(--accent); }
+            14% { text-shadow: 0.05em 0 0 var(--secondary), -0.05em -0.025em 0 var(--primary), -0.025em 0.05em 0 var(--accent); }
+            15% { text-shadow: -0.05em -0.025em 0 var(--secondary), 0.025em 0.025em 0 var(--primary), -0.05em -0.05em 0 var(--accent); }
+            49% { text-shadow: -0.05em -0.025em 0 var(--secondary), 0.025em 0.025em 0 var(--primary), -0.05em -0.05em 0 var(--accent); }
+            50% { text-shadow: 0.025em 0.05em 0 var(--secondary), 0.05em 0 0 var(--primary), 0.05em -0.05em 0 var(--accent); }
+            99% { text-shadow: 0.025em 0.05em 0 var(--secondary), 0.05em 0 0 var(--primary), 0.05em -0.05em 0 var(--accent); }
+            100% { text-shadow: -0.025em 0 0 var(--secondary), -0.025em -0.025em 0 var(--primary), -0.025em -0.05em 0 var(--accent); }
+        }
+
+        /* --- GLASS INTERFACE --- */
+        .card {
+            width: 90%;
+            max-width: 500px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 4px;
+            padding: 50px 30px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 80px rgba(0, 0, 0, 1);
+        }
+
+        /* Corner Accents */
+        .card::before {
+            content: 'SYSTEM_ERROR_LOG';
+            position: absolute;
+            top: -15px; left: 20px;
+            background: var(--secondary);
+            color: #fff;
+            padding: 2px 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 20px 0 10px;
+            letter-spacing: -1px;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .terminal-log {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-align: left;
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            margin-bottom: 30px;
+            border-left: 2px solid var(--secondary);
+            color: var(--secondary);
+            height: 60px;
+            overflow: hidden;
+        }
+
+        /* --- BUTTON UPGRADE --- */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            background: transparent;
+            color: var(--primary);
+            padding: 14px 35px;
+            border: 1px solid var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 30px rgba(0, 242, 234, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .back-btn:hover::before {
+            left: 100%;
+        }
+
+        @media (max-width: 600px) {
+            .card { padding: 40px 20px; }
+            h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="star-canvas"></canvas>
+    <div class="scanlines"></div>
+
+    <div class="card">
+        <div class="glitch-wrapper">
+            <div class="glitch" data-text="404">404</div>
+        </div>
+
+        <h1>ΧΑΘΗΚΑΤΕ ΣΤΟ ΚΕΝΟ;</h1>
+        
+        <div id="terminal" class="terminal-log">
+            > ERR_LOCATION_NOT_FOUND<br>
+            > SECTOR_UNREACHABLE...
+        </div>
+
+        <p>Η σελίδα που αναζητάτε έχει καταρρεύσει σε μια μαύρη τρύπα ή δεν υπήρξε ποτέ στο δικό μας σύμπαν.</p>
+
+        <a href="https://palouvouz15.web.app" class="back-btn">
+            <i class="fa-solid fa-house-signal"></i> Επιστροφη στη Βαση
+        </a>
+    </div>
+
+    <script>
+        // --- SPACE WARP CANVAS ---
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        const numStars = 200;
+
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            stars = [];
+            for (let i = 0; i < numStars; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    z: Math.random() * canvas.width,
+                    o: '0.' + Math.floor(Math.random() * 99) + 1
+                });
+            }
+        }
+
+        function draw() {
+            ctx.fillStyle = '#010103';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#fff';
+            for (let i = 0; i < numStars; i++) {
+                let star = stars[i];
+                let x = (star.x - canvas.width / 2) * (canvas.width / star.z);
+                x += canvas.width / 2;
+                let y = (star.y - canvas.height / 2) * (canvas.width / star.z);
+                y += canvas.height / 2;
+                let s = 1.5 * (canvas.width / star.z);
+
+                ctx.beginPath();
+                ctx.arc(x, y, s / 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                star.z -= 5;
+                if (star.z <= 0) {
+                    star.z = canvas.width;
+                }
+            }
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', init);
+        init();
+        draw();
+
+        // --- TERMINAL LOG ANIMATION ---
+        const terminal = document.getElementById('terminal');
+        const logs = [
+            "> INITIALIZING SEARCH PROTOCOL...",
+            "> ERROR: SECTOR_404_VOID_DETECTED",
+            "> DATA_STREAM_INTERRUPTED",
+            "> ATTEMPTING_RECOVERY...",
+            "> RECOVERY_FAILED_UNABLE_TO_LOCATE",
+            "> SYSTEM_ADVISORY: RETURN_HOME"
+        ];
+        let currentLog = 0;
+
+        setInterval(() => {
+            terminal.innerHTML = `> ${logs[currentLog]}<br>> ${logs[(currentLog + 1) % logs.length]}`;
+            currentLog = (currentLog + 1) % logs.length;
+        }, 2000);
+    </script>
+</body>
+</html>
