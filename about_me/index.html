@@ -3,265 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palouvouz || Profile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #00d2ff;
-            --secondary: #3a7bd5;
-            --accent: #6c5ce7;
-            --gold: #ffd700;
-            --bronze: #cd7f32;
-            --glass: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --text-light: #ffffff;
-        }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    <title>About Me | Palouvouz</title>
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a1a2e);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: var(--text-light);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-        }
+    <meta name="description" content="Engineering profile of Palouvouz: robotics, embedded systems, Arduino, Raspberry Pi and STEM competitions.">
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .snow-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 0;
-        }
-
-        .snowflake {
-            position: absolute; top: -10px; color: white; opacity: 0.6;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
-
-        /* --- NAVIGATION --- */
-        .navbar {
-            width: 100%; padding: 25px 50px;
-            display: flex; justify-content: space-between; align-items: center; z-index: 100;
-        }
-
-        .back-btn {
-            background: var(--glass); backdrop-filter: blur(12px);
-            padding: 10px 20px; border-radius: 50px; text-decoration: none;
-            color: white; font-weight: 600; border: 1px solid var(--glass-border);
-            transition: 0.3s; display: flex; align-items: center; gap: 8px;
-        }
-
-        .back-btn:hover { background: white; color: #1a1a2e; }
-
-        /* --- MAIN CONTAINER --- */
-        .container {
-            max-width: 1000px; width: 92%; margin: 20px auto 60px;
-            padding: 60px 40px; background: var(--glass);
-            backdrop-filter: blur(25px); border-radius: 40px;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 40px 100px rgba(0,0,0,0.4);
-            z-index: 10; animation: slideUp 0.8s ease-out;
-        }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        .profile-header { text-align: center; margin-bottom: 50px; }
-        
-        h1 {
-            font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 10px;
-            background: linear-gradient(to right, #fff, var(--primary));
-        }
-
-        .tagline { color: var(--primary); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem; }
-
-        .bio-section { margin: 40px 0; line-height: 1.8; font-size: 1.1rem; text-align: center; opacity: 0.9; }
-        .academic-goal {
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(0, 210, 255, 0.1);
-            border-radius: 20px;
-            border: 1px solid var(--primary);
-            display: inline-block;
-        }
-
-        /* --- AWARDS SECTION --- */
-        .section-title { font-size: 1.5rem; font-weight: 800; margin: 50px 0 25px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 15px; }
-        .section-title::before, .section-title::after { content: ''; height: 1px; width: 50px; background: var(--glass-border); }
-
-        .awards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        
-        .award-card {
-            background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px;
-            border: 1px solid var(--glass-border); text-align: center; transition: 0.3s;
-        }
-
-        .award-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); border-color: var(--primary); }
-        .award-card i { font-size: 2.5rem; margin-bottom: 15px; display: block; }
-        .award-card.gold i { color: var(--gold); text-shadow: 0 0 15px rgba(255,215,0,0.4); }
-        .award-card.bronze i { color: var(--bronze); }
-        .award-card.special i { color: var(--primary); }
-        
-        .award-rank { font-weight: 800; display: block; margin-bottom: 5px; font-size: 0.8rem; letter-spacing: 1px; }
-        .award-title { font-weight: 700; font-size: 1rem; margin-bottom: 5px; }
-        .award-event { font-size: 0.85rem; opacity: 0.6; }
-
-        /* --- PROJECTS GRID --- */
-        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        
-        .project-item {
-            display: flex; align-items: center; gap: 15px; padding: 20px;
-            background: rgba(255,255,255,0.03); border-radius: 18px;
-            border: 1px solid var(--glass-border); transition: 0.3s;
-            text-align: left;
-        }
-
-        .project-item:hover { background: white; color: #1a1a2e; transform: scale(1.02); }
-        .project-icon { font-size: 1.5rem; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; background: rgba(0,210,255,0.1); border-radius: 12px; }
-
-        /* --- FOOTER --- */
-        .footer {
-            width: 100%; padding: 60px 20px; background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(15px); border-top: 1px solid var(--glass-border);
-            text-align: center; z-index: 20;
-        }
-
-        .footer-brand { font-weight: 800; letter-spacing: 5px; color: var(--primary); font-size: 1.8rem; margin-bottom: 25px; }
-        
-        .footer-contact { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 30px; }
-        .footer-link { color: white; text-decoration: none; transition: 0.3s; display: flex; align-items: center; gap: 10px; font-size: 1rem; }
-        .footer-link:hover { color: var(--primary); transform: translateY(-3px); }
-
-        @media (max-width: 600px) {
-            .container { padding: 40px 20px; }
-            .navbar { padding: 20px; }
-            .footer-contact { flex-direction: column; gap: 15px; align-items: center; }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <div class="snow-container" id="snow"></div>
 
-    <nav class="navbar">
-        <a href="../index.html" class="back-btn">
-            <i class="fa-solid fa-arrow-left"></i> Επιστροφή
-        </a>
-        <div style="font-weight: 800; letter-spacing: 2px; opacity: 0.5;">PROFILE</div>
-    </nav>
+<nav class="navbar">
+    <a class="back-btn" href="../index.html">← Back</a>
+</nav>
 
-    <div class="container">
-        <div class="profile-header">
-            <h1 style="margin-bottom: 5px;">Παντάζης Λουκάς Βουζαξάκης</h1>
-            <p class="tagline">Tech Innovator | Robotics Enthusiast | Γ' Γυμνασίου</p>
-        </div>
+<main class="container">
 
-        <div class="bio-section">
-            <p>Είμαι μαθητής στο <strong>3ο Γυμνάσιο Ηρακλείου</strong> με πάθος για τη δημιουργία λύσεων μέσω της τεχνολογίας. Μου αρέσει να μετατρέπω θεωρητικές έννοιες σε λειτουργικά πρωτότυπα, συνδυάζοντας τον προγραμματισμό με τη ρομποτική και το design.</p>
-            
-            <div class="academic-goal">
-                <i class="fa-solid fa-graduation-cap"></i> 
-                <strong>Στόχος:</strong> Τμήμα Ηλεκτρολόγων Μηχανικών & Μηχανικών Υπολογιστών, Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης
-            </div>
-        </div>
+    <section class="hero">
+        <h1>Παντάζης Λουκάς Βουζαξάκης</h1>
+        <p class="subtitle">Palouvouz • STEM Engineer in progress</p>
+    </section>
 
-        <div class="section-title">🏆 Διακρίσεις & Επιτυχίες</div>
-        <div class="awards-grid">
-            <div class="award-card gold">
-                <i class="fa-solid fa-medal"></i>
-                <span class="award-rank" style="color:var(--gold)">1st PLACE</span>
-                <p class="award-title">MaQueen Line Tracking</p>
-                <p class="award-event">MRC 2023</p>
-            </div>
-            <div class="award-card bronze">
-                <i class="fa-solid fa-medal"></i>
-                <span class="award-rank" style="color:var(--bronze)">3rd PLACE</span>
-                <p class="award-title">Drones Competition</p>
-                <p class="award-event">MRC 2024</p>
-            </div>
-            <div class="award-card special">
-                <i class="fa-solid fa-trophy"></i>
-                <span class="award-rank" style="color:var(--primary)">FINALIST</span>
-                <p class="award-title">FLL Super Powered</p>
-                <p class="award-event">Τελικός Θεσσαλονίκης</p>
-            </div>
-            <div class="award-card special">
-                <i class="fa-solid fa-award"></i>
-                <span class="award-rank" style="color:var(--primary)">AWARD</span>
-                <p class="award-title">Best Promotion (EcoRun)</p>
-                <p class="award-event">Gen-E 2025</p>
-            </div>
-        </div>
+    <section class="card">
+        <p class="important-text">
+            Είμαι μαθητής από το Ηράκλειο Κρήτης με εστίαση στη ρομποτική, τον προγραμματισμό και τα embedded systems.
+            Δεν δουλεύω θεωρητικά. Χτίζω συστήματα, τα δοκιμάζω και τα βελτιώνω μέσα από πραγματικά projects.
+        </p>
+    </section>
 
-        <div class="section-title">🚀 Main Projects</div>
-        <div class="projects-grid">
-            <div class="project-item">
-                <div class="project-icon">⚡</div>
-                <div><strong>DriveFuelles</strong><br><small>Arduino Power</small></div>
-            </div>
-            <div class="project-item">
-                <div class="project-icon">🪸</div>
-                <div><strong>Reeflect Pod</strong><br><small>Ocean Protection</small></div>
-            </div>
-            <div class="project-item">
-                <div class="project-icon">💰</div>
-                <div><strong>Smart MoneyBox</strong><br><small>IoT Savings</small></div>
-            </div>
-            <div class="project-item">
-                <div class="project-icon">☀️</div>
-                <div><strong>Smart Solar Lamp</strong><br><small>Sustainable Energy</small></div>
-            </div>
-            <div class="project-item">
-                <div class="project-icon">🌳</div>
-                <div><strong>EcoKidz Routes</strong><br><small>Eco Navigation</small></div>
-            </div>
-            <div class="project-item">
-                <div class="project-icon">🔥</div>
-                <div><strong>RPiroguard</strong><br><small>Fire Protection</small></div>
-            </div>
-        </div>
+    <section class="card">
+        <h2>Engineering Profile</h2>
+        <p><strong>Software:</strong> Python, C++, HTML/CSS</p>
+        <p><strong>Hardware:</strong> Arduino, Raspberry Pi, 3D Printing</p>
+        <p><strong>Robotics:</strong> Line-following, drones, competition systems</p>
+    </section>
 
-        <div class="section-title">✨ Ready to Launch</div>
-        <div class="projects-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-            <div class="project-item" style="border-style: dashed;">
-                <div class="project-icon">🏛️</div>
-                <div><strong>Smart Museum</strong></div>
-            </div>
-            <div class="project-item" style="border-style: dashed;">
-                <div class="project-icon">🤖</div>
-                <div><strong>FeelosophAI</strong></div>
-            </div>
-            <div class="project-item" style="border-style: dashed;">
-                <div class="project-icon">🌿</div>
-                <div><strong>Emotionale Botanik</strong></div>
-            </div>
-        </div>
+    <section class="card">
+        <h2>Competitions & Achievements</h2>
+
+        <ul>
+            <li>WAICY Europe 2025 — Bronze Award</li>
+            <li>AI in STEM Challenge — Top 10 Europe Finalist</li>
+            <li>MRC Global Olympiad — 1st Place (Line Following Maqueen, 2023)</li>
+            <li>MRC Global Olympiad — 3rd Place (Drones, 2024)</li>
+            <li>FIRST LEGO League Greece — National Finalist</li>
+            <li>Junior Achievement Greece — Product Promotion Award</li>
+            <li>Envolve NextGen Innovators — Audience Award</li>
+            <li>SciCo / Alpha Bank — Circular Economy Program</li>
+            <li>Generation Next — 8th & 9th participation</li>
+            <li>We Want Experiments — Participation</li>
+            <li>Science on Stage — Participation</li>
+        </ul>
+    </section>
+
+    <section class="card">
+        <h2>Engineering Approach</h2>
+        <p>
+            Build → Test → Fail → Fix → Iterate.
+            Κάθε project είναι σύστημα, όχι εργασία.
+        </p>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <div class="footer-links">
+        <a href="mailto:palouvouz@gmail.com">Email</a>
+        <a href="https://github.com/palouvouz">GitHub</a>
+        <a href="https://instagram.com/palouvouz">Instagram</a>
+        <a href="https://youtube.com/@palouvouz">YouTube</a>
     </div>
+    <p>© 2026 Palouvouz. All rights reserved.</p>
+</footer>
 
-    <footer class="footer">
-        <div class="footer-brand">PALOUVOUZ</div>
-        <div class="footer-contact">
-            <a href="mailto:palouvouz@gmail.com" class="footer-link"><i class="fa-solid fa-envelope"></i> palouvouz@gmail.com</a>
-            <a href="https://www.instagram.com/palouvouz" target="_blank" class="footer-link"><i class="fa-brands fa-instagram"></i> Instagram</a>
-            <a href="https://github.com/palouvouz" target="_blank" class="footer-link"><i class="fa-brands fa-github"></i> GitHub</a>
-            <a href="https://youtube.com/@palouvouz" target="_blank" class="footer-link"><i class="fa-brands fa-youtube"></i> YouTube</a>
-            <a href="tel:6945193420" class="footer-link"><i class="fa-solid fa-phone"></i> 6945193420</a>
-        </div>
-        <p style="opacity: 0.4; font-size: 0.8rem;">© 2026 Palouvouz </p>
-    </footer>
-
+<script src="script.js"></script>
 
 </body>
 </html>

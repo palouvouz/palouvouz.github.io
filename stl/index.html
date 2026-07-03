@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palouvouz | STL Vault v2.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f2ea;
+            --secondary: #ff0050;
+            --accent: #7000ff;
+            --bg-dark: #010103;
+            --glass-bg: rgba(2, 2, 5, 0.9);
+            --glass-border: rgba(0, 242, 234, 0.2);
+            --text: #e0e0ff;
+            --glow: 0 0 15px rgba(0, 242, 234, 0.3);
+        }
+
+        * { box-sizing: border-box; outline: none; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- BACKGROUND CANVAS --- */
+        #particle-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            filter: brightness(0.7);
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 242, 234, 0.03) 50%);
+            background-size: 100% 4px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* --- BOOT OVERLAY --- */
+        #bootOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary);
+            font-size: 0.8rem;
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+
+        /* --- MAIN INTERFACE CARD --- */
+        .card {
+            width: 95%;
+            max-width: 550px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            border-radius: 4px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 0 0 100px rgba(0, 0, 0, 1);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Corner Brackets */
+        .bracket {
+            position: absolute;
+            width: 30px; height: 30px;
+            border-color: var(--primary);
+            border-style: solid;
+            opacity: 0.5;
+        }
+        .top-left { top: 0; left: 0; border-width: 4px 0 0 4px; }
+        .top-right { top: 0; right: 0; border-width: 4px 4px 0 0; }
+        .bottom-left { bottom: 0; left: 0; border-width: 0 0 4px 4px; }
+        .bottom-right { bottom: 0; right: 0; border-width: 0 4px 4px 0; }
+
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            letter-spacing: -2px;
+            margin-bottom: 5px;
+            color: #fff;
+            text-shadow: var(--glow);
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--primary);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
+        }
+
+        /* --- ACCESS INTERFACE --- */
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 22px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 0;
+            color: var(--primary);
+            font-size: 1.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            text-align: center;
+            letter-spacing: 10px;
+            transition: 0.4s;
+        }
+
+        input::placeholder {
+            letter-spacing: normal;
+            font-size: 0.9rem;
+            opacity: 0.3;
+        }
+
+        input.error { border-color: var(--secondary); animation: shake 0.4s ease; }
+
+        .terminal-log {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            text-align: left;
+            margin-top: 15px;
+            color: var(--primary);
+            height: 50px;
+            overflow: hidden;
+            opacity: 0.7;
+        }
+
+        /* --- VAULT CONTENT --- */
+        .files-container {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .files-container::-webkit-scrollbar { width: 4px; }
+        .files-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+        .file-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 25px;
+            background: rgba(0, 242, 234, 0.02);
+            border: 1px solid rgba(0, 242, 234, 0.1);
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .file-link:hover {
+            background: rgba(0, 242, 234, 0.1);
+            border-color: var(--primary);
+            box-shadow: -5px 0 0 var(--primary);
+            transform: translateX(8px);
+        }
+
+        .node-content { display: flex; align-items: center; gap: 15px; }
+        .node-icon { color: var(--primary); font-size: 1.4rem; text-shadow: var(--glow); }
+        .node-name { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 700; }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            margin-top: 30px;
+            padding: 12px 25px;
+            border-radius: 0;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover { background: var(--secondary); color: #fff; box-shadow: 0 0 20px rgba(255, 0, 80, 0.4); }
+
+        /* Security Level Bar */
+        .security-meter {
+            height: 4px;
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .security-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+            transition: width 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-12px); }
+            75% { transform: translateX(12px); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+    <div class="scanlines"></div>
+
+    <!-- BOOT SEQUENCE -->
+    <div id="bootOverlay"></div>
+
+    <div class="card" id="mainCard">
+        <div class="bracket top-left"></div>
+        <div class="bracket top-right"></div>
+        <div class="bracket bottom-left"></div>
+        <div class="bracket bottom-right"></div>
+
+        <div class="status-header">
+            <span>Vault_ID: STL-X99</span>
+            <span id="sysTime">00:00:00</span>
+            <span>Status: Cold Storage</span>
+        </div>
+
+        <div id="loginSection">
+            <h1>STL VAULT</h1>
+            <div class="security-meter"><div class="security-fill" id="meter"></div></div>
+
+            <div class="input-group">
+                <input type="password" id="passInput" placeholder="PASSCODE" maxlength="20">
+                <div id="terminalLog" class="terminal-log">
+                    > SYSTEM IDLE...<br>
+                    > WAITING FOR ACCESS KEY...
+                </div>
+            </div>
+        </div>
+
+        <div id="filesDiv" class="files-container">
+            <!-- Files Appear Here -->
+        </div>
+        
+        <button id="logoutBtn" class="logout-btn" style="display: none;" onclick="location.reload()">
+            <i class="fa-solid fa-power-off"></i> Terminate Session
+        </button>
+    </div>
+
+    <script>
+        // --- BOOT SEQUENCE ---
+        const boot = document.getElementById('bootOverlay');
+        const bootLines = [
+            "INITIALIZING VAULT PROTOCOLS...",
+            "DECRYPTING FILE HEADERS...",
+            "MOUNTING SECURE DRIVES...",
+            "CHECKING DATA INTEGRITY...",
+            "COLD STORAGE ACCESSIBLE.",
+            "VAULT READY."
+        ];
+        
+        let lineIdx = 0;
+        const bootTimer = setInterval(() => {
+            if(lineIdx < bootLines.length) {
+                const p = document.createElement('p');
+                p.textContent = `> ${bootLines[lineIdx]}`;
+                boot.appendChild(p);
+                lineIdx++;
+            } else {
+                clearInterval(bootTimer);
+                setTimeout(() => { boot.style.opacity = '0'; }, 500);
+                setTimeout(() => { boot.style.display = 'none'; }, 1500);
+            }
+        }, 150);
+
+        // --- SYS TIME ---
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('sysTime').textContent = now.toTimeString().split(' ')[0];
+        }, 1000);
+
+        // --- CANVAS ENGINE ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for(let i=0; i<90; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4,
+                    size: Math.random() * 1.5
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00f2ea';
+            ctx.strokeStyle = 'rgba(0, 242, 234, 0.08)';
+            
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                ctx.fill();
+
+                particles.forEach(p2 => {
+                    let d = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if(d < 160) {
+                        ctx.lineWidth = 0.8 - d/160;
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(draw);
+        }
+        initCanvas(); draw(); window.onresize = initCanvas;
+
+        //! Critical Security Hashes and File List
+        const validHashes = ["cEBsb3V2b3V6MjAxMXN0bA=="];
+        const stlFiles = [
+            { name: "pigeon.stl", icon: "fa-cube" },
+            { name: "kapelo.zip", icon: "fa-file-zipper" },
+            { name: "clapper_camera_microphone.3mf", icon: "fa-layer-group" }
+        ];
+
+        const input = document.getElementById('passInput');
+        const log = document.getElementById('terminalLog');
+        const filesDiv = document.getElementById('filesDiv');
+        const meter = document.getElementById('meter');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        input.addEventListener('input', (e) => {
+            const val = e.target.value;
+            meter.style.width = Math.min((val.length * 10), 100) + '%';
+            if(val.length > 0) {
+                log.innerHTML = `> ANALYZING_KEY: [${"*".repeat(val.length)}]<br>> RUNNING_DECRYPTION_PROTOCOLS...`;
+            } else {
+                log.innerHTML = `> SYSTEM IDLE...<br>> WAITING FOR ACCESS KEY...`;
+            }
+        });
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const hash = btoa(input.value);
+                if (validHashes.includes(hash)) unlock();
+                else fail();
+            }
+        });
+
+        function unlock() {
+            meter.style.width = '100%';
+            meter.style.background = 'var(--primary)';
+            log.innerHTML = `> ACCESS_GRANTED<br>> MOUNTING_DATA_CORES...`;
+            input.disabled = true;
+            
+            setTimeout(() => {
+                document.getElementById('loginSection').style.display = 'none';
+                filesDiv.style.display = 'flex';
+                logoutBtn.style.display = 'inline-block';
+                renderFiles();
+            }, 1000);
+        }
+
+        function fail() {
+            document.getElementById('mainCard').classList.add('shake');
+            log.style.color = 'var(--secondary)';
+            log.innerHTML = `> ACCESS_DENIED<br>> THREAT_LOGGED_AND_REPORTED`;
+            input.value = "";
+            meter.style.width = '0%';
+            setTimeout(() => {
+                document.getElementById('mainCard').classList.remove('shake');
+                log.style.color = '';
+            }, 1000);
+        }
+
+        function renderFiles() {
+            stlFiles.forEach((file, index) => {
+                const a = document.createElement('a');
+                a.href = file.name;
+                a.download = file.name;
+                a.className = 'file-link';
+                a.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.15}s`;
+                a.style.opacity = '0';
+                a.innerHTML = `
+                    <div class="node-content">
+                        <i class="fa-solid ${file.icon} node-icon"></i>
+                        <span class="node-name">${file.name}</span>
+                    </div>
+                    <i class="fa-solid fa-download" style="opacity:0.4"></i>
+                `;
+                filesDiv.appendChild(a);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -3,322 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palouvouz Pro | Math & Finance Dashboard</title>
+    <title>Palouvouz | Engineering Tools Hub</title>
+
+    <link rel="stylesheet" href="tools.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #29f99f;
-            --secondary: #45fff3;
-            --accent: #6c5ce7;
-            --bg: #0b0e14;
-            --glass: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
-        body {
-            background: radial-gradient(circle at top right, #1a1a2e, #0b0e14);
-            color: white;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 40px 20px;
-            min-height: 100vh;
-        }
-
-        .header { text-align: center; margin-bottom: 40px; }
-        h1 { font-size: 3rem; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-
-        /* --- Finance Section --- */
-        .finance-section {
-            max-width: 900px; margin: 0 auto 50px;
-            background: linear-gradient(135deg, rgba(108, 92, 231, 0.1), rgba(41, 249, 159, 0.05));
-            border-radius: 30px; padding: 30px; border: 1px solid var(--glass-border);
-            text-align: center; backdrop-filter: blur(10px);
-        }
-        .currency-row { display: flex; gap: 15px; justify-content: center; margin-top: 20px; flex-wrap: wrap; align-items: center; }
-        select, .finance-input, #searchBar {
-            background: #000; border: 1px solid var(--glass-border); color: white;
-            padding: 12px; border-radius: 12px; outline: none;
-        }
-
-        /* --- Search Bar --- */
-        #searchBar { width: 100%; max-width: 600px; display: block; margin: 20px auto; text-align: center; }
-
-        /* --- Grid Tools --- */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px; max-width: 1400px; margin: 0 auto;
-        }
-        .tool-card {
-            background: var(--glass); backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border); border-radius: 24px;
-            padding: 25px; transition: 0.4s;
-        }
-        .tool-card:hover { transform: translateY(-8px); border-color: var(--primary); }
-        .tool-card h3 { color: var(--secondary); margin-top: 0; font-size: 1.2rem; }
-
-        .input-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
-        input[type="number"], input[type="text"] {
-            flex: 1; min-width: 80px; background: rgba(0,0,0,0.3);
-            border: 1px solid var(--glass-border); border-radius: 10px; padding: 10px; color: white;
-        }
-
-        button.action-btn {
-            width: 100%; padding: 12px; border-radius: 12px; border: none;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #000; font-weight: 800; cursor: pointer; text-transform: uppercase;
-        }
-
-        .res-area {
-            margin-top: 15px; padding: 12px; background: rgba(255,255,255,0.02);
-            border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
-            border: 1px dashed rgba(255,255,255,0.1); font-weight: 600;
-        }
-        .copy-link { color: var(--primary); cursor: pointer; font-size: 0.8rem; text-decoration: underline; }
-
-        /* --- Scientific Calculator (Floating) --- */
-        #sciCalc {
-            position: fixed; bottom: 100px; right: 30px; width: 320px;
-            background: rgba(15, 15, 25, 0.98); backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border); border-radius: 25px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5); z-index: 1000;
-            display: none; padding: 20px;
-        }
-        .calc-display {
-            width: 100%; height: 60px; background: #000; border-radius: 12px;
-            margin-bottom: 15px; text-align: right; padding: 15px; box-sizing: border-box;
-            font-size: 1.5rem; color: var(--primary); overflow: hidden;
-        }
-        .calc-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .c-btn { padding: 12px; border: none; border-radius: 10px; background: var(--glass); color: white; cursor: pointer; }
-        .calc-toggle {
-            position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px;
-            background: var(--primary); border-radius: 50%; border: none;
-            font-size: 1.8rem; cursor: pointer; box-shadow: 0 10px 20px rgba(41,249,159,0.3); z-index: 1001;
-        }
-    </style>
 </head>
+
 <body>
 
-    <div class="header">
-        <h1>📐 Pro Math Tools</h1>
-        <input type="text" id="searchBar" placeholder="Αναζήτηση (π.χ. Πυθαγόρειο, Μέσος Όρος...)" onkeyup="filterTools()">
+<header class="header">
+    <h1>Engineering Tools Hub</h1>
+    <p>Math • Physics • Finance • Robotics utilities</p>
+</header>
+
+<input type="text" id="searchBar" placeholder="Αναζήτηση εργαλείων..." onkeyup="filterTools()">
+
+<section class="tools-grid" id="toolsGrid">
+
+    <!-- BASIC CALCULATOR -->
+    <div class="tool-card">
+        <h3>Βασικές Πράξεις</h3>
+
+        <div class="input-group">
+            <input type="number" id="baseA">
+            <input type="number" id="baseB">
+        </div>
+
+        <div class="btn-grid">
+            <button onclick="basic('+')">+</button>
+            <button onclick="basic('-')">-</button>
+            <button onclick="basic('*')">×</button>
+            <button onclick="basic('/')">÷</button>
+        </div>
+
+        <div class="result" id="resBasic">0</div>
     </div>
 
-    <div class="tools-grid" id="toolsGrid">
-        
-        <div class="tool-card">
-            <h3>➕ Βασικές Πράξεις</h3>
-            <div class="input-group">
-                <input type="number" id="base1" placeholder="Α">
-                <input type="number" id="base2" placeholder="Β">
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                <button class="action-btn" onclick="calc('base', '+')">+</button>
-                <button class="action-btn" onclick="calc('base', '-')">-</button>
-                <button class="action-btn" onclick="calc('base', '*')">×</button>
-                <button class="action-btn" onclick="calc('base', '/')">÷</button>
-            </div>
-            <div class="res-area"><span id="resBase">0</span><span class="copy-link" onclick="copy('resBase')">Copy</span></div>
-        </div>
+    <!-- PYTHAGORAS -->
+    <div class="tool-card">
+        <h3>Πυθαγόρειο Θεώρημα</h3>
 
-        <div class="tool-card">
-            <h3>📐 Πυθαγόρειο Θεώρημα</h3>
-            <div class="input-group">
-                <input type="number" id="pythA" placeholder="Πλευρά α">
-                <input type="number" id="pythB" placeholder="Πλευρά β">
-            </div>
-            <button class="action-btn" onclick="calcPythagoras()">Υπολόγισε c</button>
-            <div class="res-area"><span id="resPyth">0</span><span class="copy-link" onclick="copy('resPyth')">Copy</span></div>
-        </div>
+        <input type="number" id="a" placeholder="a">
+        <input type="number" id="b" placeholder="b">
 
-        <div class="tool-card">
-            <h3>方程 Δευτεροβάθμια Εξίσωση</h3>
-            <div class="input-group">
-                <input type="number" id="quadA" placeholder="a">
-                <input type="number" id="quadB" placeholder="b">
-                <input type="number" id="quadC" placeholder="c">
-            </div>
-            <button class="action-btn" onclick="solveQuadratic()">Λύση (x1, x2)</button>
-            <div class="res-area"><span id="resQuad">x1=?, x2=?</span><span class="copy-link" onclick="copy('resQuad')">Copy</span></div>
-        </div>
+        <button onclick="pythagoras()">Υπολογισμός</button>
 
-        <div class="tool-card">
-            <h3>🌐 Τριγωνομετρία</h3>
-            <div class="input-group">
-                <input type="number" id="trigVal" placeholder="Μοίρες °" style="width: 100%;">
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px;">
-                <button class="action-btn" onclick="calcTrig('sin')">sin</button>
-                <button class="action-btn" onclick="calcTrig('cos')">cos</button>
-                <button class="action-btn" onclick="calcTrig('tan')">tan</button>
-            </div>
-            <div class="res-area"><span id="resTrig">0</span><span class="copy-link" onclick="copy('resTrig')">Copy</span></div>
-        </div>
-
-        <div class="tool-card">
-            <h3>📊 Μέσος Όρος</h3>
-            <input type="text" id="statInput" placeholder="Αριθμοί με κόμμα (5,10,15)" style="width: 100%; margin-bottom: 10px;">
-            <button class="action-btn" onclick="calcAverage()">Υπολογισμός</button>
-            <div class="res-area"><span id="resStat">0</span><span class="copy-link" onclick="copy('resStat')">Copy</span></div>
-        </div>
-
-        <div class="tool-card">
-            <h3>⭕ Εμβαδόν Κύκλου</h3>
-            <input type="number" id="circleR" placeholder="Ακτίνα (r)" style="width: 100%; margin-bottom: 10px;">
-            <button class="action-btn" onclick="calcCircle()">Υπολογισμός (πr²)</button>
-            <div class="res-area"><span id="resCircle">0</span><span class="copy-link" onclick="copy('resCircle')">Copy</span></div>
-        </div>
-
-        <br><br>
-
-        </div>
-
-            <div class="finance-section">
-            <h2 style="margin:0; color:var(--primary);">💸 Live Currency Converter</h2>
-            <div class="currency-row">
-                <input type="number" id="amount" value="1" class="finance-input" style="width: 120px;">
-                <select id="fromCurrency">
-                    <option value="EUR">EUR 🇪🇺</option>
-                    <option value="USD">USD 🇺🇸</option>
-                    <option value="GBP">GBP 🇬🇧</option>
-                </select>
-                <span style="font-size: 1.5rem;">➔</span>
-                <select id="toCurrency">
-                    <option value="USD" selected>USD 🇺🇸</option>
-                    <option value="EUR">EUR 🇪🇺</option>
-                    <option value="BTC">BTC ₿</option>
-                </select>
-                <button onclick="convertCurrency()" class="action-btn" style="width: auto; padding: 10px 25px;">Update</button>
-            </div>
-            <h3 id="exchangeResult" style="margin-top: 20px; font-size: 2.2rem; color: var(--secondary);">--</h3>
-        </div>
-
-
-    <button class="calc-toggle" onclick="toggleCalc()">🧮</button>
-    <div id="sciCalc">
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-            <span style="font-weight:700; color:var(--primary);">Scientific</span>
-            <span onclick="toggleCalc()" style="cursor:pointer;">✕</span>
-        </div>
-        <div class="calc-display" id="display">0</div>
-        <div class="calc-buttons">
-            <button class="c-btn" style="color:red;" onclick="clearCalc()">AC</button>
-            <button class="c-btn" onclick="input('Math.sqrt(')">√</button>
-            <button class="c-btn" onclick="input('Math.pow(')">xⁿ</button>
-            <button class="c-btn" onclick="input('/')">÷</button>
-            <button class="c-btn" onclick="input('7')">7</button>
-            <button class="c-btn" onclick="input('8')">8</button>
-            <button class="c-btn" onclick="input('9')">9</button>
-            <button class="c-btn" onclick="input('*')">×</button>
-            <button class="c-btn" onclick="input('4')">4</button>
-            <button class="c-btn" onclick="input('5')">5</button>
-            <button class="c-btn" onclick="input('6')">6</button>
-            <button class="c-btn" onclick="input('-')">-</button>
-            <button class="c-btn" onclick="input('1')">1</button>
-            <button class="c-btn" onclick="input('2')">2</button>
-            <button class="c-btn" onclick="input('3')">3</button>
-            <button class="c-btn" onclick="input('+')">+</button>
-            <button class="c-btn" onclick="input('0')">0</button>
-            <button class="c-btn" onclick="input('.')">.</button>
-            <button class="c-btn" style="grid-column: span 2; background:var(--primary); color:#000;" onclick="calculate()">=</button>
-        </div>
+        <div class="result" id="resPyth">0</div>
     </div>
 
-    <script>
-        // --- Core Utils ---
-        function copy(id) {
-            const text = document.getElementById(id).innerText;
-            navigator.clipboard.writeText(text);
-            alert("Αντιγράφηκε!");
-        }
+    <!-- QUADRATIC -->
+    <div class="tool-card">
+        <h3>Δευτεροβάθμια Εξίσωση</h3>
 
-        function filterTools() {
-            let val = document.getElementById('searchBar').value.toLowerCase();
-            let cards = document.getElementsByClassName('tool-card');
-            for (let c of cards) {
-                c.style.display = c.innerText.toLowerCase().includes(val) ? "block" : "none";
-            }
-        }
+        <input type="number" id="qa">
+        <input type="number" id="qb">
+        <input type="number" id="qc">
 
+        <button onclick="quadratic()">Λύση</button>
 
-        // --- Math Logic ---
-        function calc(prefix, op) {
-            let a = parseFloat(document.getElementById(prefix+'1').value);
-            let b = parseFloat(document.getElementById(prefix+'2').value);
-            let res = eval(`${a} ${op} ${b}`);
-            document.getElementById('res'+prefix.charAt(0).toUpperCase()+prefix.slice(1)).innerText = res.toFixed(2);
-        }
+        <div class="result" id="resQuad">x1 / x2</div>
+    </div>
 
-        function calcPythagoras() {
-            let a = document.getElementById('pythA').value;
-            let b = document.getElementById('pythB').value;
-            document.getElementById('resPyth').innerText = Math.sqrt(a*a + b*b).toFixed(2);
-        }
+    <!-- TRIG -->
+    <div class="tool-card">
+        <h3>Τριγωνομετρία</h3>
 
-        function solveQuadratic() {
-            let a = document.getElementById('quadA').value;
-            let b = document.getElementById('quadB').value;
-            let c = document.getElementById('quadC').value;
-            let d = b*b - 4*a*c;
-            if (d<0) document.getElementById('resQuad').innerText = "Μιγαδικές";
-            else {
-                let x1 = (-b + Math.sqrt(d))/(2*a);
-                let x2 = (-b - Math.sqrt(d))/(2*a);
-                document.getElementById('resQuad').innerText = `x1=${x1.toFixed(2)}, x2=${x2.toFixed(2)}`;
-            }
-        }
+        <input type="number" id="angle" placeholder="μοίρες">
 
-        function calcTrig(type) {
-            let rad = document.getElementById('trigVal').value * (Math.PI/180);
-            document.getElementById('resTrig').innerText = Math[type](rad).toFixed(4);
-        }
+        <div class="btn-grid">
+            <button onclick="trig('sin')">sin</button>
+            <button onclick="trig('cos')">cos</button>
+            <button onclick="trig('tan')">tan</button>
+        </div>
 
-        function calcAverage() {
-            let arr = document.getElementById('statInput').value.split(',').map(Number);
-            let avg = arr.reduce((a,b)=>a+b, 0) / arr.length;
-            document.getElementById('resStat').innerText = avg.toFixed(2);
-        }
+        <div class="result" id="resTrig">0</div>
+    </div>
 
-        function calcCircle() {
-            let r = document.getElementById('circleR').value;
-            document.getElementById('resCircle').innerText = (Math.PI * r * r).toFixed(2);
-        }
+    <!-- AVERAGE -->
+    <div class="tool-card">
+        <h3>Μέσος Όρος</h3>
 
-        // --- Floating Calc Logic ---
-        let disp = document.getElementById('display');
-        let cInput = "";
-        function toggleCalc() { 
-            let c = document.getElementById('sciCalc');
-            c.style.display = (c.style.display==='block') ? 'none' : 'block';
-        }
-        function input(v) { cInput += v; disp.innerText = cInput; }
-        function clearCalc() { cInput = ""; disp.innerText = "0"; }
-        function calculate() {
-            try { 
-                let expr = cInput;
-                // Auto-close brackets
-                const openB = (expr.match(/\(/g) || []).length;
-                const closeB = (expr.match(/\)/g) || []).length;
-                for(let i=0; i<openB-closeB; i++) expr += ')';
-                cInput = eval(expr).toString();
-                disp.innerText = cInput;
-            } catch(e) { disp.innerText = "Error"; cInput = ""; }
-        }
-                // --- Finance Logic ---
-        async function convertCurrency() {
-            const amount = document.getElementById('amount').value;
-            const from = document.getElementById('fromCurrency').value;
-            const to = document.getElementById('toCurrency').value;
-            try {
-                const res = await fetch(`https://open.er-api.com/v6/latest/${from}`);
-                const data = await res.json();
-                const total = (amount * data.rates[to]).toFixed(2);
-                document.getElementById('exchangeResult').innerText = `${total} ${to}`;
-            } catch (e) { alert("Σφάλμα σύνδεσης"); }
-        }
+        <input type="text" id="avgInput" placeholder="π.χ 10,20,30">
 
-        convertCurrency(); // Run once on load
-    </script>
+        <button onclick="average()">Υπολογισμός</button>
+
+        <div class="result" id="resAvg">0</div>
+    </div>
+
+    <!-- CIRCLE -->
+    <div class="tool-card">
+        <h3>Εμβαδόν Κύκλου</h3>
+
+        <input type="number" id="r">
+
+        <button onclick="circle()">Υπολογισμός</button>
+
+        <div class="result" id="resCircle">0</div>
+    </div>
+
+    <!-- CONVERTER -->
+    <div class="tool-card full">
+        <h3>Currency Converter</h3>
+
+        <input type="number" id="amount">
+
+        <select id="from">
+            <option>EUR</option>
+            <option>USD</option>
+            <option>GBP</option>
+        </select>
+
+        <select id="to">
+            <option>USD</option>
+            <option>EUR</option>
+            <option>BTC</option>
+        </select>
+
+        <button onclick="convert()">Convert</button>
+
+        <div class="result" id="resConvert">--</div>
+    </div>
+
+</section>
+
+<button class="calc-btn" onclick="toggleCalc()">🧮</button>
+
+<div id="calc">
+    <div id="screen">0</div>
+
+    <div class="grid">
+        <button onclick="c('7')">7</button>
+        <button onclick="c('8')">8</button>
+        <button onclick="c('9')">9</button>
+        <button onclick="c('+')">+</button>
+
+        <button onclick="c('4')">4</button>
+        <button onclick="c('5')">5</button>
+        <button onclick="c('6')">6</button>
+        <button onclick="c('-')">-</button>
+
+        <button onclick="c('1')">1</button>
+        <button onclick="c('2')">2</button>
+        <button onclick="c('3')">3</button>
+        <button onclick="c('*')">*</button>
+
+        <button onclick="c('0')">0</button>
+        <button onclick="calc()">=</button>
+        <button onclick="clearCalc()">C</button>
+        <button onclick="c('/')">/</button>
+    </div>
+</div>
+
+<script src="tools.js"></script>
+
 </body>
 </html>

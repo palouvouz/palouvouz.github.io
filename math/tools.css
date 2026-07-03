@@ -1,0 +1,104 @@
+body{
+    font-family: Inter;
+    background:#0b0e14;
+    color:white;
+    margin:0;
+    padding:40px;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+#searchBar{
+    width:100%;
+    max-width:600px;
+    display:block;
+    margin:20px auto;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #333;
+    background:#000;
+    color:white;
+}
+
+.tools-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+}
+
+.tool-card{
+    background:rgba(255,255,255,0.05);
+    padding:20px;
+    border-radius:15px;
+    border:1px solid #222;
+}
+
+.tool-card h3{
+    margin-top:0;
+    color:#4da3ff;
+}
+
+input,select{
+    width:100%;
+    padding:10px;
+    margin:5px 0;
+    background:#000;
+    color:white;
+    border:1px solid #333;
+    border-radius:8px;
+}
+
+button{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    background:#29f99f;
+    border:none;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.result{
+    margin-top:10px;
+    font-weight:700;
+}
+
+.btn-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:5px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+/* calculator */
+#calc{
+    position:fixed;
+    bottom:80px;
+    right:20px;
+    background:#111;
+    padding:15px;
+    border-radius:15px;
+    display:none;
+}
+
+#screen{
+    background:black;
+    padding:10px;
+    margin-bottom:10px;
+    text-align:right;
+}
+
+.calc-btn{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:60px;
+    height:60px;
+    border-radius:50%;
+}
