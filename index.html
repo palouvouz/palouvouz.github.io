@@ -1,359 +1,372 @@
 <!DOCTYPE html>
 <html lang="el">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- 1. Βασικά SEO Meta Tags -->
-    <title>Πανταζής-Λουκάς Βουζαξάκης | Palouvouz Official Homepage</title>
-    <meta name="description" content="Επίσημη σελίδα του Palouvouz (Πανταζής Λουκάς Βουζαξάκης). Απόφοιτος του 3ου Γυμνασίου και μελλοντικός μαθητής του 5ου ΓΕΛ Ηρακλείου, με πάθος για τη ρομποτική, τον προγραμματισμό και την καινοτομία."> 
-    <meta name="keywords" content="palouvouz, πανταζης, λουκας, βουζαξακης, pantazis, loukas, vouzaxakis, ρομποτική, προγραμματισμός, ηράκλειο, 5ο γελ ηρακλείου, 3ο γυμνάσιο ηρακλείου, 41ο δημοτικό ηρακλείου, palouvouz15">
-    <meta name="author" content="Πανταζής-Λουκάς Βουζαξάκης">
-    <meta name="robots" content="index, follow">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
-    <!-- 2. Open Graph Meta Tags (Για σωστή εμφάνιση σε Viber, Discord, Messenger, Instagram) -->
-    <meta property="og:title" content="Πανταζής-Λουκάς Βουζαξάκης | Palouvouz Official Homepage">
-    <meta property="og:description" content="Προσωπική ιστοσελίδα και portfolio του Πανταζή-Λουκά Βουζαξάκη. Ρομποτική, προγραμματισμός και καινοτομία στο Ηράκλειο.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://web.app">
-    <!-- Αν έχεις κάποια εικόνα για preview, βάλε το link της παρακάτω, αλλιώς σβήσε την επόμενη γραμμή -->
-    <meta property="og:image" content="https://web.app/assets/preview-image.jpg">
+        <title>Πανταζής-Λουκάς Βουζαξάκης | Palouvouz Official Homepage</title>
 
-    <!-- 3. Google Schema Markup (JSON-LD) - Σωστά δομημένο για τη Google -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Πανταζής-Λουκάς Βουζαξάκης",
-      "alternateName": "palouvouz",
-      "jobTitle": "Student",
-      "description": "Μαθητής από το Ηράκλειο με πάθος για τη ρομποτική και τον προγραμματισμό, εισαχθείς στο 5ο ΓΕΛ Ηρακλείου.",
-      "url": "https://web.app",
-      "alumniOf": [
+        <meta name="description" content="Επίσημη σελίδα του Palouvouz (Πανταζής Λουκάς Βουζαξάκης). Απόφοιτος του 3ου Γυμνασίου και μελλοντικός μαθητής του 5ου ΓΕΛ Ηρακλείου, με πάθος για τη ρομποτική, τον προγραμματισμό και την καινοτομία.">
+        <meta name="keywords" content="palouvouz, πανταζης, λουκας, βουζαξακης, pantazis, loukas, vouzaxakis, ρομποτική, προγραμματισμός, ηράκλειο, 5ο γελ ηρακλείου, 3ο γυμνάσιο ηρακλείου, 41ο δημοτικό ηρακλείου, palouvouz15">
+        <meta name="author" content="Πανταζής-Λουκάς Βουζαξάκης">
+        <meta name="robots" content="index, follow">
+
+        <link rel="canonical" href="https://palouvouz.github.io/">
+
+        <!-- Open Graph -->
+        <meta property="og:title" content="Πανταζής-Λουκάς Βουζαξάκης | Palouvouz Official Homepage">
+        <meta property="og:description" content="Προσωπική ιστοσελίδα και portfolio του Πανταζή-Λουκά Βουζαξάκη. Ρομποτική, προγραμματισμός και καινοτομία στο Ηράκλειο.">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://palouvouz.github.io/">
+        <meta property="og:image" content="https://palouvouz.github.io/preview.jpg">
+        <meta property="og:locale" content="el_GR">
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Πανταζής-Λουκάς Βουζαξάκης | Palouvouz Official Homepage">
+        <meta name="twitter:description" content="Portfolio και projects ρομποτικής και προγραμματισμού.">
+        <meta name="twitter:image" content="https://palouvouz.github.io/preview.jpg">
+
+        <!-- Theme -->
+        <meta name="theme-color" content="#0d1117">
+
+        <!-- Schema.org FULL (με σχολεία όπως ζήτησες) -->
+        <script type="application/ld+json">
         {
-          "@type": "EducationalOrganization",
-          "name": "3ο Γυμνάσιο Ηρακλείου"
-        },
-        {
-          "@type": "EducationalOrganization",
-          "name": "41ο Δημοτικό Ηρακλείου"
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Πανταζής Λουκάς Βουζαξάκης",
+        "alternateName": "Palouvouz",
+        "url": "https://palouvouz.github.io/",
+        "jobTitle": "Student Developer",
+        "description": "Μαθητής από το Ηράκλειο με πάθος για ρομποτική, προγραμματισμό, Arduino, ESP32 και web development.",
+        "alumniOf": [
+            {
+            "@type": "EducationalOrganization",
+            "name": "3ο Γυμνάσιο Ηρακλείου"
+            },
+            {
+            "@type": "EducationalOrganization",
+            "name": "41ο Δημοτικό Ηρακλείου"
+            }
+        ],
+        "sameAs": [
+            "https://github.com/palouvouz",
+            "https://instagram.com/palouvouz",
+            "https://www.linkedin.com/in/pantazis-loukas-vouzaxakis-755289340/",
+            "https://www.youtube.com/@palouvouz"
+        ]
         }
-      ],
-      "sameAs": [
-        "https://github.com",
-        "https://instagram.com"
-      ]
-    }
-    </script>
+        </script>
+        <!-- 4. Εξωτερικές Γραμματοσειρές και Εικονίδια -->
+        <link href="https://googleapis.com" rel="stylesheet">
+        <link rel="stylesheet" href="https://cloudflare.com">
+        <style>
+            :root {
+                --primary: #00d2ff;
+                --secondary: #3a7bd5;
+                --accent: #6452ef;
+                --glass: rgba(255, 255, 255, 0.1);
+                --glass-border: rgba(255, 255, 255, 0.15);
+                --text-light: #ffffff;
+                --card-bg: rgba(255, 255, 255, 0.9);
+            }
 
-    <!-- 4. Εξωτερικές Γραμματοσειρές και Εικονίδια -->
-    <link href="https://googleapis.com" rel="stylesheet">
-    <link rel="stylesheet" href="https://cloudflare.com">
-    <style>
-        :root {
-            --primary: #00d2ff;
-            --secondary: #3a7bd5;
-            --accent: #6452ef;
-            --glass: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --text-light: #ffffff;
-            --card-bg: rgba(255, 255, 255, 0.9);
-        }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+                font-family: 'Inter', sans-serif;
+                background: linear-gradient(-45deg, #1900ff, #3b05a6, #0084ff, #232391);
+                background-size: 400% 400%;
+                animation: gradientBG 15s ease infinite;
+                color: var(--text-light);
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                overflow-x: hidden;
+            }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(-45deg, #1900ff, #3b05a6, #0084ff, #232391);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: var(--text-light);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-        }
+            @keyframes gradientBG {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+            .snow-container {
+                position: fixed;
+                top: 0; left: 0; width: 100%; height: 100%;
+                pointer-events: none;
+                z-index: 0;
+            }
 
-        .snow-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
+            .snowflake {
+                position: absolute;
+                top: -10px;
+                color: white;
+                opacity: 0.6;
+                animation: fall linear infinite;
+            }
 
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            color: white;
-            opacity: 0.6;
-            animation: fall linear infinite;
-        }
+            @keyframes fall {
+                to { transform: translateY(105vh) rotate(360deg); }
+            }
 
-        @keyframes fall {
-            to { transform: translateY(105vh) rotate(360deg); }
-        }
+            .navbar {
+                width: 100%;
+                padding: 25px 50px;
+                display: flex;
+                justify-content: flex-end;
+                z-index: 100;
+            }
 
-        .navbar {
-            width: 100%;
-            padding: 25px 50px;
-            display: flex;
-            justify-content: flex-end;
-            z-index: 100;
-        }
+            .auth-btn {
+                background: var(--glass);
+                backdrop-filter: blur(12px);
+                padding: 12px 30px;
+                border-radius: 100px;
+                text-decoration: none;
+                color: white;
+                font-weight: 600;
+                border: 1px solid var(--glass-border);
+                transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
 
-        .auth-btn {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            padding: 12px 30px;
-            border-radius: 100px;
-            text-decoration: none;
-            color: white;
-            font-weight: 600;
-            border: 1px solid var(--glass-border);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+            .auth-btn:hover {
+                background: white;
+                color: #048aff;
+                transform: scale(1.05);
+            }
 
-        .auth-btn:hover {
-            background: white;
-            color: #048aff;
-            transform: scale(1.05);
-        }
+            .container {
+                max-width: 1100px;
+                width: 92%;
+                margin: 40px auto;
+                padding: 60px 40px;
+                background: var(--glass);
+                backdrop-filter: blur(25px);
+                border-radius: 40px;
+                border: 1px solid var(--glass-border);
+                text-align: center;
+                box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+                z-index: 10;
+            }
+            h1 {
+                font-size: clamp(2rem, 5vw, 3.5rem);
+                font-weight: 800;
+                margin-bottom: 20px;
+                background: linear-gradient(to left, #3700ff, #002e8a);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-shadow: 
+                    -1px -1px 0 #29272744,  
+                    1px -1px 0 #29272744,
+                    -1px  1px 0 #29272744,
+                    1px  1px 0 #29272744;
+            }
 
-        .container {
-            max-width: 1100px;
-            width: 92%;
-            margin: 40px auto;
-            padding: 60px 40px;
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            border-radius: 40px;
-            border: 1px solid var(--glass-border);
-            text-align: center;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.4);
-            z-index: 10;
-        }
-        h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 800;
-            margin-bottom: 20px;
-            background: linear-gradient(to left, #3700ff, #002e8a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 
-                -1px -1px 0 #29272744,  
-                1px -1px 0 #29272744,
-                -1px  1px 0 #29272744,
-                1px  1px 0 #29272744;
-        }
+            .intro { font-size: 1.25rem; line-height: 1.7; margin-bottom: 50px; opacity: 0.9; }
 
-        .intro { font-size: 1.25rem; line-height: 1.7; margin-bottom: 50px; opacity: 0.9; }
+            .buttons-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 25px;
+                margin-bottom: 30px;
+            }
 
-        .buttons-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
+            .card {
+                background: var(--card-bg);
+                padding: 30px 20px;
+                border-radius: 24px;
+                text-decoration: none;
+                color: #1a1a2e;
+                transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                border: 1px solid white;
+            }
 
-        .card {
-            background: var(--card-bg);
-            padding: 30px 20px;
-            border-radius: 24px;
-            text-decoration: none;
-            color: #1a1a2e;
-            transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 1px solid white;
-        }
+            .card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                background: #ffffff;
+            }
 
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            background: #ffffff;
-        }
+            .card-icon { font-size: 2.5rem; margin-bottom: 15px; transition: transform 0.3s; }
+            .card:hover .card-icon { transform: scale(1.2) rotate(5deg); }
+            .card-title { font-weight: 700; font-size: 1.1rem; }
 
-        .card-icon { font-size: 2.5rem; margin-bottom: 15px; transition: transform 0.3s; }
-        .card:hover .card-icon { transform: scale(1.2) rotate(5deg); }
-        .card-title { font-weight: 700; font-size: 1.1rem; }
+            /* --- FOOTER & NEWS --- */
+            .footer {
+                width: 100%;
+                padding: 50px 20px;
+                background: rgba(0, 0, 0, 0.4);
+                backdrop-filter: blur(15px);
+                border-top: 1px solid var(--glass-border);
+                margin-top: auto;
+                z-index: 20;
+                text-align: center;
+            }
 
-        /* --- FOOTER & NEWS --- */
-        .footer {
-            width: 100%;
-            padding: 50px 20px;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(15px);
-            border-top: 1px solid var(--glass-border);
-            margin-top: auto;
-            z-index: 20;
-            text-align: center;
-        }
+            .news-section {
+                margin-bottom: 40px;
+                max-width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+            }
 
-        .news-section {
-            margin-bottom: 40px;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+            .news-header {
+                font-size: 1rem;
+                font-weight: 800;
+                margin-bottom: 12px;
+                color: var(--primary);
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            }
 
-        .news-header {
-            font-size: 1rem;
-            font-weight: 800;
-            margin-bottom: 12px;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+            .news-item {
+                background: rgba(255, 255, 255, 0.05);
+                padding: 15px;
+                border-radius: 15px;
+                border: 1px solid var(--glass-border);
+            }
 
-        .news-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 15px;
-            border: 1px solid var(--glass-border);
-        }
+            .news-date { font-size: 0.75rem; color: rgba(255,255,255,0.5); display: block; margin-bottom: 5px; font-weight: 700; }
+            .news-content { font-size: 0.9rem; color: white; }
 
-        .news-date { font-size: 0.75rem; color: rgba(255,255,255,0.5); display: block; margin-bottom: 5px; font-weight: 700; }
-        .news-content { font-size: 0.9rem; color: white; }
+            .footer-brand {
+                font-weight: 800;
+                letter-spacing: 4px;
+                color: var(--primary);
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
 
-        .footer-brand {
-            font-weight: 800;
-            letter-spacing: 4px;
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
+            .footer-contact {
+                display: flex;
+                justify-content: center;
+                gap: 25px;
+                flex-wrap: wrap;
+                margin-bottom: 20px;
+            }
 
-        .footer-contact {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
+            .footer-link {
+                color: white;
+                text-decoration: none;
+                transition: 0.3s;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 0.9rem;
+            }
 
-        .footer-link {
-            color: white;
-            text-decoration: none;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
+            .footer-link:hover { color: var(--primary); }
 
-        .footer-link:hover { color: var(--primary); }
+            @media (max-width: 768px) {
+                .container { padding: 40px 20px; }
+                .buttons-grid { grid-template-columns: 1fr; }
+                .footer-contact { flex-direction: column; gap: 15px; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="snow-container" id="snow"></div>
 
-        @media (max-width: 768px) {
-            .container { padding: 40px 20px; }
-            .buttons-grid { grid-template-columns: 1fr; }
-            .footer-contact { flex-direction: column; gap: 15px; }
-        }
-    </style>
-</head>
-<body>
-    <div class="snow-container" id="snow"></div>
-
-    <nav class="navbar">
-        <a href="https://palouvouz14.web.app/login/" class="auth-btn">
-            <span>🔐</span> Είσοδος / Εγγραφή
-        </a>
-    </nav>
-
-    <div class="container">
-        <h1>Γεια σας, είμαι ο Παντάζης 👋</h1>
-        <p class="intro">
-           Μαθητής της Α' λυκειου με πάθος για τη ρομποτική και τον προγραμματισμό. 
-           Γνωρίζω πώς να χρησιμοποιώ τις τρεις βασικές γλώσσες ανάπτυξης ιστοσελίδων, HTML, CSS και JS.
-           Πιστεύω στη δύναμη της καινοτομίας και την μάθηση!
-        </p>
-
-        <div class="buttons-grid">
-            <a href="about me/" class="card">
-                <span class="card-icon">👤</span>
-                <span class="card-title">Ποιος είμαι</span>
+        <nav class="navbar">
+            <a href="https://palouvouz14.web.app/login/" class="auth-btn">
+                <span>🔐</span> Είσοδος / Εγγραφή
             </a>
+        </nav>
+
+        <div class="container">
+            <h1>Γεια σας, είμαι ο Παντάζης 👋</h1>
+            <p class="intro">
+            Μαθητής της Α' λυκειου με πάθος για τη ρομποτική και τον προγραμματισμό. 
+            Γνωρίζω πώς να χρησιμοποιώ τις τρεις βασικές γλώσσες ανάπτυξης ιστοσελίδων, HTML, CSS και JS.
+            Πιστεύω στη δύναμη της καινοτομίας και την μάθηση!
+            </p>
+
+            <div class="buttons-grid">
+                <a href="about me/" class="card">
+                    <span class="card-icon">👤</span>
+                    <span class="card-title">Ποιος είμαι</span>
+                </a>
+                
+                <a href="https://www.teach-economics-sustainable.com/" class="card" target="_blank">
+                    <span class="card-icon">🌍</span>
+                    <span class="card-title">Βιώσιμη Ανάπτυξη</span>
+                </a>
+
+                <a href="math/" class="card">
+                    <span class="card-icon">📐</span>
+                    <span class="card-title">Μαθηματικά Εργαλεία</span>
+                </a>
+
+                <a href="school/School_Projects/" class="card">
+                    <span class="card-icon">🏫</span>
+                    <span class="card-title">Σχολικά Projects</span>
+                </a>
+
+                <a href="./stl" class="card">
+                    <span class="card-icon">🧊</span>
+                    <span class="card-title">3D Models (STL)</span>
+                </a>
+
+                <a href="https://georgeorfa015.github.io/" class="card" target="_blank">
+                    <span class="card-icon">🔗</span>
+                    <span class="card-title">Ιστοσελίδα Φίλου</span>
+                </a>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="news-section">
+                <div class="news-header">
+                    <i class="fa-solid fa-bullhorn"></i> Latest News
+                </div>
+            <div class="news-section">
+                <div class="news-header">
+                    <i class="fa-solid fa-bullhorn"></i> Νέα & Ανακοινώσεις
+                </div>
+                <!-- 1ο Νέο: SEO Update -->
+                <div class="news-item" style="margin-bottom: 15px;">
+                    <span class="news-date">03/07/2026</span>
+                    <p class="news-content"><strong>SEO Update</strong>🚀 : Προσθήκη Google Schema Markup (JSON-LD) και Open Graph tags για επίσημη ταυτοποίηση της σελίδας με τα προφίλ μου σε GitHub και Instagram!</p>
+                </div>
+                <!-- 2ο Νέο: Αποφοίτηση -->
+                <div class="news-item" style="margin-bottom: 15px;">
+                    <span class="news-date">03/07/2026</span>
+                    <p class="news-content"><strong>Σχολική Ενημέρωση</strong>🎓 : Επίσημη αποφοίτηση από το 3ο Γυμνάσιο Ηρακλείου! Επόμενος μεγάλος σταθμός από τον Σεπτέμβριο: 5ο ΓΕΛ Ηρακλείου.</p>
+                </div>
+            </div>
+
+            <div class="footer-brand">PALOUVOUZ</div>
             
-            <a href="https://www.teach-economics-sustainable.com/" class="card" target="_blank">
-                <span class="card-icon">🌍</span>
-                <span class="card-title">Βιώσιμη Ανάπτυξη</span>
-            </a>
-
-            <a href="math/" class="card">
-                <span class="card-icon">📐</span>
-                <span class="card-title">Μαθηματικά Εργαλεία</span>
-            </a>
-
-            <a href="school/School_Projects/" class="card">
-                <span class="card-icon">🏫</span>
-                <span class="card-title">Σχολικά Projects</span>
-            </a>
-
-            <a href="./stl" class="card">
-                <span class="card-icon">🧊</span>
-                <span class="card-title">3D Models (STL)</span>
-            </a>
-
-            <a href="https://georgeorfa015.github.io/" class="card" target="_blank">
-                <span class="card-icon">🔗</span>
-                <span class="card-title">Ιστοσελίδα Φίλου</span>
-            </a>
-        </div>
-    </div>
-
-    <footer class="footer">
-        <div class="news-section">
-            <div class="news-header">
-                <i class="fa-solid fa-bullhorn"></i> Latest News
+            <div class="footer-contact">
+                <a href="mailto:palouvouz@gmail.com" class="footer-link">
+                    <i class="fa-solid fa-envelope"></i> palouvouz@gmail.com
+                </a>
+                <a href="https://www.instagram.com/palouvouz" target="_blank" class="footer-link">
+                    <i class="fa-brands fa-instagram"></i> Instagram
+                </a>
+                <a href="https://github.com/palouvouz" target="_blank" class="footer-link">
+                    <i class="fa-brands fa-github"></i> GitHub
+                </a>
+                <a href="tel:+306945193420" class="footer-link">
+                    <i class="fa-solid fa-phone"></i>+30 6945193420
+                </a>
             </div>
-        <div class="news-section">
-            <div class="news-header">
-                <i class="fa-solid fa-bullhorn"></i> Νέα & Ανακοινώσεις
-            </div>
-            <!-- 1ο Νέο: SEO Update -->
-            <div class="news-item" style="margin-bottom: 15px;">
-                <span class="news-date">03/07/2026</span>
-                <p class="news-content"><strong>SEO Update</strong>🚀 : Προσθήκη Google Schema Markup (JSON-LD) και Open Graph tags για επίσημη ταυτοποίηση της σελίδας με τα προφίλ μου σε GitHub και Instagram!</p>
-            </div>
-            <!-- 2ο Νέο: Αποφοίτηση -->
-            <div class="news-item" style="margin-bottom: 15px;">
-                <span class="news-date">03/07/2026</span>
-                <p class="news-content"><strong>Σχολική Ενημέρωση</strong>🎓 : Επίσημη αποφοίτηση από το 3ο Γυμνάσιο Ηρακλείου! Επόμενος μεγάλος σταθμός από τον Σεπτέμβριο: 5ο ΓΕΛ Ηρακλείου.</p>
-            </div>
-        </div>
+            <p style="opacity: 0.4; font-size: 0.8rem;">© 2026 Palouvouz</p>
+        </footer>
 
-        <div class="footer-brand">PALOUVOUZ</div>
-        
-        <div class="footer-contact">
-            <a href="mailto:palouvouz@gmail.com" class="footer-link">
-                <i class="fa-solid fa-envelope"></i> palouvouz@gmail.com
-            </a>
-            <a href="https://www.instagram.com/palouvouz" target="_blank" class="footer-link">
-                <i class="fa-brands fa-instagram"></i> Instagram
-            </a>
-            <a href="https://github.com/palouvouz" target="_blank" class="footer-link">
-                <i class="fa-brands fa-github"></i> GitHub
-            </a>
-            <a href="tel:+306945193420" class="footer-link">
-                <i class="fa-solid fa-phone"></i>+30 6945193420
-            </a>
-        </div>
-        <p style="opacity: 0.4; font-size: 0.8rem;">© 2026 Palouvouz</p>
-    </footer>
-
-</body>
+    </body>
 </html>
