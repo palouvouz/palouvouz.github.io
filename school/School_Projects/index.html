@@ -1,344 +1,205 @@
 <!DOCTYPE html>
 <html lang="el">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palouvouz | Ultra Secure Gateway</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #00f2ea;
-            --secondary: #ff0050;
-            --accent: #7000ff;
-            --bg-dark: #020205;
-            --glass-bg: rgba(5, 5, 15, 0.85);
-            --glass-border: rgba(0, 242, 234, 0.3);
-            --text: #e0e0ff;
-        }
 
-        * { box-sizing: border-box; outline: none; margin: 0; padding: 0; }
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-        }
+    <title>School Projects & Assignments — PALOUVOUZ</title>
 
-        #particle-canvas {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            filter: blur(1px);
-        }
+    <meta
+        name="description"
+        content="PALOUVOUZ — Robotics, Programming, Arduino, Raspberry Pi and STEM projects."
+    >
 
-        .scanline {
-            width: 100%;
-            height: 100px;
-            z-index: 5;
-            background: linear-gradient(0deg, rgba(0, 242, 234, 0) 0%, rgba(0, 242, 234, 0.1) 50%, rgba(0, 242, 234, 0) 100%);
-            opacity: 0.2;
-            position: absolute;
-            bottom: 100%;
-            animation: scan 4s linear infinite;
-            pointer-events: none;
-        }
+    <meta
+        name="author"
+        content="Πανταζής-Λουκάς Βουζαξάκης"
+    >
 
-        @keyframes scan {
-            from { bottom: 100%; }
-            to { bottom: -100px; }
-        }
+    <meta
+        name="theme-color"
+        content="#070b14"
+    >
 
-        .card {
-            width: 95%;
-            max-width: 500px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 2px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 50px 40px;
-            text-align: center;
-            box-shadow: 0 0 50px rgba(0, 242, 234, 0.2);
-            position: relative;
-            z-index: 10;
-        }
+    <!-- Google Font -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
 
-        .card::before, .card::after {
-            content: '';
-            position: absolute;
-            width: 20px; height: 20px;
-            border-color: var(--primary);
-            border-style: solid;
-        }
-        .card::before { top: 10px; left: 10px; border-width: 2px 0 0 2px; }
-        .card::after { bottom: 10px; right: 10px; border-width: 0 2px 2px 0; }
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
 
-        h1 {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 2.5rem;
-            letter-spacing: -2px;
-            margin-bottom: 5px;
-            color: #fff;
-            text-shadow: 0 0 15px var(--primary);
-        }
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
 
-        .subtitle { 
-            color: var(--primary); 
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem; 
-            letter-spacing: 2px;
-            margin-bottom: 40px;
-            opacity: 0.7;
-        }
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
 
-        .input-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
+    <link
+        rel="stylesheet"
+        href="../../style.css"
+    >
 
-        input {
-            width: 100%;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            color: var(--primary);
-            font-size: 1.5rem;
-            font-family: 'JetBrains Mono', monospace;
-            text-align: center;
-            letter-spacing: 4px;
-            transition: 0.3s;
-        }
-
-        input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0, 242, 234, 0.4);
-        }
-
-        .terminal-log {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            text-align: left;
-            margin-top: 15px;
-            color: rgba(255, 255, 255, 0.4);
-            height: 40px;
-            overflow: hidden;
-        }
-
-        .links-container {
-            display: none;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .link-btn {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 25px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            color: white;
-            text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .link-btn:hover {
-            transform: translateX(10px);
-            background: rgba(0, 242, 234, 0.15);
-            border-color: var(--primary);
-        }
-
-        .btn-content { display: flex; align-items: center; gap: 15px; }
-        .btn-icon { color: var(--primary); font-size: 1.5rem; }
-        
-        .shake { animation: shake 0.4s ease-in-out; }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
 </head>
+
+
 <body>
 
-    <canvas id="particle-canvas"></canvas>
-    <div class="scanline"></div>
+    <div class="container">
 
-    <div class="card" id="mainCard">
-        <div id="loginSection">
+        <!-- =====================================================
+             HERO
+        ====================================================== -->
+
+        <div class="hero">
+
             <h1>PALOUVOUZ</h1>
-            <p class="subtitle">PROJECT_GATEWAY_V2.0</p>
 
-            <div class="input-group">
-                <input type="password" id="passInput" placeholder="••••••••••" maxlength="12">
-                <div id="terminalLog" class="terminal-log">
-                    > SYSTEM IDLE...<br>
-                    > WAITING FOR CLEARANCE...
-                </div>
-            </div>
+            <p class="subtitle">
+                Robotics · Programming · Engineering
+            </p>
+
+            <p class="semi-subtitle">
+                A collection of projects, experiments and digital work.
+            </p>
+
         </div>
 
-        <div id="linksList" class="links-container"></div>
+
+        <!-- =====================================================
+             INTRODUCTION
+        ====================================================== -->
+
+        <div class="card">
+
+            <h2><i class="fa-solid fa-microchip"></i>&nbsp; Projects &amp; Digital Works</h2>
+
+            <p class="important-text">
+                Έργα που συνδυάζουν προγραμματισμό, ρομποτική,
+                ηλεκτρονικά, STEM και δημιουργικό σχεδιασμό.
+            </p>
+
+        </div>
+
+
+        <!-- =====================================================
+             PROJECTS
+        ====================================================== -->
+
+        <div class="card">
+
+            <h2>Projects</h2>
+
+            <div class="grid">
+
+
+
+
+                <!-- ECORUN -->
+
+                <a class="card" href="./EcoRun/">
+
+                    <div class="card-title">
+                        <i class="fa-solid fa-leaf"></i>&nbsp; EcoRun
+                    </div>
+
+                    <div>
+                        Project με επίκεντρο το περιβάλλον, τη
+                        βιωσιμότητα και τη χρήση τεχνολογίας για
+                        περιβαλλοντική δράση.
+                    </div>
+
+                </a>
+
+
+                <!-- CALOKYRIS END -->
+
+                <a class="card" href="./calokyris_end/">
+
+                    <div class="card-title">
+                        <i class="fa-solid fa-sun"></i>&nbsp; Calokyris End
+                    </div>
+
+                    <div>
+                        Δημιουργικό ψηφιακό project με interactive
+                        στοιχεία και προσωπικό σχεδιασμό.
+                    </div>
+
+                </a>
+
+
+                <!-- ART -->
+
+                <a class="card" href="./art/">
+
+                    <div class="card-title">
+                        <i class="fa-solid fa-palette"></i>&nbsp; Art Exhibition
+                    </div>
+
+                    <div>
+                        Ψηφιακή έκθεση έργων τέχνης και
+                        δημιουργικών πειραματισμών.
+                    </div>
+
+                </a>
+
+
+            
+
+
+                <!-- OZONE -->
+
+                <a class="card" href="./ximia_palouvouz/">
+
+                    <div class="card-title">
+                        <i class="fa-solid fa-earth-europe"></i>&nbsp; Η Τρύπα του Όζοντος
+                    </div>
+
+                    <div>
+                        Εκπαιδευτικό project σχετικά με τη χημεία,
+                        την ατμόσφαιρα και την τρύπα του όζοντος.
+                    </div>
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             FOOTER
+        ====================================================== -->
+
+        <footer>
+
+            <div class="footer-links">
+
+                <a href="https://palouvouz.github.io/">Home</a>
+
+            </div>
+
+            <p>© 2026 Πανταζής-Λουκάς Βουζαξάκης · PALOUVOUZ</p>
+
+        </footer>
+
     </div>
 
-    <script>
-        // --- 1. BACKGROUND PARTICLES ---
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            particles = [];
-            for(let i=0; i<80; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5
-                });
-            }
-        }
-
-        function drawParticles() {
-            ctx.clearRect(0,0, canvas.width, canvas.height);
-            ctx.fillStyle = '#00f2ea';
-            ctx.strokeStyle = 'rgba(0, 242, 234, 0.15)';
-            particles.forEach(p => {
-                p.x += p.vx; p.y += p.vy;
-                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
-                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2);
-                ctx.fill();
-                particles.forEach(p2 => {
-                    let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                    if(dist < 150) {
-                        ctx.lineWidth = 1 - dist/150;
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
-                    }
-                });
-            });
-            requestAnimationFrame(drawParticles);
-        }
-        window.addEventListener('resize', initCanvas);
-        initCanvas(); drawParticles();
-
-        // --- 2. AUDIO FEEDBACK ---
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playBeep(freq, dur, type) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type || 'square';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + dur);
-        }
-
-        // --- 3. GATEWAY LOGIC ---
-        const MASTER_KEYS = ["Njk0NTE5MzQyMA==", "NjkzODg4NTM2OA=="]; // Οι Master κωδικοί σου
-
-        const allProjects = [
-            { name: "Schools", url: "./schools/", icon: "fa-school" },
-            { name: "EcoRun", url: "./EcoRun/", icon: "fa-leaf" },
-            { name: "Calokyris End", url: "./calokyris_end/", icon: "fa-sun" },
-            { name: "Art Exhibition", url: "./art/", icon: "fa-palette", isArt: true },
-            { name: "3D STL Vault", url: "./stl", icon: "fa-cube" },
-            { name: "Η Τρύπα του Όζοντος", url: "./ximia_palouvouz/", icon: "fa-earth-europe" }
-        ];
-
-        const input = document.getElementById('passInput');
-        const log = document.getElementById('terminalLog');
-        const linksContainer = document.getElementById('linksList');
-
-        input.addEventListener('input', (e) => {
-            const val = e.target.value.trim();
-            if(val.length > 0) {
-                playBeep(800, 0.05, 'sine');
-                log.innerHTML = `> ANALYZING_KEY...<br>> ENCRYPTING...`;
-            }
-
-            const currentHash = btoa(val);
-            
-            // Έλεγχος για τον κωδικό 3G_C1_2026
-            if (val === "3G_C1_2026") {
-                const artOnly = allProjects.filter(p => p.isArt);
-                unlock(artOnly);
-            } 
-            // Έλεγχος για τους Master κωδικούς
-            else if (MASTER_KEYS.includes(currentHash)) {
-                unlock(allProjects);
-            }
-            // Fail αν ο κωδικός είναι λάθος και μεγάλος
-            else if (val.length >= 11) {
-                fail();
-            }
-        });
-
-        function unlock(list) {
-            playBeep(600, 0.2, 'square');
-            setTimeout(() => playBeep(900, 0.3, 'square'), 100);
-            log.innerHTML = `> ACCESS_GRANTED<br>> FILTERING_DATABASE...`;
-            input.style.borderColor = 'var(--primary)';
-            setTimeout(() => {
-                document.getElementById('loginSection').style.display = 'none';
-                linksContainer.style.display = 'flex';
-                renderLinks(list);
-            }, 800);
-        }
-
-        function fail() {
-            playBeep(150, 0.5, 'sawtooth');
-            document.getElementById('mainCard').classList.add('shake');
-            log.innerHTML = `> ACCESS_DENIED<br>> THREAT_DETECTED`;
-            log.style.color = 'var(--secondary)';
-            input.value = "";
-            setTimeout(() => {
-                document.getElementById('mainCard').classList.remove('shake');
-                log.style.color = '';
-                log.innerHTML = `> RE-INITIALIZING...<br>> WAITING FOR KEY...`;
-            }, 1000);
-        }
-
-        function renderLinks(list) {
-            linksContainer.innerHTML = ""; 
-            list.forEach((proj, index) => {
-                const a = document.createElement('a');
-                a.href = proj.url;
-                a.target = "_blank";
-                a.className = 'link-btn';
-                a.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.15}s`;
-                a.style.opacity = '0';
-                a.innerHTML = `
-                    <div class="btn-content">
-                        <i class="fa-solid ${proj.icon} btn-icon"></i>
-                        <span style="font-family: 'JetBrains Mono', monospace; font-weight:700;">${proj.name}</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right" style="color:var(--primary)"></i>
-                `;
-                linksContainer.appendChild(a);
-            });
-        }
-    </script>
 </body>
+
 </html>
