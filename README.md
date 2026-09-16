@@ -2,9 +2,6 @@
 
 Official personal website of **Πανταζής Λουκάς Βουζαξάκης (Palouvouz)**.
 
-Visit the website:
-https://palouvouz.github.io/
-
 ## About
 
 Personal portfolio and project hub focused on:
@@ -21,9 +18,11 @@ Personal portfolio and project hub focused on:
 ## Technologies
 
 - HTML5
-- CSS3
-- JavaScript
+- CSS3(jast a taste)
+- JavaScript(jast a taste)
+- java(jast a taste)
 - GitHub Pages
+- Firebase (by Google)
 
 ## Contact
 
