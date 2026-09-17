@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="el">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>PalouvouzRPi5 Dashboard</title>
+
+    <meta
+        name="description"
+        content="Live monitoring dashboard για το PalouvouzRPi5"
+    >
+
+    <!-- External CSS -->
+    <link
+        rel="stylesheet"
+        href="https://palouvouz.github.io/style.css"
+    >
+
+    <!-- Inter -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <h1>
+                PalouvouzRPi5
+            </h1>
+
+            <div class="subtitle">
+                Raspberry Pi Live Dashboard
+            </div>
+
+            <div class="semi-subtitle">
+                Real-time system monitoring
+            </div>
+
+            <p>
+                <strong>Connection:</strong>
+                <span id="connection">
+                    Connecting...
+                </span>
+            </p>
+
+        </section>
+
+
+        <!-- SYSTEM INFORMATION -->
+
+        <section class="card">
+
+            <h2>
+                System Information
+            </h2>
+
+            <div class="grid">
+
+                <div class="card">
+
+                    <div class="card-title">
+                        IP Address
+                    </div>
+
+                    <div id="ip">
+                        Loading...
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="card-title">
+                        Uptime
+                    </div>
+
+                    <div id="uptime">
+                        --
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="card-title">
+                        CPU Usage
+                    </div>
+
+                    <div id="cpu_usage">
+                        --
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="card-title">
+                        CPU Temperature
+                    </div>
+
+                    <div id="cpu_temp">
+                        --
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="card-title">
+                        RAM
+                    </div>
+
+                    <div id="ram">
+                        --
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="card-title">
+                        Disk
+                    </div>
+
+                    <div id="disk">
+                        --
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <p>
+                <strong>Server:</strong>
+                100.69.40.3:8080
+            </p>
+
+
+            <p>
+                Auto refresh every 2 seconds ·
+                Last update:
+                <span id="lastUpdate">
+                    --
+                </span>
+            </p>
+
+        </section>
+
+
+        <!-- API STATUS -->
+
+        <section class="card">
+
+            <h2>
+                API Status
+            </h2>
+
+            <p id="apiStatus">
+                Waiting for data...
+            </p>
+
+        </section>
+
+
+        <!-- LINKS -->
+
+        <div class="grid">
+
+            <a
+                class="card"
+                href="http://100.69.40.3:8080/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+
+                <div class="card-title">
+                    RPi Dashboard
+                </div>
+
+                <div>
+                    Open the original Raspberry Pi dashboard.
+                </div>
+
+            </a>
+
+
+            <a
+                class="card"
+                href="http://100.69.40.3:8080/api"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+
+                <div class="card-title">
+                    API
+                </div>
+
+                <div>
+                    View live Raspberry Pi system data.
+                </div>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div class="footer-links">
+
+            <a
+                href="https://palouvouz.github.io/"
+            >
+                Palouvouz
+            </a>
+
+            <a
+                href="http://100.69.40.3:8080/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                RPi Dashboard
+            </a>
+
+            <a
+                href="https://palouvouz.github.io/style.css"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                CSS
+            </a>
+
+            <a
+                href="mailto:palouvouz@gmail.com"
+            >
+                Email
+            </a>
+
+            <a
+                href="https://github.com/palouvouz"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                GitHub
+            </a>
+
+            <a
+                href="https://www.instagram.com/palouvouz"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Instagram
+            </a>
+
+            <a
+                href="https://www.youtube.com/@palouvouz"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                YouTube
+            </a>
+
+        </div>
+
+        <p>
+            © 2026 Palouvouz. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- External JavaScript -->
+
+    <script src="./script.js"></script>
+
+</body>
+
+</html>
