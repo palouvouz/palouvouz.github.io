@@ -61,3 +61,12 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
+.logo_link {
+    display: inline-block; 
+    transition: transform 0.3s ease; 
+}
+
+.logo_link:hover {
+    transform: scale(1.2);
+}
