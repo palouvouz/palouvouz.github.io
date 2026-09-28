@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ετικέτα βιβλίου</title>
+<style>
+  body {
+    margin: 0; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    background: #f4f4f4;
+    font-family: Georgia, "Times New Roman", serif;
+  }
+  .label {
+    width: 90%; max-width: 420px; padding: 24px 28px;
+    text-align: center; background: #fff;
+    border: 4px double #1a1a1a; border-radius: 8px;
+    outline: 2px solid #1a1a1a; outline-offset: 6px;
+  }
+  .label h1 { margin: 0 0 12px; font-size: 1.1rem; font-weight: normal;
+    letter-spacing: 1px; text-transform: uppercase; }
+  .label .name { margin: 0 0 8px; font-size: 1.6rem; font-weight: bold; }
+  .label .class { margin: 0; font-size: 1.2rem; }
+</style>
+</head>
+<body>
+  <div class="label">
+    <h1>Αυτό το βιβλίο ανήκει στον</h1>
+    <p class="name">Βουζαξάκη Πανταζή Λούκα</p>
+    <p class="class">Τμήμα Α4</p>
+  </div>
+</body>
+</html>
