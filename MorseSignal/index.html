@@ -3,404 +3,430 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="dark">
 
-    <title>Morse Signal — PALOUVOUZ</title>
+    <title>MorseSignal</title>
 
-    <meta name="description"
-          content="Morse Signal — Η εφαρμογή Android για μετάδοση Κώδικα Morse μέσω φακού, δόνησης και ήχου.">
+    <meta
+        name="description"
+        content="Το MorseSignal είναι μια εφαρμογή Android για την κωδικοποίηση και μετάδοση μηνυμάτων σε Διεθνή Κωδικό Μορς χρησιμοποιώντας τον φακό, τη δόνηση και το ηχείο."
+    >
 
-    <!-- Open Graph / Social Media Sharing -->
-    <meta property="og:title" content="Morse Signal — PALOUVOUZ">
-    <meta property="og:description" content="Μια native Android εφαρμογή που μετατρέπει απλό κείμενο σε διεθνή κώδικα Morse μέσω φωτός, δόνησης και ήχου.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://palouvouz.github.io/">
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="https://palouvouz.github.io/favicon.png">
-
-    <style>
-        :root {
-            --bg1: #070b14;
-            --bg2: #10182a;
-            --glass: rgba(255, 255, 255, 0.055);
-            --glass-hover: rgba(255, 255, 255, 0.085);
-            --border: rgba(255, 255, 255, 0.11);
-            --border-hover: rgba(77, 163, 255, 0.55);
-            --text: #ffffff;
-            --text-soft: rgba(255, 255, 255, 0.78);
-            --text-muted: rgba(255, 255, 255, 0.55);
-            --primary: #4da3ff;
-            --radius: 16px;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.3);
-            --transition: 0.2s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            color: var(--text);
-            background: linear-gradient(135deg, var(--bg1), var(--bg2));
-            min-height: 100vh;
-            overflow-x: hidden;
-            line-height: 1.5;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 30px 16px 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            margin-bottom: 24px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .logo {
-            font-weight: 800;
-            font-size: 1.2rem;
-            color: var(--text);
-            text-decoration: none;
-            letter-spacing: -0.02em;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 16px;
-        }
-
-        .nav-links a {
-            color: var(--text-soft);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color var(--transition);
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        /* HERO */
-        .hero {
-            text-align: center;
-            margin-bottom: 24px;
-            width: 100%;
-        }
-
-        .eyebrow {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--primary);
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #ffffff 30%, #b9dcff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-text {
-            color: var(--text-soft);
-            font-size: 0.98rem;
-            max-width: 750px;
-            margin: 0 auto 16px;
-            line-height: 1.6;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 16px;
-        }
-
-        .button {
-            background: var(--primary);
-            color: #070b14;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: transform var(--transition), opacity var(--transition);
-        }
-
-        .button:hover {
-            transform: translateY(-2px);
-            opacity: 0.9;
-        }
-
-        .button.secondary {
-            background: var(--glass);
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
-        /* SECTIONS & CARDS */
-        section {
-            width: 100%;
-            margin-bottom: 24px;
-        }
-
-        h2 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            letter-spacing: -0.02em;
-            text-align: left;
-            width: 100%;
-            border-left: 3px solid var(--primary);
-            padding-left: 10px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 14px;
-            width: 100%;
-        }
-
-        .grid-2 {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .card {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 18px 20px;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(12px);
-            transition: transform var(--transition), border-color var(--transition), background var(--transition);
-            text-align: left;
-        }
-
-        .card:hover {
-            transform: translateY(-3px);
-            background: var(--glass-hover);
-            border-color: var(--border-hover);
-        }
-
-        .card h3 {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: var(--text);
-        }
-
-        .card p {
-            color: var(--text-soft);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .highlight {
-            border-color: rgba(77, 163, 255, 0.3);
-            background: linear-gradient(145deg, rgba(77, 163, 255, 0.08), rgba(255, 255, 255, 0.03));
-        }
-
-        /* FOOTER */
-        footer {
-            width: 100%;
-            padding: 20px 0 10px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        footer p {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-
-        footer a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        @media (max-width: 768px) {
-            .grid, .grid-2 {
-                grid-template-columns: 1fr;
-            }
-            .container {
-                padding: 20px 12px 30px;
-            }
-        }
-    </style>
+    <link
+        rel="stylesheet"
+        href="https://palouvouz.github.io/style.css"
+    >
 </head>
 
 <body>
 
-<div class="container">
+<main class="container">
 
-    <!-- HEADER / NAV -->
-    <header>
-        <a href="https://palouvouz.github.io/" class="logo">PALOUVOUZ</a>
-        <nav class="nav-links">
-            <a href="#about">Σχετικά</a>
-            <a href="#features">Λειτουργίες</a>
-            <a href="#technical">Τεχνικά</a>
-            <a href="#github">GitHub</a>
-        </nav>
+    <header class="hero">
+
+        <p class="semi-subtitle">
+            ΕΦΑΡΜΟΓΗ ANDROID
+        </p>
+
+        <h1>MorseSignal</h1>
+
+        <p class="subtitle">
+            Στείλτε μηνύματα χρησιμοποιώντας τον Διεθνή Κωδικό Μορς.
+        </p>
+
+        <p class="semi-subtitle">
+            Μετατρέψτε το κείμενο σε Μορς και μεταδώστε το με τον φακό,
+            το μοτέρ δόνησης ή το ηχείο του τηλεφώνου σας.
+        </p>
+
     </header>
 
-    <!-- HERO -->
-    <section class="hero" id="about">
-        <p class="eyebrow">ANDROID • KOTLIN • MORSE CODE</p>
-        <h1>Morse Signal</h1>
-        <p class="hero-text">
-            Μια native Android εφαρμογή που μετατρέπει απλό κείμενο σε Διεθνή Κώδικα Morse και το μεταδίδει μέσω φωτός, δόνησης και ήχου.
+
+    <section class="card">
+
+        <h2>Τι είναι το MorseSignal;</h2>
+
+        <p class="important-text">
+            Το MorseSignal είναι μια εγγενής εφαρμογή Android που μετατρέπει το συνηθισμένο
+            κείμενο σε Διεθνή Κωδικό Μορς και επιτρέπει στο σήμα που προκύπτει
+            να μεταδίδεται απευθείας από το τηλέφωνο.
         </p>
-        <p style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">
-            Ένα <strong>vibe-coded project</strong>, δημιουργημένο με τη βοήθεια του Anthropic, ενώ σχεδίαζα, δοκίμαζα και βελτίωνα την εφαρμογή.
+
+        <p>
+            Ένα μήνυμα μπορεί να μεταδοθεί χρησιμοποιώντας τον φακό της κάμερας,
+            τη δόνηση, τον ήχο ή πολλές εξόδους ταυτόχρονα.
+            Όλες οι επιλεγμένες έξοδοι ακολουθούν τον ίδιο χρονισμό, ώστε το σήμα
+            να παραμένει συγχρονισμένο.
         </p>
-        <div class="hero-actions">
-            <a class="button" href="https://github.com/palouvouz/MorseSignal" target="_blank" rel="noopener noreferrer">
-                Προβολή στο GitHub
-            </a>
-            <a class="button secondary" href="#features">
-                Εξερεύνηση
-            </a>
-        </div>
+
     </section>
 
-    <!-- WHAT IT BUILT / OUTPUTS -->
-    <section id="features">
-        <h2>Τι κατασκευάζει</h2>
+
+    <section class="card">
+
+        <h2>Από το κείμενο στο σήμα</h2>
+
         <div class="grid">
-            <article class="card">
-                <h3>Φακός (Flashlight)</h3>
-                <p>Μεταδίδει οπτικά τον κώδικα Morse χρησιμοποιώντας ακριβώς χρονισμένα φλας από το φως της κάμερας.</p>
-            </article>
-            <article class="card">
-                <h3>Δόνηση (Vibration)</h3>
-                <p>Μετάδοση του σήματος μέσω του μοτέρ δόνησης της συσκευής για απτική εμπειρία.</p>
-            </article>
-            <article class="card">
-                <h3>Ήχος (Audio)</h3>
-                <p>Παραγωγή ηχητικού σήματος Morse με ρυθμιζόμενη συχνότητα και ένταση.</p>
-            </article>
-        </div>
-    </section>
 
-    <!-- SYNCHRONIZATION & FEATURES -->
-    <section>
-        <h2>Συγχρονισμός & Λειτουργίες</h2>
-        <div class="grid grid-2">
-            <article class="card highlight">
-                <h3>Ενιαία Μηχανή Μετάδοσης</h3>
-                <p>Αντί για ξεχωριστά συστήματα χρονισμού, χρησιμοποιείται κοινή μηχανή. Τελεία = 1 μονάδα, Παύλα = 3 μονάδες, με απόλυτη συγχρονισμoθεσία σε όλες τις εξόδους.</p>
-            </article>
-            <article class="card">
-                <h3>Live Preview & Φωνή</h3>
-                <p>Δες τον κώδικα Morse ζωντανά πριν τη μετάδοση ή χρησιμοποίησε φωνητική είσοδο (Voice Input) για μετατροπή ομιλίας σε κείμενο.</p>
-            </article>
-            <article class="card">
-                <h3>SOS & Quick Settings</h3>
-                <p>Γρήγορη δράση SOS, ενσωματωμένο Quick Settings Tile και Widget αρχικής οθόνης για άμεση πρόσβαση.</p>
-            </article>
-            <article class="card">
-                <h3>Υποστήριξη Ελληνικών</h3>
-                <p>Δυνατότητα αυτόνομης μεταγραφής ελληνικών χαρακτήρων σε λατινικούς πριν τη μετάδοση, χωρίς σιωπηλές αλλοιώσεις.</p>
-            </article>
-        </div>
-    </section>
+            <div class="card">
+                <div class="card-title">Εισαγωγή μηνύματος</div>
 
-    <!-- SAFETY & TECHNICAL -->
-    <section id="technical">
-        <h2>Ασφάλεια & Τεχνικά Χαρακτηριστικά</h2>
-        <div class="grid grid-2">
-            <article class="card highlight">
-                <h3>STOP σημαίνει STOP</h3>
-                <p>Το πάτημα του STOP ή η έξοδος από το προσκήνιο (foreground) απενεργοποιεί άμεσα κάθε έξοδο (φακό, ήχο, δόνηση), αποτρέποντας ακούσιες συνέχειες.</p>
-            </article>
-            <article class="card">
-                <h3>Tech Stack</h3>
-                <p><strong>Kotlin 2.0</strong>, <strong>Jetpack Compose + Material 3</strong>, DataStore Preferences, Camera2 torch API & AudioTrack PCM.</p>
-            </article>
-        </div>
-    </section>
-
-    <!-- GITHUB / FOOTER -->
-    <section id="github" style="text-align: center; margin-top: 10px;">
-        <a class="button" href="https://github.com/palouvouz/MorseSignal" target="_blank" rel="noopener noreferrer">
-            Άνοιγμα Morse Signal στο GitHub
-        </a>
-    </section>
-            <footer>
-
-            <div class="footer-links">
-
-                <a href="mailto:palouvouz@gmail.com">
-                    Email
-                </a>
-
-                <a
-                    href="https://github.com/palouvouz"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    GitHub
-                </a>
-
-                <a
-                    href="https://www.instagram.com/palouvouz"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Instagram
-                </a>
-
-                <a
-                    href="https://www.youtube.com/@palouvouz"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    YouTube
-                </a>
-
+                <div>
+                    Πληκτρολογήστε το μήνυμα που θέλετε να μεταδώσετε ή χρησιμοποιήστε τη
+                    φωνητική εισαγωγή του Android για να το υπαγορεύσετε.
+                </div>
             </div>
-            <p>
-                Morse Signal || Vibe coded με τη βοήθεια του Anthropic. © 2026
-            </p>
-            <p>
-                © 2026 Palouvouz. All rights reserved.
-            </p>
 
-        </footer>
+            <div class="card">
+                <div class="card-title">Έλεγχος του κώδικα Μορς</div>
 
-</div>
+                <div>
+                    Η εφαρμογή εμφανίζει την παραγόμενη ακολουθία Μορς πριν
+                    μεταδοθεί οτιδήποτε, ώστε να μπορείτε να ελέγξετε πρώτα το αποτέλεσμα.
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Επιλογή εξόδων</div>
+
+                <div>
+                    Επιλέξτε φακό, δόνηση, ήχο ή οποιονδήποτε συνδυασμό
+                    των διαθέσιμων εξόδων.
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Μετάδοση</div>
+
+                <div>
+                    Ξεκινήστε τη μετάδοση όταν είστε έτοιμοι. Κάθε έξοδος
+                    ακολουθεί τον ίδιο χρονισμό Μορς.
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="card">
+
+        <h2>Χαρακτηριστικά</h2>
+
+        <ul>
+
+            <li>
+                Μετατρέπει γράμματα, αριθμούς και κοινά σημεία στίξης σε
+                Διεθνή Κωδικό Μορς.
+            </li>
+
+            <li>
+                Εμφανίζει ζωντανή προεπισκόπηση της παραγόμενης ακολουθίας Μορς.
+            </li>
+
+            <li>
+                Μεταδίδει μέσω του φακού της κάμερας.
+            </li>
+
+            <li>
+                Μεταδίδει μέσω του μοτέρ δόνησης.
+            </li>
+
+            <li>
+                Μεταδίδει μέσω του ηχείου του τηλεφώνου.
+            </li>
+
+            <li>
+                Διατηρεί πολλαπλές εξόδους συγχρονισμένες μέσω ενός συστήματος χρονισμού.
+            </li>
+
+            <li>
+                Ρυθμιζόμενη ταχύτητα μετάδοσης από 50 έως 500 χιλιοστά του δευτερολέπτου
+                ανά μονάδα χρονισμού Μορς.
+            </li>
+
+            <li>
+                Ρυθμιζόμενη συχνότητα και ένταση ήχου.
+            </li>
+
+            <li>
+                Άμεσος έλεγχος STOP που απενεργοποιεί όλες τις ενεργές εξόδους.
+            </li>
+
+            <li>
+                Μετάδοση SOS με ένα άγγιγμα.
+            </li>
+
+            <li>
+                Πλακίδιο γρήγορων ρυθμίσεων και γραφικό στοιχείο (widget) αρχικής οθόνης.
+            </li>
+
+            <li>
+                Φωνητική εισαγωγή μέσω της αναγνώρισης ομιλίας του συστήματος Android.
+            </li>
+
+        </ul>
+
+    </section>
+
+
+    <section class="card">
+
+        <h2>Ελληνικό κείμενο</h2>
+
+        <p>
+            Το MorseSignal δεν αλλάζει σιωπηρά το ελληνικό κείμενο σε κάτι άλλο.
+        </p>
+
+        <p>
+            Όταν εισάγονται ελληνικοί χαρακτήρες, η εφαρμογή μπορεί είτε να
+            τους αναγνωρίσει ως μη υποστηριζόμενους είτε, όταν η επιλογή είναι ενεργοποιημένη,
+            να τους μεταγράψει σε λατινικούς χαρακτήρες πριν τους κωδικοποιήσει.
+        </p>
+
+        <p>
+            Η προεπισκόπηση δείχνει το κείμενο που προκύπτει, ώστε ο χρήστης να μπορεί να δει
+            ακριβώς τι θα μεταδοθεί.
+        </p>
+
+    </section>
+
+
+    <section class="card">
+
+        <h2>Σχεδιασμένο γύρω από έναν ενιαίο μηχανισμό μετάδοσης</h2>
+
+        <p>
+            Οι υλοποιήσεις φακού, δόνησης και ήχου είναι ξεχωριστές
+            από τη λογική κωδικοποίησης Μορς.
+        </p>
+
+        <p>
+            Η εφαρμογή μετατρέπει πρώτα το μήνυμα σε μια ακολουθία
+            γεγονότων μετάδοσης Μορς. Οι επιλεγμένες έξοδοι υλικού
+            καταναλώνουν στη συνέχεια την ίδια ακολουθία.
+        </p>
+
+        <p>
+            Αυτό σημαίνει ότι οι τρεις έξοδοι δεν υλοποιούν η καθεμία τον
+            δικό της χρονισμό Μορς. Λαμβάνουν τις ίδιες πληροφορίες χρονισμού και παραμένουν
+            συγχρονισμένες.
+        </p>
+
+    </section>
+
+
+    <section class="card">
+
+        <h2>Ασφάλεια και έλεγχος</h2>
+
+        <p>
+            Η μετάδοση ελέγχεται σκόπιμα από τον χρήστη.
+        </p>
+
+        <p>
+            Η φωνητική εισαγωγή δεν ξεκινά ποτέ αυτόματα μια μετάδοση. Το
+            παραγόμενο κείμενο και η ακολουθία Μορς μπορούν να ελεγχθούν πριν
+            ξεκινήσει η μετάδοση.
+        </p>
+
+        <p>
+            Το πάτημα του STOP απενεργοποιεί αμέσως τον ενεργό φακό,
+            τις εξόδους δόνησης και ήχου.
+        </p>
+
+        <p>
+            Η μετάδοση σταματά επίσης όταν η εφαρμογή φεύγει από το προσκήνιο.
+        </p>
+
+    </section>
+
+
+    <section class="card">
+
+        <h2>Κατασκευασμένο με τεχνολογίες Android</h2>
+
+        <p>
+            Το MorseSignal είναι γραμμένο σε Kotlin και χρησιμοποιεί το Jetpack Compose για
+            τη διεπαφή χρήστη του.
+        </p>
+
+        <p>
+            Το έργο χρησιμοποιεί Coroutines και Flow για την κατάσταση της εφαρμογής και τον
+            χειρισμό συμβάντων, DataStore για τις ρυθμίσεις, Camera2 για τον έλεγχο του φακού,
+            VibratorManager για τη δόνηση και AudioTrack για τη μετάδοση ήχου.
+        </p>
+
+        <p>
+            Περιλαμβάνει επίσης ένα πλακίδιο γρήγορων ρυθμίσεων Android και ένα γραφικό στοιχείο αρχικής οθόνης.
+        </p>
+
+        <p>
+            Ελάχιστη έκδοση Android: <strong>Android 8.0 (API 26)</strong>.
+        </p>
+
+    </section>
+
+
+    <section class="card">
+
+        <h2>Απορρήτο</h2>
+
+        <p class="important-text">
+            Το MorseSignal δεν απαιτεί λογαριασμό ή διακομιστή (server).
+        </p>
+
+        <p>
+            Η διαδικασία κωδικοποίησης και μετάδοσης Μορς εκτελείται τοπικά στη
+            συσκευή. Η εφαρμογή δεν χρειάζεται εργαλεία ανάλυσης ή υπηρεσία backend
+            για τη βασική της λειτουργικότητα.
+        </p>
+
+        <p>
+            Η φωνητική εισαγωγή χρησιμοποιεί τη διεπαφή αναγνώρισης ομιλίας του συστήματος Android
+            αντί για μια προσαρμοσμένη υπηρεσία εγγραφής μέσα στο MorseSignal.
+        </p>
+
+    </section>
+
+
+    <section class="card">
+
+        <h2>Πηγαίος κώδικας και εκδόσεις</h2>
+
+        <div class="grid">
+
+            <a
+                class="card"
+                href="https://github.com/palouvouz/MorseSignal"
+                target="_blank"
+                rel="noopener"
+            >
+                <div class="card-title">
+                    Πηγαίος κώδικας
+                </div>
+
+                <div>
+                    Δείτε ολόκληρο το έργο στο GitHub.
+                </div>
+            </a>
+
+
+            <a
+                class="card"
+                href="https://github.com/palouvouz/MorseSignal/releases"
+                target="_blank"
+                rel="noopener"
+            >
+                <div class="card-title">
+                    Εκδόσεις
+                </div>
+
+                <div>
+                    Βρείτε δημοσιευμένες εκδόσεις της εφαρμογής και τις
+                    σημειώσεις έκδοσής τους.
+                </div>
+            </a>
+
+
+            <a
+                class="card"
+                href="https://github.com/palouvouz/MorseSignal/blob/master/docs/USER_GUIDE.md"
+                target="_blank"
+                rel="noopener"
+            >
+                <div class="card-title">
+                    Οδηγός χρήσης
+                </div>
+
+                <div>
+                    Διαβάστε πώς λειτουργεί η εφαρμογή και πώς να χρησιμοποιήσετε τα χαρακτηριστικά της.
+                </div>
+            </a>
+
+
+            <a
+                class="card"
+                href="https://github.com/palouvouz/MorseSignal/blob/master/docs/ARCHITECTURE.md"
+                target="_blank"
+                rel="noopener"
+            >
+                <div class="card-title">
+                    Αρχιτεκτονική
+                </div>
+
+                <div>
+                    Εξερευνήστε τη δομή της εφαρμογής και τον
+                    μηχανισμό μετάδοσής της.
+                </div>
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <section class="card">
+
+        <h2>Γιατί Μορς;</h2>
+
+        <p>
+            Ο κώδικας Μορς είναι ένα απλό σύστημα επικοινωνίας που αναπαριστά
+            χαρακτήρες ως ακολουθίες σύντομων και μακρών σημάτων.
+        </p>
+
+        <p>
+            Ένα τηλέφωνο διαθέτει ήδη διάφορους τρόπους παραγωγής αυτών των σημάτων:
+            φως, δόνηση και ήχο. Το MorseSignal τα συγκεντρώνει
+            σε μία εφαρμογή και δίνει στον χρήστη άμεσο έλεγχο
+            του χρονισμού και της μεθόδου μετάδοσης.
+        </p>
+
+    </section>
+
+</main>
+
+
+<footer>
+    <p style="margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.7;">
+        <a href="https://palouvouz.github.io/" style="text-decoration: none; " , style=" color: white;"> PALOUVOUZ</a> || Vibe coded with Anthropic.
+    </p>
+    <div class="footer-links">
+
+        <a href="mailto:palouvouz@gmail.com">
+            Email
+        </a>
+
+        <a
+            href="https://github.com/palouvouz"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            GitHub
+        </a>
+
+        <a
+            href="https://www.instagram.com/palouvouz"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            Instagram
+        </a>
+
+        <a
+            href="https://www.youtube.com/@palouvouz"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            YouTube
+        </a>
+
+    </div>
+
+    <p>
+        © 2026 Palouvouz. All rights reserved.
+    </p>
+
+</footer>
 
 </body>
 </html>
