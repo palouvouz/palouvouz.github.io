@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,438 +8,399 @@
     <title>Morse Signal — PALOUVOUZ</title>
 
     <meta name="description"
-          content="Morse Signal — my vibe-coded Android app for transmitting Morse Code through flashlight, vibration and audio.">
+          content="Morse Signal — Η εφαρμογή Android για μετάδοση Κώδικα Morse μέσω φακού, δόνησης και ήχου.">
 
     <!-- Open Graph / Social Media Sharing -->
     <meta property="og:title" content="Morse Signal — PALOUVOUZ">
-    <meta property="og:description" content="A native Android app that turns ordinary text into International Morse Code and transmits it through light, vibration and audio.">
+    <meta property="og:description" content="Μια native Android εφαρμογή που μετατρέπει απλό κείμενο σε διεθνή κώδικα Morse μέσω φωτός, δόνησης και ήχου.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://palouvouz.github.io/">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://palouvouz.github.io/favicon.png">
 
-    <link rel="stylesheet"
-          href="https://palouvouz.github.io/style.css">
+    <style>
+        :root {
+            --bg1: #070b14;
+            --bg2: #10182a;
+            --glass: rgba(255, 255, 255, 0.055);
+            --glass-hover: rgba(255, 255, 255, 0.085);
+            --border: rgba(255, 255, 255, 0.11);
+            --border-hover: rgba(77, 163, 255, 0.55);
+            --text: #ffffff;
+            --text-soft: rgba(255, 255, 255, 0.78);
+            --text-muted: rgba(255, 255, 255, 0.55);
+            --primary: #4da3ff;
+            --radius: 16px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.3);
+            --transition: 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text);
+            background: linear-gradient(135deg, var(--bg1), var(--bg2));
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 16px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .nav-links a {
+            color: var(--text-soft);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .eyebrow {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #ffffff 30%, #b9dcff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text {
+            color: var(--text-soft);
+            font-size: 0.98rem;
+            max-width: 750px;
+            margin: 0 auto 16px;
+            line-height: 1.6;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .button {
+            background: var(--primary);
+            color: #070b14;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: transform var(--transition), opacity var(--transition);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .button.secondary {
+            background: var(--glass);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        /* SECTIONS & CARDS */
+        section {
+            width: 100%;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+            text-align: left;
+            width: 100%;
+            border-left: 3px solid var(--primary);
+            padding-left: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            width: 100%;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            transition: transform var(--transition), border-color var(--transition), background var(--transition);
+            text-align: left;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            background: var(--glass-hover);
+            border-color: var(--border-hover);
+        }
+
+        .card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .card p {
+            color: var(--text-soft);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            border-color: rgba(77, 163, 255, 0.3);
+            background: linear-gradient(145deg, rgba(77, 163, 255, 0.08), rgba(255, 255, 255, 0.03));
+        }
+
+        /* FOOTER */
+        footer {
+            width: 100%;
+            padding: 20px 0 10px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .grid, .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 20px 12px 30px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<header class="container">
-    <nav>
-        <a href="https://palouvouz.github.io/" class="logo">
-            PALOUVOUZ
-        </a>
+<div class="container">
 
-        <div class="nav-links">
-            <a href="#about">About</a>
-            <a href="#features">Features</a>
-            <a href="#technical">Technical</a>
+    <!-- HEADER / NAV -->
+    <header>
+        <a href="https://palouvouz.github.io/" class="logo">PALOUVOUZ</a>
+        <nav class="nav-links">
+            <a href="#about">Σχετικά</a>
+            <a href="#features">Λειτουργίες</a>
+            <a href="#technical">Τεχνικά</a>
             <a href="#github">GitHub</a>
-        </div>
-    </nav>
-</header>
-
-
-<main>
+        </nav>
+    </header>
 
     <!-- HERO -->
-    <section class="container hero" id="about">
-
-        <p class="eyebrow">
-            ANDROID • KOTLIN • MORSE CODE
-        </p>
-
-        <h1>
-            Morse Signal
-        </h1>
-
+    <section class="hero" id="about">
+        <p class="eyebrow">ANDROID • KOTLIN • MORSE CODE</p>
+        <h1>Morse Signal</h1>
         <p class="hero-text">
-            I built Morse Signal as a native Android app that turns
-            ordinary text into International Morse Code and transmits it
-            through light, vibration and sound.
+            Μια native Android εφαρμογή που μετατρέπει απλό κείμενο σε Διεθνή Κώδικα Morse και το μεταδίδει μέσω φωτός, δόνησης και ήχου.
         </p>
-
-        <p>
-            This is one of my <strong>vibe-coded projects</strong>,
-            created with the help of Anthropic while I designed,
-            tested and refined the application.
+        <p style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">
+            Ένα <strong>vibe-coded project</strong>, δημιουργημένο με τη βοήθεια του Anthropic, ενώ σχεδίαζα, δοκίμαζα και βελτίωνα την εφαρμογή.
         </p>
-
         <div class="hero-actions">
-            <a class="button"
-               href="https://github.com/palouvouz/MorseSignal"
-               target="_blank"
-               rel="noopener noreferrer">
-                View on GitHub
+            <a class="button" href="https://github.com/palouvouz/MorseSignal" target="_blank" rel="noopener noreferrer">
+                Προβολή στο GitHub
             </a>
-
-            <a class="button secondary"
-               href="#features">
-                Explore the app
+            <a class="button secondary" href="#features">
+                Εξερεύνηση
             </a>
         </div>
-
     </section>
 
-
-    <!-- WHAT IT DOES -->
-    <section class="container" id="features">
-
-        <h2>
-            What I built
-        </h2>
-
-        <p>
-            Morse Signal takes text, converts it into International Morse
-            Code and sends the resulting signal using one or more physical
-            outputs.
-        </p>
-
+    <!-- WHAT IT BUILT / OUTPUTS -->
+    <section id="features">
+        <h2>Τι κατασκευάζει</h2>
         <div class="grid">
-
             <article class="card">
-                <h3>Flashlight</h3>
-                <p>
-                    The phone's flashlight can transmit Morse visually
-                    using precisely timed flashes.
-                </p>
+                <h3>Φακός (Flashlight)</h3>
+                <p>Μεταδίδει οπτικά τον κώδικα Morse χρησιμοποιώντας ακριβώς χρονισμένα φλας από το φως της κάμερας.</p>
             </article>
-
             <article class="card">
-                <h3>Vibration</h3>
-                <p>
-                    Morse can also be transmitted through the device's
-                    vibration motor.
-                </p>
+                <h3>Δόνηση (Vibration)</h3>
+                <p>Μετάδοση του σήματος μέσω του μοτέρ δόνησης της συσκευής για απτική εμπειρία.</p>
             </article>
-
             <article class="card">
-                <h3>Audio</h3>
-                <p>
-                    The app can generate an audible Morse signal with
-                    configurable frequency and volume.
-                </p>
+                <h3>Ήχος (Audio)</h3>
+                <p>Παραγωγή ηχητικού σήματος Morse με ρυθμιζόμενη συχνότητα και ένταση.</p>
             </article>
-
         </div>
-
     </section>
 
-
-    <!-- CORE IDEA -->
-    <section class="container">
-
-        <h2>
-            One signal. Multiple outputs.
-        </h2>
-
-        <p>
-            One of the main ideas behind Morse Signal is synchronization.
-            Instead of creating separate timing systems for the flashlight,
-            vibration and audio, I use a shared transmission engine.
-        </p>
-
-        <p>
-            This means that when several outputs are enabled, they follow
-            the same Morse timing.
-        </p>
-
-        <div class="card highlight">
-
-            <h3>
-                Example
-            </h3>
-
-            <p>
-                A Morse dot lasts one timing unit, a dash lasts three,
-                and the gaps between symbols, letters and words follow
-                the standard International Morse timing.
-            </p>
-
+    <!-- SYNCHRONIZATION & FEATURES -->
+    <section>
+        <h2>Συγχρονισμός & Λειτουργίες</h2>
+        <div class="grid grid-2">
+            <article class="card highlight">
+                <h3>Ενιαία Μηχανή Μετάδοσης</h3>
+                <p>Αντί για ξεχωριστά συστήματα χρονισμού, χρησιμοποιείται κοινή μηχανή. Τελεία = 1 μονάδα, Παύλα = 3 μονάδες, με απόλυτη συγχρονισμoθεσία σε όλες τις εξόδους.</p>
+            </article>
+            <article class="card">
+                <h3>Live Preview & Φωνή</h3>
+                <p>Δες τον κώδικα Morse ζωντανά πριν τη μετάδοση ή χρησιμοποίησε φωνητική είσοδο (Voice Input) για μετατροπή ομιλίας σε κείμενο.</p>
+            </article>
+            <article class="card">
+                <h3>SOS & Quick Settings</h3>
+                <p>Γρήγορη δράση SOS, ενσωματωμένο Quick Settings Tile και Widget αρχικής οθόνης για άμεση πρόσβαση.</p>
+            </article>
+            <article class="card">
+                <h3>Υποστήριξη Ελληνικών</h3>
+                <p>Δυνατότητα αυτόνομης μεταγραφής ελληνικών χαρακτήρων σε λατινικούς πριν τη μετάδοση, χωρίς σιωπηλές αλλοιώσεις.</p>
+            </article>
         </div>
-
     </section>
 
-
-    <!-- FEATURES -->
-    <section class="container">
-
-        <h2>
-            Features I added
-        </h2>
-
-        <div class="grid">
-
-            <article class="card">
-                <h3>Live Preview</h3>
-                <p>
-                    I can see the generated Morse code before transmitting it.
-                </p>
+    <!-- SAFETY & TECHNICAL -->
+    <section id="technical">
+        <h2>Ασφάλεια & Τεχνικά Χαρακτηριστικά</h2>
+        <div class="grid grid-2">
+            <article class="card highlight">
+                <h3>STOP σημαίνει STOP</h3>
+                <p>Το πάτημα του STOP ή η έξοδος από το προσκήνιο (foreground) απενεργοποιεί άμεσα κάθε έξοδο (φακό, ήχο, δόνηση), αποτρέποντας ακούσιες συνέχειες.</p>
             </article>
-
             <article class="card">
-                <h3>Voice Input</h3>
-                <p>
-                    I can speak a message and let Android convert my speech
-                    into text before I transmit it.
-                </p>
+                <h3>Tech Stack</h3>
+                <p><strong>Kotlin 2.0</strong>, <strong>Jetpack Compose + Material 3</strong>, DataStore Preferences, Camera2 torch API & AudioTrack PCM.</p>
             </article>
-
-            <article class="card">
-                <h3>SOS</h3>
-                <p>
-                    A dedicated SOS action makes it possible to quickly
-                    transmit the standard Morse distress signal.
-                </p>
-            </article>
-
-            <article class="card">
-                <h3>Quick Settings</h3>
-                <p>
-                    I added a Quick Settings Tile for fast access to Morse SOS.
-                </p>
-            </article>
-
-            <article class="card">
-                <h3>Home Screen Widget</h3>
-                <p>
-                    The application also provides a widget with quick access
-                    to SOS and the main app.
-                </p>
-            </article>
-
-            <article class="card">
-                <h3>Greek Support</h3>
-                <p>
-                    Greek characters are not silently changed. If enabled,
-                    the app can optionally transliterate them into Latin
-                    characters before transmission.
-                </p>
-            </article>
-
         </div>
-
     </section>
 
-
-    <!-- SAFETY -->
-    <section class="container">
-
-        <h2>
-            Safety was important
-        </h2>
-
-        <p>
-            I designed the transmission system so that pressing STOP
-            immediately disables all active outputs.
-        </p>
-
-        <p>
-            The application also stops an active transmission when it leaves
-            the foreground. This prevents the flashlight, vibration or audio
-            from continuing unexpectedly.
-        </p>
-
-        <div class="card">
-
-            <h3>
-                STOP means STOP.
-            </h3>
-
-            <p>
-                Even when an error, cancellation or interruption occurs,
-                the outputs are explicitly shut down.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- TECHNICAL -->
-    <section class="container" id="technical">
-
-        <h2>
-            How I built it
-        </h2>
-
-        <p>
-            Morse Signal is a native Android application written in Kotlin.
-            I separated the Morse logic and transmission engine from the
-            Android hardware layer so that the core logic remains easier
-            to test and maintain.
-        </p>
-
-        <div class="grid">
-
-            <article class="card">
-                <h3>Language</h3>
-                <p>Kotlin 2.0</p>
-            </article>
-
-            <article class="card">
-                <h3>UI</h3>
-                <p>Jetpack Compose + Material 3</p>
-            </article>
-
-            <article class="card">
-                <h3>Architecture</h3>
-                <p>Domain → Engine → Hardware → UI/Data</p>
-            </article>
-
-            <article class="card">
-                <h3>Storage</h3>
-                <p>DataStore Preferences</p>
-            </article>
-
-            <article class="card">
-                <h3>Flashlight</h3>
-                <p>Camera2 setTorchMode()</p>
-            </article>
-
-            <article class="card">
-                <h3>Audio</h3>
-                <p>AudioTrack PCM</p>
-            </article>
-
-        </div>
-
-    </section>
-
-
-    <!-- PRIVACY -->
-    <section class="container">
-
-        <h2>
-            Local-first by design
-        </h2>
-
-        <p>
-            I wanted the application to stay simple and private.
-            Morse Signal does not require an account, backend server
-            or analytics system.
-        </p>
-
-        <p>
-            The application's core functionality works locally on the
-            Android device.
-        </p>
-
-    </section>
-
-
-    <!-- VIBE CODING -->
-    <section class="container">
-
-        <h2>
-            Vibe coding
-        </h2>
-
-        <p>
-            Morse Signal is also an experiment in how I can use AI-assisted
-            development to build a complete application.
-        </p>
-
-        <p>
-            I used Anthropic during development as part of the
-            vibe-coding process. The goal was not simply to generate code,
-            but to turn an idea into a structured Android project,
-            test the implementation, identify problems and continuously
-            refine the result.
-        </p>
-
-        <div class="card highlight">
-
-            <h3>
-                Idea → Code → Test → Refine
-            </h3>
-
-            <p>
-                That workflow is what makes Morse Signal interesting to me:
-                it combines my original idea with AI-assisted software
-                development and actual Android engineering.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- PROJECT STATUS -->
-    <section class="container">
-
-        <h2>
-            Project status
-        </h2>
-
-        <p>
-            Morse Signal is a real Android project that I developed as a
-            standalone application. It includes the application source code,
-            documentation, architecture notes, testing information and
-            APK build instructions.
-        </p>
-
-        <div class="card">
-
-            <h3>
-                Android 8.0+
-            </h3>
-
-            <p>
-                Minimum API 26 · Target/Compile SDK 35
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- GITHUB -->
-    <section class="container" id="github">
-
-        <h2>
-            Source code
-        </h2>
-
-        <p>
-            The complete project is available publicly on GitHub.
-            I also keep the technical documentation there, including
-            architecture, testing, troubleshooting and APK build
-            instructions.
-        </p>
-
-        <a class="button"
-           href="https://github.com/palouvouz/MorseSignal"
-           target="_blank"
-           rel="noopener noreferrer">
-            Open Morse Signal on GitHub
+    <!-- GITHUB / FOOTER -->
+    <section id="github" style="text-align: center; margin-top: 10px;">
+        <a class="button" href="https://github.com/palouvouz/MorseSignal" target="_blank" rel="noopener noreferrer">
+            Άνοιγμα Morse Signal στο GitHub
         </a>
-
     </section>
+            <footer>
 
+            <div class="footer-links">
 
-    <!-- FOOTER -->
-    <footer class="container">
+                <a href="mailto:palouvouz@gmail.com">
+                    Email
+                </a>
 
-        <p>
-            Morse Signal — a PALOUVOUZ project.
-        </p>
+                <a
+                    href="https://github.com/palouvouz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    GitHub
+                </a>
 
-        <p>
-            Idea by
-            <a href="https://palouvouz.github.io/" target="_blank" rel="noopener noreferrer">
-                Πανταζής-Λουκάς Βουζαξάκης
-            </a>
-        </p>
+                <a
+                    href="https://www.instagram.com/palouvouz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Instagram
+                </a>
 
-        <p>
-            Vibe coded with Anthropic.
-        </p>
+                <a
+                    href="https://www.youtube.com/@palouvouz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    YouTube
+                </a>
 
-    </footer>
+            </div>
+            <p>
+                Morse Signal || Vibe coded με τη βοήθεια του Anthropic. © 2026
+            </p>
+            <p>
+                © 2026 Palouvouz. All rights reserved.
+            </p>
 
-</main>
+        </footer>
+
+</div>
 
 </body>
 </html>
