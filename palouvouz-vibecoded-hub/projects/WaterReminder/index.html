@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Water Reminder – εφαρμογή υπενθύμισης νερού για Android</title>
+  <meta name="description" content="Εφαρμογή Android που υπενθυμίζει να πίνεις νερό με βάση τον στόχο και το πρόγραμμά σου.">
+
+  <!-- Εδώ μπαίνει το stylesheet από το repository σου. Αντικατέστησε το URL και αφαίρεσε τα σχόλια:
+  <link rel="stylesheet" href="ΒΑΛΕ_ΕΔΩ_ΤΟ_URL_ΤΟΥ_STYLESHEET_ΣΟΥ">
+  -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <p class="site-label">Εφαρμογή Android</p>
+    <h1 class="site-title">Water Reminder</h1>
+    <p class="site-lead">
+      Υπενθυμίσεις για νερό, υπολογισμένες από τον ημερήσιο στόχο σου και τις ώρες που είσαι διαθέσιμος.
+    </p>
+  </header>
+
+  <main class="site-main">
+    <section class="section section-problem">
+      <h2 class="section-title">Το πρόβλημα</h2>
+      <p class="section-text">
+        Πολλοί ξεχνάμε να πίνουμε νερό μέσα στην ημέρα. Η εφαρμογή σε ειδοποιεί ανά τακτά διαστήματα,
+        ώστε να συμπληρώνεις τον στόχο σου χωρίς να το σκέφτεσαι.
+      </p>
+    </section>
+
+    <section class="section section-features">
+      <h2 class="section-title">Τι κάνει</h2>
+      <ul class="feature-list">
+        <li class="feature-item">
+          <h3 class="feature-name">Λογαριασμός</h3>
+          <p class="feature-text">Σύνδεση με email και κωδικό, με Google ή με σύνδεσμο στο email χωρίς κωδικό. Η σύνδεση μένει ενεργή στη συσκευή και ο κωδικός μπορεί να επαναφερθεί με email.</p>
+        </li>
+        <li class="feature-item">
+          <h3 class="feature-name">Στόχος σε ποτήρια ή λίτρα</h3>
+          <p class="feature-text">Ένα ποτήρι είναι 250 ml. Επιλέγεις όποια μονάδα προτιμάς.</p>
+        </li>
+        <li class="feature-item">
+          <h3 class="feature-name">Δικό σου πρόγραμμα</h3>
+          <p class="feature-text">Ορίζεις πότε ξεκινά και πότε τελειώνει η ημέρα σου. Οι υπενθυμίσεις μοιράζονται ισόποσα.</p>
+        </li>
+        <li class="feature-item">
+          <h3 class="feature-name">Λειτουργία μαθητή</h3>
+          <p class="feature-text">Καμία ειδοποίηση τις σχολικές ώρες, Δευτέρα έως Παρασκευή. Οι ώρες αλλάζουν από τις ρυθμίσεις.</p>
+        </li>
+        <li class="feature-item">
+          <h3 class="feature-name">Ήπια ή Skip</h3>
+          <p class="feature-text">Απαντάς κατευθείαν από την ειδοποίηση. Τα skip έχουν ημερήσιο όριο που ορίζεις εσύ.</p>
+        </li>
+        <li class="feature-item">
+          <h3 class="feature-name">Δόνηση, ήχος ή σιωπηλή ειδοποίηση</h3>
+          <p class="feature-text">Διαλέγεις πώς θέλεις να ενημερώνεσαι.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="section section-how">
+      <h2 class="section-title">Πώς δουλεύει</h2>
+      <ol class="step-list">
+        <li class="step-item">Κάνεις εγγραφή και βάζεις τον στόχο σου.</li>
+        <li class="step-item">Ορίζεις τις ώρες έναρξης και λήξης.</li>
+        <li class="step-item">Η εφαρμογή χωρίζει τον στόχο σε ισόποσες υπενθυμίσεις μέσα στον χρόνο που είσαι διαθέσιμος.</li>
+        <li class="step-item">Όταν συμπληρώσεις τον στόχο, οι ειδοποιήσεις σταματούν μέχρι την επόμενη ημέρα.</li>
+      </ol>
+    </section>
+
+    <section class="section section-tech">
+      <h2 class="section-title">Τεχνολογίες</h2>
+      <p class="section-text">
+        Kotlin με Jetpack Compose, C++ (NDK) για τον υπολογισμό των ωρών, JavaScript για τον δείκτη προόδου
+        και Firebase Authentication για τη σύνδεση.
+      </p>
+    </section>
+
+    <section class="section section-download">
+      <h2 class="section-title">Λήψη</h2>
+      <p class="section-text">
+        Ο κώδικας και οι εκδόσεις (APK) βρίσκονται στο repository του project στο GitHub.
+      </p>
+      <!-- Βάλε εδώ τον σύνδεσμο προς το repository σου, π.χ.:
+      <a class="download-link" href="ΒΑΛΕ_ΕΔΩ_ΤΟ_URL_ΤΟΥ_REPOSITORY">Άνοιγμα στο GitHub</a>
+      -->
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p class="credits">
+      Η ιδέα είναι του δημιουργού της εφαρμογής. Η εφαρμογή έγινε vibe coded με την Anthropic (Claude)
+      και το debug έγινε με την OpenAI.
+    </p>
+    <p class="copyright">© <span id="year"></span> Water Reminder</p>
+  </footer>
+
+  <script>
+    // Γράφει το τρέχον έτος στο υποσέλιδο.
+    document.addEventListener('DOMContentLoaded', function () {
+      var year = document.getElementById('year');
+      if (year) {
+        year.textContent = String(new Date().getFullYear());
+      }
+    });
+  </script>
+</body>
+</html>
