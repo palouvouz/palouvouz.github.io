@@ -1,0 +1,69 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Διαχειριστής = υπάρχει έγγραφο admins/{uid} για τον συνδεδεμένο χρήστη.
+    // Το έγγραφο το δημιουργείς ΜΟΝΟ εσύ από το Firebase Console.
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isHttps(value) {
+      return value is string
+        && value.size() <= 500
+        && value.matches('^https://.+');
+    }
+
+    function validProject(d) {
+      return d.keys().hasOnly([
+          'title', 'description', 'imageUrl', 'category', 'status',
+          'githubUrl', 'demoUrl', 'version', 'order', 'published',
+          'createdAt', 'updatedAt'
+        ])
+        && d.keys().hasAll([
+          'title', 'description', 'category', 'githubUrl',
+          'published', 'createdAt', 'updatedAt'
+        ])
+        && d.title is string && d.title.size() >= 1 && d.title.size() <= 80
+        && d.description is string && d.description.size() >= 1 && d.description.size() <= 400
+        && d.category in ['Android App', 'Web App', 'Gadget', 'Hardware', 'Experiment']
+        && isHttps(d.githubUrl)
+        && d.published is bool
+        && d.createdAt is timestamp
+        && d.updatedAt is timestamp
+        && (!('imageUrl' in d) || isHttps(d.imageUrl))
+        && (!('demoUrl' in d) || isHttps(d.demoUrl))
+        && (!('status' in d) || d.status in ['In Development', 'Beta', 'Released'])
+        && (!('version' in d) || (d.version is string && d.version.size() <= 20))
+        && (!('order' in d) || d.order is number);
+    }
+
+    match /projects/{projectId} {
+      // Οι επισκέπτες διαβάζουν ΜΟΝΟ δημοσιευμένα. Ο διαχειριστής τα πάντα.
+      allow read: if resource.data.published == true || isAdmin();
+
+      allow create: if isAdmin()
+        && validProject(request.resource.data)
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+
+      allow update: if isAdmin()
+        && validProject(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.updatedAt == request.time;
+
+      allow delete: if isAdmin();
+    }
+
+    // Ο χρήστης μπορεί να διαβάσει μόνο το δικό του έγγραφο (για να ελέγχει
+    // αν είναι διαχειριστής). Από τον browser δεν γράφει κανείς.
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Οτιδήποτε άλλο: απαγορεύεται (προεπιλογή).
+  }
+}

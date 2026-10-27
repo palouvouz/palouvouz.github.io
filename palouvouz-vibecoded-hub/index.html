@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PALOUVOUZ Vibe Coded Hub</title>
+    <meta name="description" content="Κατάλογος με εφαρμογές, Android apps, web apps, gadgets και πειράματα του PALOUVOUZ.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://palouvouz.github.io/style.css">
+
+    <style>
+        /* Συμπληρωματικά styles για τα components του Hub.
+           Το κεντρικό style.css δεν τροποποιείται. */
+
+        [hidden] { display: none !important; }
+
+        /* ---------- Φίλτρα κατηγορίας ---------- */
+        .filters {
+            width: 100%;
+            margin: 0 0 28px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .chip {
+            padding: 9px 18px;
+            font: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-soft);
+            cursor: pointer;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            transition:
+                background var(--transition),
+                border-color var(--transition),
+                color var(--transition);
+        }
+
+        .chip:hover {
+            background: var(--glass-hover);
+            border-color: var(--border-hover);
+        }
+
+        .chip:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .chip[aria-pressed="true"] {
+            color: var(--text);
+            background: var(--primary-soft);
+            border-color: rgba(77, 163, 255, 0.45);
+        }
+
+        /* ---------- Κάρτα project ---------- */
+        .grid .project-card {
+            padding: 0;
+            min-height: 0;
+            justify-content: flex-start;
+            align-items: stretch;
+            text-align: left;
+        }
+
+        .project-thumb {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(77, 163, 255, 0.22),
+                    rgba(255, 255, 255, 0.04)
+                );
+            border-bottom: 1px solid var(--border);
+        }
+
+        .project-thumb img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .monogram {
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            color: var(--text);
+            opacity: 0.9;
+        }
+
+        .project-body {
+            position: relative;
+            flex: 1;
+            padding: 22px 24px 8px;
+        }
+
+        .project-tags {
+            margin-bottom: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: #cfe6ff;
+            background: var(--primary-soft);
+            border: 1px solid rgba(77, 163, 255, 0.28);
+            border-radius: 999px;
+        }
+
+        .tag-muted {
+            color: var(--text-soft);
+            background: var(--glass);
+            border-color: var(--border);
+        }
+
+        .project-desc {
+            color: var(--text-soft);
+            font-size: 0.94rem;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .project-actions {
+            position: relative;
+            padding: 16px 24px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* ---------- Κουμπιά (glass) ---------- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            font: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            text-decoration: none;
+            cursor: pointer;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            transition:
+                background var(--transition),
+                border-color var(--transition),
+                transform var(--transition);
+        }
+
+        .btn:hover {
+            background: var(--glass-hover);
+            border-color: var(--border-hover);
+        }
+
+        .btn:active { transform: scale(0.98); }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: var(--primary-soft);
+            border-color: rgba(77, 163, 255, 0.45);
+        }
+
+        /* ---------- Μηνύματα κατάστασης ---------- */
+        #state-error .btn { margin-top: 14px; }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header class="hero">
+            <h1>Vibe Coded Hub</h1>
+            <p class="subtitle">Εφαρμογές, gadgets και πειράματα που φτιάχνω με vibe coding</p>
+            <p class="semi-subtitle">PALOUVOUZ</p>
+        </header>
+
+        <nav class="filters" id="filters" aria-label="Φίλτρο κατηγορίας" hidden></nav>
+
+        <section class="card" id="state-loading" role="status" aria-live="polite">
+            <h2>Φόρτωση projects…</h2>
+        </section>
+
+        <section class="card" id="state-empty" hidden>
+            <h2>Δεν υπάρχουν projects ακόμα</h2>
+            <p>Τα projects εμφανίζονται εδώ μόλις δημοσιευτούν.</p>
+        </section>
+
+        <section class="card" id="state-error" role="alert" hidden>
+            <h2>Δεν φορτώθηκαν τα projects</h2>
+            <p id="error-detail">Δοκίμασε ξανά σε λίγο.</p>
+            <button class="btn" type="button" id="retry-btn">Δοκίμασε ξανά</button>
+        </section>
+
+        <div class="grid" id="project-grid" hidden></div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="/">Αρχική</a>
+            <a href="https://github.com/palouvouz" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+        <p>Η ιδέα είναι του PALOUVOUZ · Vibe coded με Anthropic (Claude) · Debug με OpenAI</p>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

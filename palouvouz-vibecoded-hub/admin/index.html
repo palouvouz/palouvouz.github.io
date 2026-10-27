@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Διαχείριση · PALOUVOUZ Vibe Coded Hub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://palouvouz.github.io/style.css">
+
+    <style>
+        /* Συμπληρωματικά styles για το admin panel.
+           Το κεντρικό style.css δεν τροποποιείται. */
+
+        [hidden] { display: none !important; }
+
+        /* ---------- Κάρτες panel ---------- */
+        .container > .card.panel { text-align: left; }
+
+        .container > .card.panel:hover {
+            transform: none;
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.075),
+                    rgba(255, 255, 255, 0.035)
+                );
+            border-color: var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .container > .card.narrow { max-width: 480px; }
+
+        .container > .card.bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding-top: 22px;
+            padding-bottom: 22px;
+        }
+
+        .bar-actions {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .panel .muted { color: var(--text-muted); }
+
+        .panel .form-msg {
+            min-height: 1.2em;
+            font-size: 0.88rem;
+            color: var(--text-soft);
+        }
+
+        .panel .form-msg.error { color: #ff9a9a; }
+
+        .uid {
+            position: relative;
+            display: block;
+            margin: 12px 0 18px;
+            padding: 10px 14px;
+            font-size: 0.82rem;
+            overflow-wrap: anywhere;
+            user-select: all;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        /* ---------- Φόρμες ---------- */
+        .form {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            text-align: left;
+        }
+
+        .field.full { grid-column: 1 / -1; }
+
+        .field > span {
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-soft);
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            width: 100%;
+            padding: 12px 14px;
+            font: inherit;
+            font-size: 0.95rem;
+            color: var(--text);
+            color-scheme: dark;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            outline: none;
+            transition:
+                border-color var(--transition),
+                background var(--transition);
+        }
+
+        .field textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            background: var(--glass-hover);
+            border-color: var(--border-hover);
+        }
+
+        .field.check {
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .field.check input {
+            width: auto;
+            accent-color: var(--primary);
+        }
+
+        .form-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* ---------- Κουμπιά (glass) ---------- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 20px;
+            font: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            text-decoration: none;
+            cursor: pointer;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            transition:
+                background var(--transition),
+                border-color var(--transition),
+                transform var(--transition);
+        }
+
+        .btn:hover {
+            background: var(--glass-hover);
+            border-color: var(--border-hover);
+        }
+
+        .btn:active { transform: scale(0.98); }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--primary-soft);
+            border-color: rgba(77, 163, 255, 0.45);
+        }
+
+        .btn-danger {
+            background: rgba(255, 92, 92, 0.12);
+            border-color: rgba(255, 92, 92, 0.4);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 92, 92, 0.2);
+            border-color: rgba(255, 92, 92, 0.75);
+        }
+
+        .btn-small {
+            padding: 7px 14px;
+            font-size: 0.82rem;
+        }
+
+        /* ---------- Λίστα projects ---------- */
+        .admin-list {
+            position: relative;
+            width: 100%;
+            margin-top: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 18px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+        }
+
+        .row-main {
+            flex: 1 1 260px;
+            min-width: 0;
+        }
+
+        .row-title {
+            font-size: 1.02rem;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .row-meta {
+            margin-top: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+
+        .row-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            padding: 3px 10px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: #cfe6ff;
+            background: var(--primary-soft);
+            border: 1px solid rgba(77, 163, 255, 0.28);
+            border-radius: 999px;
+        }
+
+        .tag-muted {
+            color: var(--text-soft);
+            background: var(--glass);
+            border-color: var(--border);
+        }
+
+        /* ---------- Διάλογος διαγραφής ---------- */
+        dialog {
+            margin: auto;
+            width: min(420px, calc(100% - 32px));
+            padding: 26px;
+            color: var(--text);
+            text-align: left;
+            background: #10182a;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-hover);
+        }
+
+        dialog::backdrop {
+            background: rgba(3, 6, 12, 0.65);
+            backdrop-filter: blur(4px);
+        }
+
+        dialog h3 {
+            margin-bottom: 10px;
+            font-size: 1.15rem;
+        }
+
+        dialog p {
+            margin-bottom: 20px;
+            color: var(--text-soft);
+            font-size: 0.94rem;
+            line-height: 1.55;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header class="hero">
+            <h1>Διαχείριση</h1>
+            <p class="subtitle">Vibe Coded Hub</p>
+        </header>
+
+        <!-- Έλεγχος σύνδεσης -->
+        <section class="card panel" id="view-loading" role="status" aria-live="polite">
+            <h2 id="loading-title">Έλεγχος σύνδεσης…</h2>
+        </section>
+
+        <!-- Σύνδεση -->
+        <section class="card panel narrow" id="view-login" hidden>
+            <h2>Σύνδεση</h2>
+            <form class="form" id="login-form" novalidate>
+                <label class="field">
+                    <span>Email</span>
+                    <input type="email" id="login-email" autocomplete="username" required>
+                </label>
+                <label class="field">
+                    <span>Κωδικός</span>
+                    <input type="password" id="login-password" autocomplete="current-password" required>
+                </label>
+                <button class="btn btn-primary" type="submit" id="login-submit">Σύνδεση</button>
+            </form>
+            <button class="btn" type="button" id="google-btn">Σύνδεση με Google</button>
+            <p class="form-msg" id="login-msg" role="alert"></p>
+        </section>
+
+        <!-- Συνδεδεμένος χρήστης χωρίς δικαίωμα διαχείρισης -->
+        <section class="card panel narrow" id="view-denied" hidden>
+            <h2>Δεν έχεις δικαίωμα διαχείρισης</h2>
+            <p>Συνδέθηκες ως <strong id="denied-email"></strong>, αλλά ο λογαριασμός δεν είναι διαχειριστής.</p>
+            <p>Για να τον εξουσιοδοτήσεις, δημιούργησε στο Firestore το έγγραφο <strong>admins/&lt;UID&gt;</strong> με αυτό το UID:</p>
+            <code class="uid" id="denied-uid"></code>
+            <p class="form-msg" id="denied-note"></p>
+            <button class="btn js-signout" type="button">Αποσύνδεση</button>
+        </section>
+
+        <!-- Μπάρα λογαριασμού -->
+        <section class="card panel bar" id="view-bar" hidden>
+            <div>
+                <span class="muted">Συνδεδεμένος ως</span>
+                <strong id="bar-email"></strong>
+            </div>
+            <div class="bar-actions">
+                <a class="btn" href="../">Δημόσια σελίδα</a>
+                <button class="btn btn-primary" type="button" id="new-btn">Νέο project</button>
+                <button class="btn js-signout" type="button">Αποσύνδεση</button>
+            </div>
+        </section>
+
+        <!-- Φόρμα προσθήκης / επεξεργασίας -->
+        <section class="card panel" id="view-form" hidden>
+            <h2 id="form-title">Νέο project</h2>
+            <form class="form" id="project-form" novalidate>
+                <div class="form-grid">
+                    <label class="field full">
+                        <span>Όνομα *</span>
+                        <input type="text" id="f-title" maxlength="80" required>
+                    </label>
+                    <label class="field full">
+                        <span>Σύντομη περιγραφή * (έως 400 χαρακτήρες)</span>
+                        <textarea id="f-description" maxlength="400" required></textarea>
+                    </label>
+                    <label class="field">
+                        <span>Κατηγορία *</span>
+                        <select id="f-category" required></select>
+                    </label>
+                    <label class="field">
+                        <span>Κατάσταση ανάπτυξης</span>
+                        <select id="f-status"></select>
+                    </label>
+                    <label class="field full">
+                        <span>GitHub repository URL *</span>
+                        <input type="url" id="f-github" placeholder="https://github.com/palouvouz/…" maxlength="500" required>
+                    </label>
+                    <label class="field full">
+                        <span>Demo / σελίδα παρουσίασης URL</span>
+                        <input type="url" id="f-demo" placeholder="https://…" maxlength="500">
+                    </label>
+                    <label class="field full">
+                        <span>URL εικόνας (αν λείπει, εμφανίζεται το αρχικό γράμμα του ονόματος)</span>
+                        <input type="url" id="f-image" placeholder="https://…" maxlength="500">
+                    </label>
+                    <label class="field">
+                        <span>Έκδοση</span>
+                        <input type="text" id="f-version" placeholder="π.χ. v1.0.0" maxlength="20">
+                    </label>
+                    <label class="field">
+                        <span>Σειρά εμφάνισης (μικρότερο = πρώτο, προεπιλογή 100)</span>
+                        <input type="number" id="f-order" step="any" placeholder="100">
+                    </label>
+                    <label class="field full check">
+                        <input type="checkbox" id="f-published">
+                        <span>Δημοσιευμένο (ορατό στους επισκέπτες)</span>
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" type="submit" id="save-btn">Αποθήκευση</button>
+                    <button class="btn" type="button" id="cancel-btn">Ακύρωση</button>
+                </div>
+                <p class="form-msg" id="form-msg" role="alert"></p>
+            </form>
+        </section>
+
+        <!-- Λίστα projects -->
+        <section class="card panel" id="view-list" hidden>
+            <h2>Τα projects μου</h2>
+            <p class="muted" id="list-status" role="status"></p>
+            <div class="admin-list" id="project-list"></div>
+        </section>
+    </main>
+
+    <dialog id="delete-dialog" aria-labelledby="delete-title">
+        <h3 id="delete-title">Διαγραφή project;</h3>
+        <p id="delete-text"></p>
+        <div class="form-actions">
+            <button class="btn btn-danger" type="button" id="delete-confirm">Διαγραφή</button>
+            <button class="btn" type="button" id="delete-cancel">Ακύρωση</button>
+        </div>
+    </dialog>
+
+    <footer>
+        <div class="footer-links">
+            <a href="../">Δημόσια σελίδα</a>
+            <a href="/">Αρχική</a>
+        </div>
+        <p>Η ιδέα είναι του PALOUVOUZ · Vibe coded με Anthropic (Claude) · Debug με OpenAI</p>
+    </footer>
+
+    <script type="module" src="admin.js"></script>
+</body>
+</html>
