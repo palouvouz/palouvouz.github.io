@@ -188,6 +188,46 @@
 
         /* ---------- Μηνύματα κατάστασης ---------- */
         #state-error .btn { margin-top: 14px; }
+
+        
+        /* ---------- Διακριτικό Admin link ---------- */
+        .admin-link {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin: 0 auto 12px;
+            padding: 0 4px;
+        }
+        
+        .admin-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 11px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-soft);
+            text-decoration: none;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            opacity: 0.7;
+            transition:
+                opacity var(--transition),
+                background var(--transition),
+                border-color var(--transition);
+        }
+        
+        .admin-btn:hover {
+            opacity: 1;
+            background: var(--glass-hover);
+            border-color: var(--border-hover);
+        }
+        
+        .admin-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
     </style>
 </head>
 <body>
@@ -216,6 +256,19 @@
 
         <div class="grid" id="project-grid" hidden></div>
     </main>
+
+    
+    <!-- ADMIN LINK -->
+    <div class="admin-link">
+        <a href="https://palouvouz.github.io/palouvouz-vibecoded-hub/admin/"
+           class="admin-btn"
+           aria-label="Admin panel">
+            Admin ↗
+        </a>
+    </div>
+
+    <!-- FOOTER -->
+
 
     <!-- FOOTER -->
 
