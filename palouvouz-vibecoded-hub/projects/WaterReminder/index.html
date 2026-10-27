@@ -1,109 +1,201 @@
+```html
 <!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Water Reminder – εφαρμογή υπενθύμισης νερού για Android</title>
-  <meta name="description" content="Εφαρμογή Android που υπενθυμίζει να πίνεις νερό με βάση τον στόχο και το πρόγραμμά σου.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Εδώ μπαίνει το stylesheet από το repository σου. Αντικατέστησε το URL και αφαίρεσε τα σχόλια:-->
-  <link rel="stylesheet" href="https://palouvouz.github.io/style.css">
-  
-  <link rel="stylesheet" href="css/style.css">
+    <title>Water Reminder | PALOUVOUZ</title>
+
+    <meta
+        name="description"
+        content="Water Reminder — Android εφαρμογή υπενθύμισης νερού με εξατομικευμένους στόχους, έξυπνες ειδοποιήσεις και λειτουργία μαθητή."
+    >
+
+    <meta name="theme-color" content="#070b14">
+
+    <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-  <header class="site-header">
-    <p class="site-label">Εφαρμογή Android</p>
-    <h1 class="site-title">Water Reminder</h1>
-    <p class="site-lead">
-      Υπενθυμίσεις για νερό, υπολογισμένες από τον ημερήσιο στόχο σου και τις ώρες που είσαι διαθέσιμος.
-    </p>
-  </header>
+    <main class="container">
 
-  <main class="site-main">
-    <section class="section section-problem">
-      <h2 class="section-title">Το πρόβλημα</h2>
-      <p class="section-text">
-        Πολλοί ξεχνάμε να πίνουμε νερό μέσα στην ημέρα. Η εφαρμογή σε ειδοποιεί ανά τακτά διαστήματα,
-        ώστε να συμπληρώνεις τον στόχο σου χωρίς να το σκέφτεσαι.
-      </p>
-    </section>
+        <!-- HERO -->
+        <header class="hero">
+            <p class="semi-subtitle">ANDROID APPLICATION · PALOUVOUZ</p>
 
-    <section class="section section-features">
-      <h2 class="section-title">Τι κάνει</h2>
-      <ul class="feature-list">
-        <li class="feature-item">
-          <h3 class="feature-name">Λογαριασμός</h3>
-          <p class="feature-text">Σύνδεση με email και κωδικό, με Google ή με σύνδεσμο στο email χωρίς κωδικό. Η σύνδεση μένει ενεργή στη συσκευή και ο κωδικός μπορεί να επαναφερθεί με email.</p>
-        </li>
-        <li class="feature-item">
-          <h3 class="feature-name">Στόχος σε ποτήρια ή λίτρα</h3>
-          <p class="feature-text">Ένα ποτήρι είναι 250 ml. Επιλέγεις όποια μονάδα προτιμάς.</p>
-        </li>
-        <li class="feature-item">
-          <h3 class="feature-name">Δικό σου πρόγραμμα</h3>
-          <p class="feature-text">Ορίζεις πότε ξεκινά και πότε τελειώνει η ημέρα σου. Οι υπενθυμίσεις μοιράζονται ισόποσα.</p>
-        </li>
-        <li class="feature-item">
-          <h3 class="feature-name">Λειτουργία μαθητή</h3>
-          <p class="feature-text">Καμία ειδοποίηση τις σχολικές ώρες, Δευτέρα έως Παρασκευή. Οι ώρες αλλάζουν από τις ρυθμίσεις.</p>
-        </li>
-        <li class="feature-item">
-          <h3 class="feature-name">Ήπια ή Skip</h3>
-          <p class="feature-text">Απαντάς κατευθείαν από την ειδοποίηση. Τα skip έχουν ημερήσιο όριο που ορίζεις εσύ.</p>
-        </li>
-        <li class="feature-item">
-          <h3 class="feature-name">Δόνηση, ήχος ή σιωπηλή ειδοποίηση</h3>
-          <p class="feature-text">Διαλέγεις πώς θέλεις να ενημερώνεσαι.</p>
-        </li>
-      </ul>
-    </section>
+            <h1>Water Reminder</h1>
 
-    <section class="section section-how">
-      <h2 class="section-title">Πώς δουλεύει</h2>
-      <ol class="step-list">
-        <li class="step-item">Κάνεις εγγραφή και βάζεις τον στόχο σου.</li>
-        <li class="step-item">Ορίζεις τις ώρες έναρξης και λήξης.</li>
-        <li class="step-item">Η εφαρμογή χωρίζει τον στόχο σε ισόποσες υπενθυμίσεις μέσα στον χρόνο που είσαι διαθέσιμος.</li>
-        <li class="step-item">Όταν συμπληρώσεις τον στόχο, οι ειδοποιήσεις σταματούν μέχρι την επόμενη ημέρα.</li>
-      </ol>
-    </section>
+            <p class="subtitle">
+                Μην ξεχνάς να πίνεις νερό.
+            </p>
 
-    <section class="section section-tech">
-      <h2 class="section-title">Τεχνολογίες</h2>
-      <p class="section-text">
-        Kotlin με Jetpack Compose, C++ (NDK) για τον υπολογισμό των ωρών, JavaScript για τον δείκτη προόδου
-        και Firebase Authentication για τη σύνδεση.
-      </p>
-    </section>
+            <p class="semi-subtitle">
+                Οργάνωσε την ενυδάτωσή σου με εξατομικευμένους στόχους
+                και υπενθυμίσεις που προσαρμόζονται στο καθημερινό σου πρόγραμμα.
+            </p>
+        </header>
 
-    <section class="section section-download">
-      <h2 class="section-title">Λήψη</h2>
-      <p class="section-text">
-        Ο κώδικας και οι εκδόσεις (APK) βρίσκονται στο repository του project στο GitHub.
-      </p>
-      <!-- Βάλε εδώ τον σύνδεσμο προς το repository σου, π.χ.:
-      <a class="download-link" href="ΒΑΛΕ_ΕΔΩ_ΤΟ_URL_ΤΟΥ_REPOSITORY">Άνοιγμα στο GitHub</a>
-      -->
-    </section>
-  </main>
+        <!-- PROJECT INTRODUCTION -->
+        <section class="card">
+            <h2>Η ιδέα πίσω από το project</h2>
 
-  <footer class="site-footer">
-    <p class="credits">
-      Η εφαρμογή έγινε vibe coded με την Anthropic (Claude)
-      και το debug έγινε με την OpenAI.
-    </p>
-    <p class="copyright">© <span id="year"></span> Water Reminder</p>
-  </footer>
+            <p class="important-text">
+                Το Water Reminder σχεδιάστηκε για να κάνει την καθημερινή
+                παρακολούθηση της κατανάλωσης νερού πιο απλή και οργανωμένη.
+                Αντί για τυχαίες ειδοποιήσεις, η εφαρμογή βασίζεται στον
+                ημερήσιο στόχο και στο χρονικό διάστημα που έχεις ορίσει.
+            </p>
+        </section>
 
-  <script>
-    // Γράφει το τρέχον έτος στο υποσέλιδο.
-    document.addEventListener('DOMContentLoaded', function () {
-      var year = document.getElementById('year');
-      if (year) {
-        year.textContent = String(new Date().getFullYear());
-      }
-    });
-  </script>
+        <!-- FEATURES -->
+        <section class="card">
+            <h2>Βασικές λειτουργίες</h2>
+
+            <p>
+                Τα βασικά χαρακτηριστικά της εφαρμογής συγκεντρωμένα σε ένα μέρος.
+            </p>
+
+            <div class="grid">
+
+                <article class="card">
+                    <h3 class="card-title">Λογαριασμός χρήστη</h3>
+                    <div>
+                        Εγγραφή και σύνδεση με email και κωδικό,
+                        Google ή σύνδεσμο σύνδεσης μέσω email.
+                        Η συνεδρία διατηρείται μεταξύ των ανοιγμάτων της εφαρμογής.
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h3 class="card-title">Προσωπικός στόχος</h3>
+                    <div>
+                        Καθορισμός ημερήσιου στόχου σε ποτήρια ή λίτρα.
+                        Ένα ποτήρι αντιστοιχεί σε 250 ml.
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h3 class="card-title">Έξυπνο πρόγραμμα</h3>
+                    <div>
+                        Επιλογή ώρας έναρξης και λήξης της ημέρας,
+                        με κατανομή των υπενθυμίσεων μέσα στο διαθέσιμο διάστημα.
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h3 class="card-title">Student Mode</h3>
+                    <div>
+                        Περιορισμός ειδοποιήσεων κατά τις σχολικές ώρες
+                        τις καθημερινές, με δυνατότητα αλλαγής του προγράμματος.
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h3 class="card-title">Άμεση απόκριση</h3>
+                    <div>
+                        Διαχείριση των υπενθυμίσεων απευθείας από την ειδοποίηση,
+                        με επιλογές καταγραφής κατανάλωσης νερού ή παράλειψης,
+                        σύμφωνα με τις διαθέσιμες λειτουργίες της εφαρμογής.
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h3 class="card-title">Προσαρμοσμένες ειδοποιήσεις</h3>
+                    <div>
+                        Επιλογή του τρόπου ειδοποίησης, όπως ήχος,
+                        δόνηση ή σιωπηλή ενημέρωση.
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="card">
+            <h2>Πώς λειτουργεί</h2>
+
+            <ul>
+                <li>Δημιουργείς λογαριασμό και ορίζεις τον ημερήσιο στόχο σου.</li>
+                <li>Επιλέγεις τις ώρες κατά τις οποίες θέλεις να λαμβάνεις υπενθυμίσεις.</li>
+                <li>Η εφαρμογή προγραμματίζει τις υπενθυμίσεις με βάση τις ρυθμίσεις σου.</li>
+                <li>Καταγράφεις την κατανάλωσή σου και παρακολουθείς την πρόοδό σου.</li>
+            </ul>
+        </section>
+
+        <!-- TECHNOLOGY -->
+        <section class="card">
+            <h2>Τεχνολογίες</h2>
+
+            <p>
+                <strong>Kotlin</strong> — κύρια γλώσσα ανάπτυξης Android.
+            </p>
+
+            <p>
+                <strong>Jetpack Compose</strong> — περιβάλλον χρήστη.
+            </p>
+
+            <p>
+                <strong>Firebase Authentication</strong> — αυθεντικοποίηση χρηστών.
+            </p>
+
+            <p>
+                <strong>C++ / NDK και JavaScript</strong> — βοηθητικά μέρη
+                της υλοποίησης, όπου χρησιμοποιούνται.
+            </p>
+        </section>
+
+        <!-- DEVELOPMENT -->
+        <section class="card">
+            <h2>Ανάπτυξη</h2>
+
+            <p class="important-text">
+                Το project αναπτύχθηκε με τη βοήθεια εργαλείων AI-assisted
+                development και vibe coding, με χρήση του Claude της Anthropic
+                και του ChatGPT της OpenAI για υποστήριξη στον εντοπισμό
+                και τη διόρθωση σφαλμάτων.
+            </p>
+        </section>
+
+        <!-- DOWNLOAD -->
+        <section class="card">
+            <h2>Κώδικας και λήψη</h2>
+
+            <p>
+                Μπορείς να επισκεφθείς το repository για να δεις τον κώδικα
+                και τις διαθέσιμες εκδόσεις της εφαρμογής.
+            </p>
+
+            <p>
+            <a href="https://github.com/palouvouz/WaterReminder/releases">
+              reposiry and releases
+            </a>
+            </p>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <nav class="footer-links" aria-label="Σύνδεσμοι">
+            <a href="https://palouvouz.github.io/">
+                PALOUVOUZ Portfolio
+            </a>
+        </nav>
+
+        <p>
+            Water Reminder · Android Project
+        </p>
+
+        <p>
+            © <span id="year"></span> PALOUVOUZ
+        </p>
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+    </script>
 </body>
 </html>
+```
