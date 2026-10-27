@@ -320,6 +320,47 @@
             <p class="subtitle">Vibe Coded Hub</p>
         </header>
 
+        <!-- Σύνδεση -->
+        <section class="card panel narrow" id="view-login" hidden>
+            <h2>Σύνδεση</h2>
+        
+            <form class="form" id="login-form" novalidate>
+                <label class="field">
+                    <span>Email</span>
+                    <input
+                        type="email"
+                        id="login-email"
+                        autocomplete="username"
+                        required
+                    >
+                </label>
+        
+                <label class="field">
+                    <span>Κωδικός</span>
+                    <input
+                        type="password"
+                        id="login-password"
+                        autocomplete="current-password"
+                        required
+                    >
+                </label>
+        
+                <button
+                    class="btn btn-primary"
+                    type="submit"
+                    id="login-submit"
+                >
+                    Σύνδεση
+                </button>
+            </form>
+        
+            <p class="muted">
+                Η πρόσβαση επιτρέπεται μόνο σε εξουσιοδοτημένο λογαριασμό διαχειριστή.
+            </p>
+        
+            <p class="form-msg" id="login-msg" role="alert"></p>
+        </section>
+                
         <!-- Έλεγχος σύνδεσης -->
         <section class="card panel" id="view-loading" role="status" aria-live="polite">
             <h2 id="loading-title">Έλεγχος σύνδεσης…</h2>
